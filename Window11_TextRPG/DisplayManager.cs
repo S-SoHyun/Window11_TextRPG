@@ -125,6 +125,31 @@ namespace Window11_TextRPG
 
             InputInduction();
         }
+
+        public static void StoreScene(Player plyaer, List<MountableItem> items)
+        {
+            Console.Write("[상점]");
+
+            AddBlankLine();
+            Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
+
+            AddBlankLine();
+            Console.WriteLine("[보유골드]");
+            Console.WriteLine($"{plyaer.Gold} G");
+
+            AddBlankLine();
+            Console.WriteLine("[아이템 목록]");
+
+            printBuyItem(items);
+
+            AddBlankLine(2);
+            Console.WriteLine("1. 아이템 구매");
+            Console.WriteLine("2. 아이템 판매");
+
+            AddBlankLine();
+            Console.WriteLine("0. 나가기");
+
+            InputInduction();
         }
 
         public static void StoreScene(Player plyaer, List<Item> items)
