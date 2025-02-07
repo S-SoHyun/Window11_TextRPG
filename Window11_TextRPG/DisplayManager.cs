@@ -77,17 +77,30 @@ namespace Window11_TextRPG
             InputInduction();
         }
 
-        public static void DungeonScene(Player player, Monster monster)
+        public static void DungeonScene(Player player, List<Monster> monsters)
         {
-
-
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} HP {monsters[i].hp}");
+            }
+            AddBlankLine(2);
+            Console.WriteLine("[내정보]");
+            Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
+            Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            AddBlankLine();
+            Console.WriteLine("1. 공격");
+            AddBlankLine();
             InputInduction();
         }
 
         public static void DungeonPlayerAttackScene(Player player, Monster monster)
         {
-
-
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            Console.WriteLine($"{player.name} 의 공격!");
+            Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : ]");
             InputInduction();
         }
 
