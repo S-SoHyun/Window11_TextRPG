@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Emit;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
@@ -13,27 +14,27 @@ namespace Window11_TextRPG
     {
         Player player = new Player();
 
-        public static void LevelCheck(Player player,Monster monster)
+        public static void LevelCheck(Player player, Monster monster)
         {
             //몬스터가 죽으면 몬스터 레벨만큼 경험치 받기
-
             //겅혐치통 공식 (5 * (level * (level - 1)) / 2) + 10
             // 레벨 업하면 player.atk , def 증가
             player.exp += monster.level;
-            
-        }
 
+            if (player.exp > 5 * (player.level * (player.level - 1)) / 2) +10 ) {
+                player.exp = 0;
+                player.level += 1;
+                player.atk += 0.5f; ;
+                player.def += 1;
+
+            }
+        }
 
         public void Enter()
         {
             string input = Console.ReadLine();
             //캐릭터 이름 정하기
             player.name = input;
-
-
-            
-            
-
 
 
             //직업정하기
