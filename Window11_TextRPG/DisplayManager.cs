@@ -135,12 +135,12 @@ namespace Window11_TextRPG
 
             AddBlankLine();
             Console.WriteLine("[보유골드]");
-            Console.WriteLine($"{plyaer.Gold} G");
+            Console.WriteLine($"{plyaer.gold} G");
 
             AddBlankLine();
             Console.WriteLine("[아이템 목록]");
 
-            printBuyItem(items);
+            printStoreItem(items, false);
 
             AddBlankLine(2);
             Console.WriteLine("1. 아이템 구매");
@@ -161,12 +161,12 @@ namespace Window11_TextRPG
 
             AddBlankLine();
             Console.WriteLine("[보유골드]");
-            Console.WriteLine($"{plyaer.Gold} G");
+            Console.WriteLine($"{plyaer.gold} G");
 
             AddBlankLine();
             Console.WriteLine("[아이템 목록]");
 
-            printBuyItem(items);
+            printStoreItem(items, false);
 
             AddBlankLine(2);
             Console.WriteLine("1. 아이템 구매");
@@ -187,12 +187,12 @@ namespace Window11_TextRPG
 
             AddBlankLine();
             Console.WriteLine("[보유골드]");
-            Console.WriteLine($"{plyaer.Gold} G");
+            Console.WriteLine($"{plyaer.gold} G");
 
             AddBlankLine();
             Console.WriteLine("[아이템 목록]");
 
-            printSellItem(items);
+            printStoreItem(items, true);
 
             AddBlankLine(2);
             Console.WriteLine("1. 아이템 구매");
@@ -204,77 +204,60 @@ namespace Window11_TextRPG
             InputInduction();
         }
 
-        private static void printBuyItem(List<MountableItem> items)
+        // fasle: buy, true: sell
+        private static void printStoreItem(List<MountableItem> items, bool buy_sell)
         {
             // item 출력
             int count = 0;
-            for (int i = 0; i < items.Count; i++)
+            // 장비 장착 옵션
+            string equip = "구매완료";
+            string AorD = "";
+            foreach (MountableItem item in items)
             {
-                // 장비 장착 옵션
-                string equip = "구매완료";
+                count++;
+                equip = "구매완료";
                 // 공격력 or 방어력
-                string AorD = "";
+                AorD = "";
 
+                // 방어 장비
+                if (item.Defense > 0)
                 {
-                    // 방어 장비
-                    if (items[i].Defense > 0)
-                    {
-                        AorD = $"방어력 +{items[i].Defense}";
-                    }
-                    // 공격 장비
-                    else if (items[i].Attack > 0)
-                    {
-                        AorD = $"공격력 +{items[i].Attack}";
-                    }
-                    count++;
-                    if (items[i].Own)
-                    {
-                        Console.WriteLine($" -{count} {items[i].Name} | {AorD} | {items[i].Description} | {equip}");
-                    }
-                    else
-                    {
-                        Console.WriteLine($" -{count} {items[i].Name} | {AorD} | {items[i].Description} | {items[i].Gold} G");
-                    }
-
-
+                    AorD += $"방어력 +{item.Defense} | ";
                 }
-            }
-        }
-
-        private static void printSellItem(List<MountableItem> items)
-        {
-            // item 출력
-            int count = 0;
-            for (int i = 0; i < items.Count; i++)
-            {
-                // 장비 장착 옵션
-                string equip = "미소유";
-                // 공격력 or 방어력
-                string AorD = "";
-
+                // 공격 장비
+                if (item.Attack > 0)
                 {
-                    // 방어 장비
-                    if (items[i].Defense > 0)
-                    {
-                        AorD = $"방어력 +{items[i].Defense}";
-                    }
-                    // 공격 장비
-                    else if (items[i].Attack > 0)
-                    {
-                        AorD = $"공격력 +{items[i].Attack}";
-                    }
-                    count++;
-                    // 장비 소유 유무
+                    AorD += $"공격력 +{item.Attack} | ";
+                }
 
-                    if (!items[i].Own)
+                // 구매 리스트
+                if (!buy_sell)
+                {
+                    // 소유한 아이템
+                    if (item.Own)
                     {
-                        Console.WriteLine($" -{count} {items[i].Name} | {AorD} | {items[i].Description} | {equip}");
+                        Console.WriteLine($" -{count} {item.Name} | {AorD}{item.Description} | {equip}");
                     }
+                    // 미소유 아이템
                     else
                     {
-                        Console.WriteLine($" -{count} {items[i].Name} | {AorD} | {items[i].Description} | {(int)((float)items[i].Gold * 0.85f)} G");
+                        Console.WriteLine($" -{count} {item.Name} | {AorD}{item.Description} | {item.Price} G");
                     }
-
+                }
+                // 판매 리스트
+                else
+                {
+                    equip = "미소유";
+                    // 미소유 아이템
+                    if (!item.Own)
+                    {
+                        Console.WriteLine($" -{count} {item.Name} | {AorD} | {item.Description} | {equip}");
+                    }
+                    // 소유한 아이템
+                    else
+                    {
+                        Console.WriteLine($" -{count} {item.Name} | {AorD} | {item.Description} | {(int)((float)item.Price * 0.85f)} G");
+                    }
                 }
             }
         }
