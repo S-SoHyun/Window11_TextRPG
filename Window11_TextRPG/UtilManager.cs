@@ -13,13 +13,21 @@ namespace Window_11_TEXTRPG
         // 플레이어 input
         public static int PlayerInput(int min, int max)
         {
+            // 매개변수 :
+            // min, max 포함되게 
+
             int input;
             while (true)
             {
-                Console.Write("숫자를 입력하세요 >>> ");
-                if (int.TryParse(Console.ReadLine(), out input))
+                Console.Write($"{min} ~ {max} 숫자를 입력하세요 >>> ");
+                if (int.TryParse(Console.ReadLine(), out input)
+                    && input >= min 
+                    && input <= max)
                 {
-                    break;  // 성공적으로 숫자를 입력받으면 반복문 종료
+                    // 성공적으로 숫자를 입력받으면 종료 
+                    // 범위내에 입력하면 종료
+
+                    break;  
                 }
                 Console.WriteLine("올바른 숫자를 입력해주세요.");
             }
@@ -27,13 +35,21 @@ namespace Window_11_TEXTRPG
             return input;
         }
 
-        // ##TODO : Iscene을 클래스로 만든 뒤 , 목록 list에 대한 리스트를 만든다
+        // ##TODO : 각각 mager에서 그냥 array만들어서 저장한 다음에 넣으면 좋을듯?
         // ex) string[] array = new string[4]{"1.플레이어정보","2.상점","3.인벤토리","4.저장"}
         // playerinput에 0 , array.length()를 넣으면 편할듯?
         // 추가로
         // disPlayermanager에서도 배열만 받으면
         // 배열의 길이만큼 돌면서 출력하면되서 편할듯
         // !!!!좀더 생각필요!
+
+        public static void PrintSelectList(string[] array) 
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                Console.WriteLine();
+            }
+        }
 
     }
 }
