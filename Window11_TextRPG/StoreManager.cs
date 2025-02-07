@@ -12,17 +12,25 @@ namespace Window11_TextRPG
         // Singleton
         private StoreManager() { }
         private static StoreManager? instance;
-        public static StoreManager GetInst()
+        public static StoreManager Instance
         {
-            if (instance == null)
-                instance = new StoreManager();
-            return instance;
+            get
+            {
+                if (instance == null)
+                    instance = new StoreManager();
+                return instance;
+            }
         }
+        // 인벤토리에서 가져온 아이템 리스트
+        List<MountableItem> items = InventoryManager.Instance.mountableItems;
 
         // 임시 변수들
         Player player = new Player();    
         List<MountableItem> items;
         //InventoryManager
+
+
+
 
         // GameManager에서 접근하는 곳
         public void Enter()
@@ -31,61 +39,97 @@ namespace Window11_TextRPG
             StoreScene();
         }
 
-
         private void StoreScene()
         {
+            // 다음 Scene 지정
+            Action nextScene = StoreScene;
 
-            while (true)
+            bool choose = false;
+            while (!choose)
             {
                 // StoreScene 출력
                 DisplayManager.StoreScene(player, items);
-                int result = UtilManager.PlayerInput(1, 3);
+                int result = UtilManager.PlayerInput(0, 2);
+
+                // 나가기 버튼
+                if (0 == result)
+                {
+                    Console.WriteLine("debug로비로 간다");
+                    Thread.Sleep(1000);
+                    nextScene = StoreScene;
+                    choose = true;
+                }
+
                 switch (result)
                 {
                     case 1: // 구매 페이지 진입
-                        DisplayManager.StoreBuyScene(player, items);
-                        BuyItemScene();
+                        nextScene = BuyItemScene;
+                        choose = true;
                         break;
 
                     case 2: // 판매 페이지 진입
-                        DisplayManager.StoreBuyScene(player, items);
-                        SellItemScene();
-                        break;
-
-                    case 3: // 로비 페이지 진입
-
+                        nextScene = SellItemScene;
+                        choose = true;
                         break;
                 }
             }
+            nextScene();
         }
-
 
         private void BuyItemScene()
         {
-            while (true)
-            {   
+            // 다음 Scene 지정
+            Action nextScene = BuyItemScene;
+
+            bool choose = false;
+            while (!choose)
+            {
                 // DiplayManager 접근
-                int result = UtilManager.PlayerInput(1, items.Count());
-                switch (result)
+                DisplayManager.StoreBuyScene(player, items);
+                int result = UtilManager.PlayerInput(0, items.Count() + 1);
+
+                // 나가기 버튼
+                if (0 == result)
                 {
-                    case 1: // 구매 페이지 진입  
-
-                        break;
-
-                    case 2: // 판매 페이지 진입
-
-                        break;
-
-                    case 3: // 로비 페이지 진입
-
-                        break;
+                    nextScene = StoreScene;
+                    choose = true;
+                }
+                // 아이템 구매 접근
+                else
+                {
+                    BuyItem(result);
                 }
             }
+            nextScene();
         }
 
         private void SellItemScene()
         {
-            // DiplayManager 접근
+            // 다음 Scene 지정
+            Action nextScene = SellItemScene;
+
+            bool choose = false;
+            while (!choose)
+            {
+                // DiplayManager 접근
+                DisplayManager.StoreSellScene(player, items);
+
+                int result = UtilManager.PlayerInput(0, items.Count() + 1);
+
+                // 나가기 버튼
+                if (0 == result)
+                {
+                    nextScene = StoreScene;
+                    choose = true;
+                }
+                // 아이템 팬매 접근
+                else
+                {
+                    SellItem(result);
+                }
+
+            }
+            nextScene();
         }
 
         private void BuyItem(int idx)
@@ -118,7 +162,6 @@ namespace Window11_TextRPG
 
         private void SellItem(int idx)
         {
-            //EquipmentScene equipmentScene = EquipmentScene.GetInst();
             MountableItem item = items[idx - 1];
             // 판매 불가
             if (!item.Own)

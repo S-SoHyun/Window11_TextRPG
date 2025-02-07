@@ -31,7 +31,7 @@ namespace Window11_TextRPG
         {
             AddBlankLine();
             Console.WriteLine("원하시는 행동을 입력해주세요");
-            Console.Write(">>> ");
+            // Console.Write(">>> ");
         }
 
 
@@ -77,17 +77,30 @@ namespace Window11_TextRPG
             InputInduction();
         }
 
-        public static void DungeonScene(Player player, Monster monster)
+        public static void DungeonScene(Player player, List<Monster> monsters)
         {
-
-
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} HP {monsters[i].hp}");
+            }
+            AddBlankLine(2);
+            Console.WriteLine("[내정보]");
+            Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
+            Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            AddBlankLine();
+            Console.WriteLine("1. 공격");
+            AddBlankLine();
             InputInduction();
         }
 
         public static void DungeonPlayerAttackScene(Player player, Monster monster)
         {
-
-
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            Console.WriteLine($"{player.name} 의 공격!");
+            Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : ]");
             InputInduction();
         }
 
@@ -128,6 +141,7 @@ namespace Window11_TextRPG
 
         public static void StoreScene(Player plyaer, List<MountableItem> items)
         {
+            Clear();
             Console.Write("[상점]");
 
             AddBlankLine();
@@ -154,6 +168,7 @@ namespace Window11_TextRPG
 
         public static void StoreBuyScene(Player plyaer, List<MountableItem> items)
         {
+            Clear();
             Console.Write("[상점 - 구매]");
 
             AddBlankLine();
@@ -169,10 +184,6 @@ namespace Window11_TextRPG
             printStoreItem(items, false);
 
             AddBlankLine(2);
-            Console.WriteLine("1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매");
-
-            AddBlankLine();
             Console.WriteLine("0. 나가기");
 
             InputInduction();
@@ -180,6 +191,7 @@ namespace Window11_TextRPG
 
         public static void StoreSellScene(Player plyaer, List<MountableItem> items)
         {
+            Clear();
             Console.Write("[상점 - 판매]");
 
             AddBlankLine();
@@ -195,10 +207,6 @@ namespace Window11_TextRPG
             printStoreItem(items, true);
 
             AddBlankLine(2);
-            Console.WriteLine("1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매");
-
-            AddBlankLine();
             Console.WriteLine("0. 나가기");
 
             InputInduction();
