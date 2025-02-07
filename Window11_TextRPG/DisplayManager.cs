@@ -21,10 +21,17 @@ namespace Window11_TextRPG
         {
             // 빈줄 추가 메서드
             // count 수치 만큼 빈줄 추가
-            for (int i = 1; i < count; i++)
+            for (int i = 0; i < count; i++)
             {
                 Console.WriteLine("");
             }
+        }
+
+        private static void InputInduction()
+        {
+            AddBlankLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요");
+            Console.Write(">>> ");
         }
 
 
@@ -45,9 +52,7 @@ namespace Window11_TextRPG
             AddBlankLine(2);
             Console.WriteLine("0. 나가기");
 
-            AddBlankLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요");
-            Console.Write(">>> ");
+            InputInduction();
         }
 
         public static void MainScene()
@@ -58,36 +63,51 @@ namespace Window11_TextRPG
         public static void DungeonScene(Player player, Monster monster)
         {
 
+
+            InputInduction();
         }
 
         public static void DungeonPlayerAttackScene(Player player, Monster monster)
         {
 
+
+            InputInduction();
         }
 
         public static void DungeonMonsterAttackScene(Player player, Monster monster)
         {
 
+
+            InputInduction();
         }
 
         public static void DungeonWinResultScene(Player player, Monster monster)
         {
 
+
+            InputInduction();
         }
 
         public static void DungeonLoseResultScene(Player player, Monster monster)
         {
 
+
+            InputInduction();
         }
 
         public static void InventoryScene(Player plyaer, List<Item> items)
         {
 
+
+            InputInduction();
         }
 
         public static void EquipmentScene(Player plyaer, List<Item> items)
         {
 
+
+            InputInduction();
+        }
         }
 
         public static void StoreScene(Player plyaer, List<Item> items)
