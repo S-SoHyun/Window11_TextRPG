@@ -57,7 +57,24 @@ namespace Window11_TextRPG
 
         public static void MainScene()
         {
+            Console.WriteLine("RPG 마을에 오신 여러분 환영합니다.");
+            Console.WriteLine("이곳에서 던전으로 들어가기전 활동을 할 수 있습니다.");
 
+            AddBlankLine();
+            Console.WriteLine("1. 상태보기");
+            Console.WriteLine("2. 인벤토리");
+            Console.WriteLine("3. 상점");
+            Console.WriteLine("4. 던전 들어가기");
+            Console.WriteLine("5. 휴식");
+
+            AddBlankLine(2);
+            Console.WriteLine("6. 저장하기");
+            Console.WriteLine("7. 불러오기");
+
+            AddBlankLine(2);
+            Console.WriteLine("0. 게임 종료");
+
+            InputInduction();
         }
 
         public static void DungeonScene(Player player, Monster monster)
