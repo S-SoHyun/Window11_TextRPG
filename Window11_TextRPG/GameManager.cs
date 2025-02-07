@@ -22,6 +22,18 @@ namespace Window11_TextRPG
         private IScene[] ISceneList;
         private IScene currScene;      // 현재 씬 저장용
 
+        // 싱글톤
+        private static GameManager? instance;
+        public static GameManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new GameManager();
+                return instance;
+            }
+        }
+
         // 생성자
         public GameManager() 
         {
@@ -49,6 +61,8 @@ namespace Window11_TextRPG
                 currScene.Enter();
             }
         }
+
+        public void GetSave() { }
 
     }
 }
