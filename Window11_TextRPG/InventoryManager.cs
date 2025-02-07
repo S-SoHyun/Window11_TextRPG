@@ -27,8 +27,8 @@ namespace Window_11_TEXTRPG
 
 
         // 장착 가능 아이템, 물약 아이템 리스트 생성
-        List<MountableItem> mountableItems = new List<MountableItem>();
-        List<PotionItem> potions = new List<PotionItem>();
+        public List<MountableItem> mountableItems = new List<MountableItem>();
+        public List<PotionItem> potions = new List<PotionItem>();
 
       
         public void AddItem()
