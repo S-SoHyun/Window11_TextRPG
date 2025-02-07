@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Linq;
 using System.Text;
@@ -9,6 +10,24 @@ namespace Window_11_TEXTRPG
 {
     public class InventoryManager : IScene
     {
+        private static InventoryManager Instance;
+
+        public InventoryManager GetInstance()
+        {
+            if (Instance == null)
+            {
+                return new InventoryManager();
+            }
+            else
+            {
+                return Instance;
+            }
+        }
+
+        private InventoryManager() 
+        { 
+
+        }
 
         // 장착 가능 아이템, 물약 아이템 리스트 생성
         List<MountableItem> mountableItems = new List<MountableItem>();
