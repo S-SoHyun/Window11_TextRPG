@@ -10,33 +10,48 @@ using Window_11_TEXTRPG;
 namespace Window11_TextRPG
 {
 
+
     public class PlayerManager : IScene
     {
-        Player player = new Player();
 
-        public static void LevelCheck(Player player, Monster monster)
+        private PlayerManager() { }
+        private static PlayerManager? instance;
+        public static PlayerManager Instance
         {
-            //몬스터가 죽으면 몬스터 레벨만큼 경험치 받기
-            //겅혐치통 공식 (5 * (level * (level - 1)) / 2) + 10
-            // 레벨 업하면 player.atk , def 증가
-            if (monster.IsDie())
+            get
             {
-                player.exp += monster.level;
-                if (player.exp > 5 * (player.level * (player.level - 1) / 2) +10) {
-                player.exp = 0;
-                player.level += 1;
-                player.atk += 0.5f; ;
-                player.def += 1;
-
+                if (instance == null)
+                    instance = new PlayerManager();
+                return instance;
             }
-            }           
         }
+
+        Player player;
+
+        //public static void LevelCheck(Player player, Monster monster)
+        //{
+        //    //몬스터가 죽으면 몬스터 레벨만큼 경험치 받기
+        //    //겅혐치통 공식 (5 * (level * (level - 1)) / 2) + 10
+        //    // 레벨 업하면 player.atk , def 증가
+        //    if (monster.IsDie())
+        //    {
+        //        player.exp += monster.level;
+        //        if (player.exp >= 5 * (player.level * (player.level - 1) / 2) + 10)
+        //        {
+        //            player.exp = player.exp % (5 * (player.level * (player.level - 1) / 2) + 10);
+        //            player.level += 1;
+        //            player.atk += 0.5f; ;
+        //            player.def += 1;
+        //        }
+        //    }
+        //}
+      
 
         public void Enter()
         {
-            string input = Console.ReadLine();
-            //캐릭터 이름 정하기
-            player.name = input;
+            string input = Console.ReadLine().ToString();
+          
+           
 
 
             //직업정하기
@@ -44,39 +59,29 @@ namespace Window11_TextRPG
             int result = UtilManager.PlayerInput(1, 4);
             switch (result)
             {
-                case 1: player.job = "전사";
-                    player.maxhp += 30 ;
-                    player.hp += player.maxhp;
-
+                case 1:
+                    player = new Player("전사", input, 130, 10);                    
                     break;
+
                 case 2:
-                    player.job = "마법사";
-                    player.maxhp -= 10;
-                    player.hp += player.maxhp;
-                    player.atk += 7;
-
+                    player = new Player("마법사", input, 90, 17);                    
                     break;
+
                 case 3:
-                    player.job = "도적";
-                    
-                    
-                    player.atk += 5;
+                    player = new Player("도적", input, 100, 15);                    
                     break;
-                case 4:
-                    player.job = "궁수";
 
-                    player.maxhp -= 20;
-                    player.hp += player.maxhp;
-                    player.atk += 10;
+                case 4:
+                    player = new Player("궁수", input, 80, 20);               
                     break;
                 default:
                     break;
             }
-
-
-            }
+            Console.WriteLine(player.name);
+            Console.WriteLine(player.job);
 
 
         }
     }
+}
 

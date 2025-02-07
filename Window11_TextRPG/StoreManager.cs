@@ -24,9 +24,8 @@ namespace Window11_TextRPG
         // 인벤토리에서 가져온 아이템 리스트
         List<MountableItem> items = InventoryManager.Instance.mountableItems;
 
-        // 임시 변수
-        Player player = new Player();
-        
+        // 임시 변수들
+        Player player = new Player();    
 
         // GameManager에서 접근하는 곳
         public void Enter()
