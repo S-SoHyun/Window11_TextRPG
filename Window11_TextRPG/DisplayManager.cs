@@ -31,7 +31,7 @@ namespace Window11_TextRPG
         {
             AddBlankLine();
             Console.WriteLine("원하시는 행동을 입력해주세요");
-            Console.Write(">>> ");
+            // Console.Write(">>> ");
         }
 
 
@@ -128,6 +128,7 @@ namespace Window11_TextRPG
 
         public static void StoreScene(Player plyaer, List<MountableItem> items)
         {
+            Clear();
             Console.Write("[상점]");
 
             AddBlankLine();
@@ -154,6 +155,7 @@ namespace Window11_TextRPG
 
         public static void StoreBuyScene(Player plyaer, List<MountableItem> items)
         {
+            Clear();
             Console.Write("[상점 - 구매]");
 
             AddBlankLine();
@@ -169,10 +171,6 @@ namespace Window11_TextRPG
             printStoreItem(items, false);
 
             AddBlankLine(2);
-            Console.WriteLine("1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매");
-
-            AddBlankLine();
             Console.WriteLine("0. 나가기");
 
             InputInduction();
@@ -180,6 +178,7 @@ namespace Window11_TextRPG
 
         public static void StoreSellScene(Player plyaer, List<MountableItem> items)
         {
+            Clear();
             Console.Write("[상점 - 판매]");
 
             AddBlankLine();
@@ -195,10 +194,6 @@ namespace Window11_TextRPG
             printStoreItem(items, true);
 
             AddBlankLine(2);
-            Console.WriteLine("1. 아이템 구매");
-            Console.WriteLine("2. 아이템 판매");
-
-            AddBlankLine();
             Console.WriteLine("0. 나가기");
 
             InputInduction();
