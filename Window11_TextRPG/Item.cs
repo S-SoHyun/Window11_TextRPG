@@ -6,13 +6,13 @@ using System.Threading.Tasks;
 
 namespace Window_11_TEXTRPG
 {
-    enum ITEMTYPE
+    public enum ITEMTYPE
     {
         WEAPON,
         ARMOR,
         POTION,
     }
-    internal abstract class Item
+    public abstract class Item
     {
         protected string? name;
         protected string? description;
@@ -42,7 +42,7 @@ namespace Window_11_TEXTRPG
     }
 
     // 장착 가능한 아이템
-    class MountableItem : Item
+    public class MountableItem : Item
     {
         private int attack;
         private int defense;
@@ -73,7 +73,7 @@ namespace Window_11_TEXTRPG
     }
 
     // 포션 아이템
-    class PotionItem : Item
+    public class PotionItem : Item
     {
         private int count;
         private int heel;

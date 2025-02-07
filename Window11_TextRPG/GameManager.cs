@@ -27,6 +27,15 @@ namespace Window11_TextRPG
         {
             // Scene 리스트 초기화
             ISceneList = new IScene[Enum.GetNames(typeof(SceneState)).Length];
+
+            /*
+            ISceneList[(int)SceneState.LobbyManager] = new LobbyManager();
+            ISceneList[(int)SceneState.PlayerManager] = new PlayerManager();
+            ISceneList[(int)SceneState.DungeonManager] = new DungeonManager();
+
+            ISceneList[(int)SceneState.InventoryManager] = new InventoryManager();
+            ISceneList[(int)SceneState.StoreManager] = new StoreManager();
+            */
         }
 
         // 씬 (manager) 변화 
