@@ -10,10 +10,31 @@ namespace Window11_TextRPG
     {
         string name;
         int level;
-        string type;
-        int hp;
+        int type;
+        float hp;
 
-        public Monster(string name, int level, string type, int hp) 
+        public Monster(int level, int type, float hp)
+        {
+            string name = "";
+            switch (type)
+            {
+                case 0:
+                    name = "미니언";
+                    break;
+                case 1:
+                    name = "대포미니언";
+                    break;
+                case 2:
+                    name = "공허충";
+                    break;
+            }
+            this.name = name;
+            this.level = level;
+            this.type = type;
+            this.hp = hp;
+        }
+
+        public Monster(string name, int level, int type, float hp) 
         {
             this.name = name;
             this.level = level;
