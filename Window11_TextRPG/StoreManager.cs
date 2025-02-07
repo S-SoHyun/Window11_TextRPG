@@ -12,12 +12,16 @@ namespace Window11_TextRPG
         // Singleton
         private StoreManager() { }
         private static StoreManager? instance;
-        public static StoreManager GetInst()
+        public static StoreManager Instance
         {
-            if (instance == null)
-                instance = new StoreManager();
-            return instance;
+            get
+            {
+                if (instance == null)
+                    instance = new StoreManager();
+                return instance;
+            }
         }
+
 
         // 임시 변수들
         Player player = new Player();
