@@ -8,10 +8,10 @@ namespace Window11_TextRPG
 {
     public class Monster
     {
-        string name;
-        int level;
-        int type;
-        float hp;
+        public string name { get; set; }
+        public int level { get; set; }
+        public int type { get; set; }
+        public float hp { get; set; }
 
         public Monster(int level, int type, float hp)
         {
