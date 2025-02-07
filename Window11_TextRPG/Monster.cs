@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Window_11_TEXTRPG;
 
 namespace Window11_TextRPG
 {
-    public class Monster
+    public class Monster :IMove 
     {
         public string name { get; set; }
         public int level { get; set; }
@@ -50,6 +51,29 @@ namespace Window11_TextRPG
                 return true;
             }
             return false;
+        }
+
+        public int Attack()
+        {
+
+           int attackDamage = 0;
+
+            switch (type)
+            {
+                case 0: // 미니언
+                    attackDamage = 5 + (level * 2);
+                    break;
+                case 1: // 대포미니언
+                    attackDamage = 10 + (level * 3);
+                    break;
+                case 2: // 공허충
+                    attackDamage = 15 + (level * 4);
+                    break;
+                default:
+                    attackDamage = 3 + (level * 1);
+                    break;
+            }
+            return attackDamage;
         }
     }
 }

@@ -51,5 +51,15 @@ namespace Window_11_TEXTRPG
             }
         }
 
+        public static int GetCeiling(double number)
+        {
+            return (int)Math.Ceiling(number);
+        }
+
+        public static int getRandomInt(int min, int max) 
+        {
+            return new Random().Next(min, max);
+        }
+
     }
 }
