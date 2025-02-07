@@ -51,11 +51,13 @@ namespace Window_11_TEXTRPG
             }
         }
 
+        //소수점 올림
         public static int GetCeiling(double number)
         {
             return (int)Math.Ceiling(number);
         }
 
+        //랜덤함수 min 이상 max 미만
         public static int getRandomInt(int min, int max) 
         {
             return new Random().Next(min, max);
