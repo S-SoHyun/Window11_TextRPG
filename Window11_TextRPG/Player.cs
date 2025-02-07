@@ -11,8 +11,8 @@ namespace Window11_TextRPG
         public string name { get; set; } = "";
         public int level { get; set; } = 1;
         public string job { get; set; } = "전사";
-        public int atk { get; set; } = 10;
-        public int def { get; set; } = 5;
+        public float atk { get; set; } = 10;
+        public float def { get; set; } = 5;
 
         public int maxhp { get; set; } = 100;
 
