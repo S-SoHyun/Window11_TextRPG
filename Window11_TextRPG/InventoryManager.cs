@@ -10,9 +10,10 @@ namespace Window_11_TEXTRPG
 {
     public class InventoryManager : IScene
     {
-        private static InventoryManager Instance;
+        private static InventoryManager Instance;    // 싱글톤 선언
+        private InventoryManager() {}    // 생성자
 
-        public InventoryManager GetInstance()
+        public static InventoryManager GetInstance()
         {
             if (Instance == null)
             {
@@ -24,10 +25,6 @@ namespace Window_11_TEXTRPG
             }
         }
 
-        private InventoryManager() 
-        { 
-
-        }
 
         // 장착 가능 아이템, 물약 아이템 리스트 생성
         List<MountableItem> mountableItems = new List<MountableItem>();
