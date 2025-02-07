@@ -101,28 +101,58 @@ namespace Window11_TextRPG
             AddBlankLine();
             Console.WriteLine($"{player.name} 의 공격!");
             Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : ]");
-            InputInduction();
+            AddBlankLine();
+            Console.WriteLine($"Lv.{monster.level} {monster.name}");
+            Console.WriteLine($"HP {monster.hp} -> ");
+            AddBlankLine();
+            Console.WriteLine("0. 취소");
+            AddBlankLine();
+            Console.WriteLine("대상을 선택해주세요.\n>> ");
         }
 
         public static void DungeonMonsterAttackScene(Player player, Monster monster)
         {
-
-
-            InputInduction();
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            Console.WriteLine($"{monster.name} 의 공격!");
+            Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : ]");
+            AddBlankLine();
+            Console.WriteLine($"Lv.{player.level} {player.name}");
+            Console.WriteLine($"HP {player.hp} -> ");
+            AddBlankLine();
+            Console.WriteLine("0. 취소");
+            AddBlankLine();
+            Console.Write(">> ");
         }
 
-        public static void DungeonWinResultScene(Player player, Monster monster)
+        public static void DungeonWinResultScene(Player player, int monsterCount)
         {
-
-
-            InputInduction();
+            Console.WriteLine("Battle!! - Result");
+            AddBlankLine();
+            Console.WriteLine("Victory");
+            AddBlankLine();
+            Console.WriteLine($"던전에서 몬스터 {monsterCount}마리를 잡았습니다.");
+            AddBlankLine();
+            Console.WriteLine($"Lv.{player.level} {player.name}");
+            Console.WriteLine($"HP {player.hp} -> ");
+            AddBlankLine();
+            Console.WriteLine("0. 다음");
+            AddBlankLine();
+            Console.Write(">> ");
         }
 
-        public static void DungeonLoseResultScene(Player player, Monster monster)
+        public static void DungeonLoseResultScene(Player player, int monsterCount)
         {
-
-
-            InputInduction();
+            Console.WriteLine("Battle!! - Result");
+            AddBlankLine();
+            Console.WriteLine("You Lose");
+            AddBlankLine();
+            Console.WriteLine($"Lv.{player.level} {player.name}");
+            Console.WriteLine($"HP {player.hp} -> 0");
+            AddBlankLine();
+            Console.WriteLine("0. 다음");
+            AddBlankLine();
+            Console.Write(">> ");
         }
 
         public static void InventoryScene(Player plyaer, List<Item> items)
