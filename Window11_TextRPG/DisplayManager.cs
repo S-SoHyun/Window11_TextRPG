@@ -30,6 +30,24 @@ namespace Window11_TextRPG
 
         public static void StatusScene(Player player)
         {
+            Clear();
+            Console.WriteLine("[상태보기]");
+            AddBlankLine(2);
+
+            Console.WriteLine("이름: " + player.name);
+            Console.WriteLine("Lv." + player.level);
+            Console.WriteLine("직업: " + player.job);
+            Console.WriteLine("공격력: " + player.atk);
+            Console.WriteLine("방어력: " + player.def);
+            Console.WriteLine("체력: " + player.hp);
+            Console.WriteLine("Gold: " + player.gold);
+
+            AddBlankLine(2);
+            Console.WriteLine("0. 나가기");
+
+            AddBlankLine();
+            Console.WriteLine("원하시는 행동을 입력해주세요");
+            Console.Write(">>> ");
         }
 
         public static void MainScene()
