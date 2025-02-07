@@ -21,6 +21,7 @@ namespace Window11_TextRPG
 
         // 임시 변수들
         Player player = new Player();
+        
         List<MountableItem> items;
         //InventoryManager
 
