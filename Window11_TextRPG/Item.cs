@@ -15,6 +15,7 @@ namespace Window_11_TEXTRPG
     internal abstract class Item
     {
         protected string? name;
+        protected string? description;
         protected int price;
         protected ITEMTYPE type;
 
@@ -22,6 +23,11 @@ namespace Window_11_TEXTRPG
         {
             get { return name; }
             set { name = value; }
+        }
+        public string Description
+        {
+            get { return description; }
+            set { description = value; }
         }
         public int Price
         {
