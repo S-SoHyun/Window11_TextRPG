@@ -187,16 +187,14 @@ namespace Window11_TextRPG
         {
             rewardPotion.Add(new PotionItem()
             {
-                Name = "체력 포션",
-                Description = "(비매품)체력을 채워준다.",
-                Price = 0,
+                Name = "HP 포션",
+                Description = "HP를 30 회복할 수 있는 포션입니다.",
+                Price = 500,
                 Type = ITEMTYPE.POTION,
 
                 Count = 1,
                 Heel = 30,
-
             });
-        }
 
-    }
+        }
 }
