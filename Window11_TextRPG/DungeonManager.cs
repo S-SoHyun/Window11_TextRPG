@@ -30,18 +30,28 @@ namespace Window11_TextRPG
         
         public void Enter()
         {
-            Player player = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player 부분은 
-            //int monsterDieCnt = 0;
+            Player player = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
+            int monsterDieCnt = 0;
+            int playerHpBeforeEnter = player.hp;
             SetMonsters(player);
-            DisplayManager.DungeonScene(player,monsters);
-            //while(!player.Hpcheck() || monsterDieCnt == monsters.Count)
-            //{
-                
-            //}
-            PlayerAttackMonster(player);
-            foreach (Monster monster in monsters)
+            while (!player.Hpcheck() && monsterDieCnt != monsters.Count)
             {
-                MonsterAttackPlayer(player, monster);
+                DisplayManager.DungeonScene(player, monsters);
+                PlayerAttackMonster(player,ref monsterDieCnt);
+            }
+            if (player.Hpcheck())
+            {
+                DisplayManager.DungeonLoseResultScene(player, playerHpBeforeEnter);
+            }
+            else if (monsterDieCnt == monsters.Count) 
+            {
+                DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter);
+            }
+            switch (UtilManager.PlayerInput(0,0))
+            {
+                case 0:
+                    //상위 메뉴로 이동
+                    break;
             }
         }
 
@@ -58,34 +68,52 @@ namespace Window11_TextRPG
             }
         }
 
-        public void PlayerAttackMonster(Player player)
+        public void PlayerAttackMonster(Player player, ref int monsterDieCnt)
         {
             int userInput = UtilManager.PlayerInput(0, monsters.Count);
-            Monster userSelectedMonster = monsters[userInput - 1];
-            if (!userSelectedMonster.IsDie())
+            Monster userSelectedMonster = new Monster();                        //0을 입력시 몬스터 배열의 userInput조회시 -1을 조회시켜 에러발생하여 수정
+            if (userInput == 0)
             {
-                int beforeMonsterHp = userSelectedMonster.hp;
-                int playerDamage = player.Attack();
-                userSelectedMonster.hp = userSelectedMonster.hp - playerDamage < 0 ? 0 : userSelectedMonster.hp - playerDamage;
-                DisplayManager.DungeonPlayerAttackScene(player,userSelectedMonster, playerDamage, beforeMonsterHp);     //플레이어가 몬스터를 공격하는 장면
+                //상위 메뉴로
             }
             else
             {
-                Console.WriteLine("잘못된 입력입니다.");
-                PlayerAttackMonster(player);
+                userSelectedMonster = monsters[userInput - 1];
+                if (!userSelectedMonster.IsDie())
+                {
+                    int beforeMonsterHp = userSelectedMonster.hp;
+                    int playerDamage = player.Attack();
+                    userSelectedMonster.hp = userSelectedMonster.hp - playerDamage < 0 ? 0 : userSelectedMonster.hp - playerDamage;
+                    DisplayManager.DungeonPlayerAttackScene(player, userSelectedMonster, playerDamage, beforeMonsterHp);     //플레이어가 몬스터를 공격하는 장면
+                    int next = UtilManager.PlayerInput(0, 0);
+                    foreach (Monster monster in monsters)
+                    {
+                        if (monster.IsDie())
+                        {
+                            monsterDieCnt++;
+                        }
+                        else
+                        {
+                            MonsterAttackPlayer(player, monster);
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("잘못된 입력입니다.");
+                    PlayerAttackMonster(player, ref monsterDieCnt);
+                }
             }
         }
 
         public void MonsterAttackPlayer(Player player, Monster monster)
         {
-            int userInput = UtilManager.PlayerInput(0, 0);
             int beforePlayerHp = player.hp;
+            player.hp -= monster.Attack();
             if (!player.Hpcheck())
             {
                 DisplayManager.DungeonMonsterAttackScene(player, monster, beforePlayerHp);
-            }else
-            {
-                //Lose 함수 호출
+                int userInput = UtilManager.PlayerInput(0, 0);
             }
         }
 
