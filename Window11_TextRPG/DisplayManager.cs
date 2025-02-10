@@ -301,5 +301,15 @@ namespace Window11_TextRPG
                 }
             }
         }
+
+        // DisplayerManger에 함수 옮기기!
+        public static void PrintMenu(string[] list)
+        {
+            for (int i = 0; i < list.Length; i++)
+            {
+                Console.WriteLine($"{i + 1} . {list[i]}");
+            }
+        }
+
     }
 }

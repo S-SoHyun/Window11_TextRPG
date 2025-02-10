@@ -9,9 +9,8 @@ namespace Window11_TextRPG
 {
     internal class LobbyManager : IScene
     {
-        private string[] lobbyList;
-
-        public LobbyManager()
+        // Singleton
+        private LobbyManager() 
         {
             lobbyList = new string[6]
             {
@@ -22,17 +21,27 @@ namespace Window11_TextRPG
                 "퀘스트",
                 "저장하기"
             };
-            
         }
+        private static LobbyManager? instance;
+        public static LobbyManager Instance
+        {
+            get
+            {
+                if (instance == null)
+                    instance = new LobbyManager();
+                return instance;
+            }
+        }
+
+        private string[] lobbyList;
 
         public void Enter()
         {
-            // player input 
-            int input = UtilManager.PlayerInput(0, lobbyList.Length);
-
             // 출력
-            // TODO : DISPLAY 매니져에서 list 넣어서 출력
-            PrintLobbySene(lobbyList);
+            DisplayManager.PrintMenu(lobbyList);
+
+            // player input 
+            int input = UtilManager.PlayerInput(1, lobbyList.Length);
 
             switch (input) 
             {
@@ -68,15 +77,6 @@ namespace Window11_TextRPG
 
         }
 
-        // DisplayerManger에 함수 옮기기!
-        public void PrintLobbySene(string[] list) 
-        {
-            for (int i = 0; i < list.Length; i++) 
-            {
-                Console.WriteLine($"{i + 1} . {list[i]}");                   
-            }
-                
-        }
 
     }
 }
