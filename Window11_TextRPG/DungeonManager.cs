@@ -143,7 +143,7 @@ namespace Window11_TextRPG
 
         }
 
-        enum MonsterType
+        public enum MonsterType
         {
             Minion = 0,
             Canon,
