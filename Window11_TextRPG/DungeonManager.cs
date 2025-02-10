@@ -94,9 +94,9 @@ namespace Window11_TextRPG
                 if (!userSelectedMonster.IsDie())
                 {
                     int beforeMonsterHp = userSelectedMonster.hp;
-                    var (playerDamage, hittype) = player.AttackCalculator(player.Attack()); //playerDamage의 최종 데미지 계산 
+                    var (playerDamage, hitType) = player.AttackCalculator(player.Attack()); //playerDamage의 최종 데미지 계산 
                     userSelectedMonster.hp = userSelectedMonster.hp - playerDamage < 0 ? 0 : userSelectedMonster.hp - playerDamage;
-                    DisplayManager.DungeonPlayerAttackScene(player, userSelectedMonster, playerDamage, beforeMonsterHp,hittype);     //플레이어가 몬스터를 공격하는 장면
+                    DisplayManager.DungeonPlayerAttackScene(player, userSelectedMonster, playerDamage, beforeMonsterHp,hitType);     //플레이어가 몬스터를 공격하는 장면
                     int next = UtilManager.PlayerInput(0, 0);
                     foreach (Monster monster in monsters)
                     {
