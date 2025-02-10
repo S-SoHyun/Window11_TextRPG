@@ -38,36 +38,33 @@ namespace Window11_TextRPG
         {
             // 다음 Scene 지정
             Action nextScene = StoreScene;
+            int result = -1;
 
-            bool choose = false;
-            while (!choose)
+            do
             {
                 // StoreScene 출력
                 DisplayManager.StoreScene(player, items);
-                int result = UtilManager.PlayerInput(0, 2);
-
-                // 나가기 버튼
-                if (0 == result)
-                {
-                    Console.WriteLine("debug로비로 간다");
-                    Thread.Sleep(1000);
-                    nextScene = StoreScene;
-                    choose = true;
-                }
+                result = UtilManager.PlayerInput(0, 2);
 
                 switch (result)
                 {
-                    case 1: // 구매 페이지 진입
-                        nextScene = BuyItemScene;
-                        choose = true;
+                    case 0: // 로비
+                        Console.WriteLine("debug로비로 간다");
+                        Thread.Sleep(1000);
+                        nextScene = StoreScene;
                         break;
 
-                    case 2: // 판매 페이지 진입
+                    case 1: // 구매 페이지
+                        nextScene = BuyItemScene;
+                        break;
+
+                    case 2: // 판매 페이지
                         nextScene = SellItemScene;
-                        choose = true;
                         break;
                 }
             }
+            while (result < 0 || result > 2);
+
             nextScene();
         }
 
@@ -76,54 +73,60 @@ namespace Window11_TextRPG
             // 다음 Scene 지정
             Action nextScene = BuyItemScene;
 
-            bool choose = false;
-            while (!choose)
+            int result = -1;
+            int inputCount = items.Count() + 1;
+            do
             {
                 // DiplayManager 접근
                 DisplayManager.StoreBuyScene(player, items);
-                int result = UtilManager.PlayerInput(0, items.Count() + 1);
+                
+                result = UtilManager.PlayerInput(0, inputCount);
 
                 // 나가기 버튼
                 if (0 == result)
                 {
                     nextScene = StoreScene;
-                    choose = true;
                 }
                 // 아이템 구매 접근
                 else
                 {
                     BuyItem(result);
                 }
+                
             }
+            while (result < 0 || result > inputCount);
+
             nextScene();
         }
 
         private void SellItemScene()
         {
             // 다음 Scene 지정
-            Action nextScene = SellItemScene;
+            Action nextScene = BuyItemScene;
 
-            bool choose = false;
-            while (!choose)
+            int result = -1;
+            int inputCount = items.Count() + 1;
+            do
             {
                 // DiplayManager 접근
-                DisplayManager.StoreSellScene(player, items);
+                DisplayManager.StoreBuyScene(player, items);
 
-                int result = UtilManager.PlayerInput(0, items.Count() + 1);
+                result = UtilManager.PlayerInput(0, inputCount);
 
                 // 나가기 버튼
                 if (0 == result)
                 {
                     nextScene = StoreScene;
-                    choose = true;
                 }
-                // 아이템 팬매 접근
+                // 아이템 판매 접근
                 else
                 {
                     SellItem(result);
                 }
 
             }
+            while (result < 0 || result > inputCount);
+
             nextScene();
         }
 
