@@ -42,14 +42,12 @@ namespace Window11_TextRPG
             // Scene 리스트 초기화
             ISceneList = new IScene[Enum.GetNames(typeof(SceneState)).Length];
 
-            /*
-            ISceneList[(int)SceneState.LobbyManager] = new LobbyManager();
-            ISceneList[(int)SceneState.PlayerManager] = new PlayerManager();
-            ISceneList[(int)SceneState.DungeonManager] = new DungeonManager();
-
-            ISceneList[(int)SceneState.InventoryManager] = new InventoryManager();
-            ISceneList[(int)SceneState.StoreManager] = new StoreManager();
-            */
+            ISceneList[(int)SceneState.LobbyManager]        = LobbyManager.Instance;
+            ISceneList[(int)SceneState.PlayerManager]       = PlayerManager.Instance;  
+            ISceneList[(int)SceneState.DungeonManager]      = DungeonManager.Instance;
+            ISceneList[(int)SceneState.InventoryManager]    = InventoryManager.Instance;
+            ISceneList[(int)SceneState.StoreManager]        = StoreManager.Instance;
+            
         }
 
         // 씬 (manager) 변화 
@@ -64,7 +62,10 @@ namespace Window11_TextRPG
             }
         }
 
-        public void GetSave() { }
+        public void GetSave() 
+        {
+            Console.WriteLine("GameManager의 Save 함수입니다.");
+        }
 
         // 임시변수 (추후 삭제)
         List<MountableItem> mountableItems;
