@@ -15,7 +15,6 @@ namespace Window11_TextRPG
             // 보상 아이템 초기화
             init_rewardWeapon();
             init_rewardArmor();
-            init_rewardPotion();
             init_rewardGold();
         }
 
@@ -23,12 +22,11 @@ namespace Window11_TextRPG
         // 보상 아이템 설정
         List<MountableItem> rewardWeapon = new List<MountableItem>();
         List<MountableItem> rewardArmor = new List<MountableItem>();
-        List<PotionItem> rewardPotion = new List<PotionItem>();
         List<int> rewardGold = new List<int>();
 
         // 참조
         List<MountableItem> mountableItems = InventoryManager.Instance.mountableItems;
-        List<PotionItem> potionItems = InventoryManager.Instance.potions;
+        PotionItem potion = InventoryManager.Instance.potion;
 
         // 50%로 아이템 반환 및 적용
         public MountableItem? Item(Player player)
@@ -67,15 +65,8 @@ namespace Window11_TextRPG
         // 포션 갯수 반환 및 적용
         public int Potion(Player player)
         {
-            int count = ranFunc(1, 5);
-            PotionItem potion = rewardPotion[0];
-
-            // 포션을 가지고 있는지
-            if (!potionItems.Contains(potion))
-            {
-                potionItems.Add(potion);
-            }
-
+            int count = ranFunc(1, 6);
+ 
             potion.Count += count;
 
             return count; // 포션 갯수 반환
@@ -183,19 +174,6 @@ namespace Window11_TextRPG
                 Equip = false
             });
         }
-        void init_rewardPotion()
-        {
-            rewardPotion.Add(new PotionItem()
-            {
-                Name = "HP 포션",
-                Description = "HP를 30 회복할 수 있는 포션입니다.",
-                Price = 500,
-                Type = ITEMTYPE.POTION,
 
-                Count = 1,
-                Heel = 30,
-            });
-
-        }
     }
 }
