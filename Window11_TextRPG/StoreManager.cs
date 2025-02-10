@@ -25,7 +25,7 @@ namespace Window11_TextRPG
         List<MountableItem> items = InventoryManager.Instance.mountableItems;
 
         // 임시 변수들
-        Player player = new Player();    
+        Player player = new Player() { gold = 100000 };    
 
         // GameManager에서 접근하는 곳
         public void Enter()
@@ -49,9 +49,7 @@ namespace Window11_TextRPG
                 switch (result)
                 {
                     case 0: // 로비
-                        Console.WriteLine("debug로비로 간다");
-                        Thread.Sleep(1000);
-                        nextScene = StoreScene;
+                        nextScene = LobbyManager.Instance.Enter;
                         break;
 
                     case 1: // 구매 페이지
@@ -74,7 +72,7 @@ namespace Window11_TextRPG
             Action nextScene = BuyItemScene;
 
             int result = -1;
-            int inputCount = items.Count() + 1;
+            int inputCount = items.Count();
             do
             {
                 // DiplayManager 접근
@@ -102,10 +100,10 @@ namespace Window11_TextRPG
         private void SellItemScene()
         {
             // 다음 Scene 지정
-            Action nextScene = BuyItemScene;
+            Action nextScene = SellItemScene;
 
             int result = -1;
-            int inputCount = items.Count() + 1;
+            int inputCount = items.Count();
             do
             {
                 // DiplayManager 접근
