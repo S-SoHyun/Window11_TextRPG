@@ -35,6 +35,8 @@ namespace Window11_TextRPG
             this.hp = hp;
         }
 
+        public Monster() { }
+
         public Monster(string name, int level, int type, int hp) 
         {
             this.name = name;

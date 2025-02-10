@@ -79,11 +79,12 @@ namespace Window11_TextRPG
 
         public static void DungeonScene(Player player, List<Monster> monsters)
         {
+            Clear();
             Console.WriteLine("Battle!!");
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
-                Console.WriteLine($"{i + 1} Lv.{monsters[i].level} {monsters[i].name} HP {monsters[i].hp}");
+                Console.WriteLine($"{i + 1} Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
             }
             AddBlankLine(2);
             Console.WriteLine("[내정보]");
@@ -97,7 +98,7 @@ namespace Window11_TextRPG
 
         public static void DungeonPlayerAttackScene(Player player, Monster monster, int playerDamage, int beforeMonsterHp)
         {
-            Console.Clear();
+            Clear();
             Console.WriteLine("Battle!!");
             AddBlankLine();
             Console.WriteLine($"{player.name} 의 공격!");
@@ -106,29 +107,30 @@ namespace Window11_TextRPG
             Console.WriteLine($"Lv.{monster.level} {monster.name}");
             Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - playerDamage)}");
             AddBlankLine();
-            Console.WriteLine("0. 취소");
+            Console.WriteLine("0. 다음");
             AddBlankLine();
             Console.WriteLine("대상을 선택해주세요.\n>> ");
         }
 
         public static void DungeonMonsterAttackScene(Player player, Monster monster, int beforePlayerHp)
         {
-            Console.Clear();
+            Clear();
             Console.WriteLine("Battle!!");
             AddBlankLine();
             Console.WriteLine($"{monster.name} 의 공격!");
             Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {monster.Attack()}]");
             AddBlankLine();
             Console.WriteLine($"Lv.{player.level} {player.name}");
-            Console.WriteLine($"HP {beforePlayerHp} -> ");
+            Console.WriteLine($"HP {beforePlayerHp} -> {player.hp}");
             AddBlankLine();
-            Console.WriteLine("0. 취소");
+            Console.WriteLine("0. 다음");
             AddBlankLine();
             Console.Write(">> ");
         }
 
-        public static void DungeonWinResultScene(Player player, int monsterCount)
+        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter)
         {
+            Clear();
             Console.WriteLine("Battle!! - Result");
             AddBlankLine();
             Console.WriteLine("Victory");
@@ -136,21 +138,22 @@ namespace Window11_TextRPG
             Console.WriteLine($"던전에서 몬스터 {monsterCount}마리를 잡았습니다.");
             AddBlankLine();
             Console.WriteLine($"Lv.{player.level} {player.name}");
-            Console.WriteLine($"HP {player.hp} -> ");
+            Console.WriteLine($"HP {playerHpBeforeEnter} -> {player.hp}");
             AddBlankLine();
             Console.WriteLine("0. 다음");
             AddBlankLine();
             Console.Write(">> ");
         }
 
-        public static void DungeonLoseResultScene(Player player, int monsterCount)
+        public static void DungeonLoseResultScene(Player player, int playerHpBeforeEnter)
         {
+            Clear();
             Console.WriteLine("Battle!! - Result");
             AddBlankLine();
             Console.WriteLine("You Lose");
             AddBlankLine();
             Console.WriteLine($"Lv.{player.level} {player.name}");
-            Console.WriteLine($"HP {player.hp} -> 0");
+            Console.WriteLine($"HP {playerHpBeforeEnter} -> 0");
             AddBlankLine();
             Console.WriteLine("0. 다음");
             AddBlankLine();

@@ -37,18 +37,127 @@ namespace Window_11_TEXTRPG
 
 
 
-        public void AddItem()
+        public void AddMountableItem()    // 장착 가능 아이템 (기본 목록) 추가
         {
-            // 1. 장착할 수 있는 아이템 추가
-            mountableItems.Add(new MountableItem());
-            mountableItems.Add(new MountableItem());
-            mountableItems.Add(new MountableItem());
+            mountableItems.Add(new MountableItem()
+            {
+                Name = "수련자의 갑옷",
+                Description = "수련에 도움을 주는 갑옷입니다. ",
+                Price = 1000,
+                Type = ITEMTYPE.ARMOR,
 
-            //2. 포션 추가
-            potions.Add(new PotionItem());
-            potions.Add(new PotionItem());
-            potions.Add(new PotionItem());
+                Attack = 0,
+                Defense = 4,
+                Own = false,
+                Equip = false,
+            });
+
+            mountableItems.Add(new MountableItem()
+            {
+                Name = "무쇠갑옷",
+                Description = "무쇠로 만들어져 튼튼한 갑옷입니다.",
+                Price = 2000,
+                Type = ITEMTYPE.ARMOR,
+
+                Attack = 0,
+                Defense = 9,
+                Own = false,
+                Equip = false,
+            });
+
+            mountableItems.Add(new MountableItem()
+            {
+                Name = "스파르타의 갑옷",
+                Description = "스파르타의 전사들이 사용했다는 전설의 갑옷입니다. ",
+                Price = 3500,
+                Type = ITEMTYPE.ARMOR,
+
+                Attack = 0,
+                Defense = 15,
+                Own = false,
+                Equip = false,
+            });
+
+            mountableItems.Add(new MountableItem()
+            {
+                Name = "낡은 검",
+                Description = "쉽게 볼 수 있는 낡은 검 입니다. ",
+                Price = 600,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 5,
+                Defense = 0,
+                Own = false,
+                Equip = false,
+            });
+
+            mountableItems.Add(new MountableItem()
+            {
+                Name = "청동 도끼",
+                Description = "어디선가 사용됐던거 같은 도끼입니다. ",
+                Price = 1500,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 10,
+                Defense = 0,
+                Own = false,
+                Equip = false,
+            });
+
+            mountableItems.Add(new MountableItem()
+            {
+                Name = "스파르타의 창",
+                Description = "스파르타의 전사들이 사용했다는 전설의 창입니다. ",
+                Price = 2500,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 20,
+                Defense = 0,
+                Own = false,
+                Equip = false,
+            });
         }
+
+
+        public void AddPotionItem()     // 포션 추가 (기본 = 3개)
+        {
+            potions.Add(new PotionItem()
+            {
+                Name = "HP 포션",
+                Description = "HP를 30 회복할 수 있는 포션입니다.",
+                Price = 500,
+                Type = ITEMTYPE.POTION,
+
+                Count = 1,
+                Heel = 30,
+            });
+
+            potions.Add(new PotionItem()
+            {
+                Name = "HP 포션",
+                Description = "HP를 30 회복할 수 있는 포션입니다.",
+                Price = 500,
+                Type = ITEMTYPE.POTION,
+
+                Count = 1,
+                Heel = 30,
+            });
+
+            potions.Add(new PotionItem()
+            {
+                Name = "HP 포션",
+                Description = "HP를 30 회복할 수 있는 포션입니다.",
+                Price = 500,
+                Type = ITEMTYPE.POTION,
+
+                Count = 1,
+                Heel = 30,
+            });
+        }
+
+           
+
+        
 
 
         public void Enter()
@@ -91,60 +200,71 @@ namespace Window_11_TEXTRPG
         }
 
 
-        // 코딩하다보니 종류별로 이큅되게 했는데 이렇게 하면 불편할 것 같음. equip, unequip으로 해야 되지 않을까?
+        //만약 고른 게 웨폰이라면 && 플레이어의 무기가 장착이 되어 있다면
+        //장착해제()
+        //고른 걸 장착
+        //만약 고른 게 웨폰이고 플레이어의 무기가 장착이 안 되어 있다면
+        //고른 걸 장착
 
-        public void WeaponEquip(int input)    // 웨폰아이템 장착
+        // own도 따져야 됨
+
+        public void Equip(int input)
         {
-            DivisionType();
             MountableItem select = mountableItems[input - 1];
             MountableItem equipped = null;
+            DivisionType();
 
-            for (int i = 0; i < weaponItems.Count; i++)
+            // 1. 고른 게 웨폰이라면 weaponItems에서 장착된 게 있는지 확인 후 장착
+            if (select.Type == ITEMTYPE.WEAPON)
             {
-                if (weaponItems[i].Equip)
+                for (int i = 0; i < weaponItems.Count; i++)    // weaponItems에서 equip이 true인 것 찾기
                 {
-                    equipped = weaponItems[i];
-                    break;
+                    if (weaponItems[i].Equip)
+                    {
+                        equipped = weaponItems[i];
+                        break;
+                    }
                 }
-            }
 
-            if (equipped == null)     // equipped가 여전히 null이라면 장착하고 아니면 그거 해제하고 고른거 장착하도록.
-            {
-                select.Equip = true;
-                //스탯창에서 atk, def 추가되는 코드
+                if (equipped != null)
+                {
+                    Unequip(equipped);
+                    select.Equip = true;
+                }
+                else
+                    select.Equip = true;
+
             }
-            else
+            // 2. 고른 게 아머라면 armorItems에서 장착된 게 있는지 확인 후 장착
+            else if (select.Type == ITEMTYPE.ARMOR)
             {
-                equipped.Equip = false;
-                select.Equip = true;
-                //스탯창에서 atk, def 추가되는 코드
+                for (int i = 0; i < armorItems.Count; i++)    // armorItems에서 equip이 true인 것 찾기
+                {
+                    if (armorItems[i].Equip)
+                    {
+                        equipped = armorItems[i];
+                        break;
+                    }
+                }
+
+                if (equipped != null)
+                {
+                    Unequip(equipped);
+                    select.Equip = true;
+                }
+                else
+                    select.Equip = true;
+
             }
         }
 
 
-        public void ArmorEquip(int input)    // 아이템 장착
+
+        public void Unequip(MountableItem equipped)
         {
-            DivisionType();
-            MountableItem select = mountableItems[input - 1];
-            MountableItem equipped = null;
-
-            for (int i = 0; i < armorItems.Count; i++)
-            {
-                if (armorItems[i].Equip)
-                {
-                    equipped = armorItems[i];
-                    break;
-                }
-            }
-
-            if (equipped == null)     // equipped가 여전히 null이라면 장착하고 아니면 그거 해제하고 고른거 장착하도록.            
-                select.Equip = true;
-            else
-            {
-                equipped.Equip = false;
-                select.Equip = true;
-            }
+            equipped.Equip = false;
         }
+
 
 
         public void UsePotion(PotionItem potion)    // 물약 사용
@@ -152,13 +272,11 @@ namespace Window_11_TEXTRPG
             if (potion.Count > 0)      // 만약 물약이 한 개 이상 있다면
             {
                 potions.RemoveAt(0);             // 물약 리스트에서 0번 항목 제거
-                //Player.hp += potion.heal;
+                //Player.hp += potion.Heel;
                 Console.WriteLine("회복을 완료했습니다.");
             }
             else
-            {
                 Console.WriteLine("포션이 부족합니다.");
-            }
         }
 
 
