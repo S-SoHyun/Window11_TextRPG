@@ -22,7 +22,10 @@ namespace Window11_TextRPG
                 return instance;
             }
         }
-        private DungeonManager() { }
+        private DungeonManager() 
+        {
+            InitMonsterCatches();
+        }
 
         List<Monster> monsters = new List<Monster>();
 
@@ -55,7 +58,7 @@ namespace Window11_TextRPG
             }
         }
 
-        public void initMonsterCatches()
+        public void InitMonsterCatches()
         {
             foreach (string monsterTypeName in Enum.GetNames(typeof(MonsterType)))
             {
