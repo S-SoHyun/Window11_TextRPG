@@ -12,7 +12,7 @@ namespace Window11_TextRPG
         // 필드 
         protected string questName;   // 퀘스트이름
         protected string questStory;  // 퀘스트 스토리 (ex) 미니언들이 너무 많아졋다고 생각~
-        protected int rewardGold;                                 // 리워드 
+        protected int rewardGold;               // 리워드 
         protected string questPerform;          // 수행내역 
 
         // 컨테이너

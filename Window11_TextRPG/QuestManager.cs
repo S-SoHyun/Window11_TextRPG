@@ -51,6 +51,12 @@ namespace Window11_TextRPG
 
             // 현재 퀘스트 
             currQuest = quests[input - 1];
+
+            // 퀘스트 print
+            PrintQuest();
+
+            // 성공여부에 따라 print 다름 
+            PrintReward();
         }
 
         private void PrintQuest()
@@ -66,9 +72,6 @@ namespace Window11_TextRPG
 
             Console.WriteLine( "-" + currQuest.QuestProgress() + '\n');
             Console.WriteLine( "-" + currQuest.RewardItemAndGold() + '\n');
-
-            // 성공여부에 따라 print 다름 
-            PrintReward();
         }
 
         private void PrintReward() 
@@ -76,20 +79,41 @@ namespace Window11_TextRPG
             // 성공하면 ?
             if (currQuest.IsCompleted()) 
             {
-                // 목록(리스트) 출력
-                DisplayManager.PrintMenu(getReward);
-
-                // ##TODO : 보상 받기 생각해야함 !!!! 
+                getReward[0] = " 보상받기";
             }
 
             // 아직 덜 성공 했으면 ?
             else 
             {
-                Console.WriteLine("아직 퀘스트를 완료 하지 않으셨군요! ");
+                getReward[0] = " 아직 보상을 받을 수 없습니다.";
             }
 
+            // 목록(리스트) 출력
+            DisplayManager.PrintMenu(getReward);
+
+            // 플레이어 입력받기
+            int input = UtilManager.PlayerInput(1, getReward.Length);
+
+            switch (input)
+            {
+                case 1:
+                    // 퀘스트 완료했을 때만 보상받기
+                    if(currQuest.IsCompleted())
+                        GetReward();
+                    break;
+                case 2:
+                    GameManager.Instance.ChangeScene(SceneState.LobbyManager);
+                    break;
+            }
         }
 
+        private void GetReward() 
+        {
+            foreach (var temp in currQuest.RewardItemByCount) 
+            {
+                Console.WriteLine($"보상 : {temp.Key} / 갯수 {temp.Value}");
+            }
+        }
 
         private void InitQuestList()
         {
@@ -110,7 +134,7 @@ namespace Window11_TextRPG
                     "모험가인 자네가 좀 처치해주게!\r\n",
                 perForm : "몬스터 처치하기",
                 reward: 5,
-                monstername: "",
+                monstername: "Minion",
                 killCount: 5));
             quests.Add(new EquiptQuest
                 (name: "장비를 장착해보자"
@@ -133,8 +157,7 @@ namespace Window11_TextRPG
 
             // 보상 아이템 세팅 
             // ##TODO : InventoryManager에서 들고와야함 
-
-
+            // 임시로 해놓기 
         }
     }
 }
