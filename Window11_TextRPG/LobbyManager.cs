@@ -31,8 +31,7 @@ namespace Window11_TextRPG
             int input = UtilManager.PlayerInput(0, lobbyList.Length);
 
             // 출력
-            // TODO : DISPLAY 매니져에서 list 넣어서 출력
-            PrintLobbySene(lobbyList);
+            DisplayManager.PrintMenu(lobbyList);
 
             switch (input) 
             {
@@ -68,15 +67,6 @@ namespace Window11_TextRPG
 
         }
 
-        // DisplayerManger에 함수 옮기기!
-        public void PrintLobbySene(string[] list) 
-        {
-            for (int i = 0; i < list.Length; i++) 
-            {
-                Console.WriteLine($"{i + 1} . {list[i]}");                   
-            }
-                
-        }
 
     }
 }
