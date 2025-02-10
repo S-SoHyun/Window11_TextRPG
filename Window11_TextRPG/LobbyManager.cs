@@ -9,7 +9,9 @@ namespace Window11_TextRPG
 {
     internal class LobbyManager : IScene
     {
-        // Singleton
+        private string[] lobbyList;
+
+        // 생성자
         private LobbyManager() 
         {
             lobbyList = new string[6]
@@ -19,9 +21,10 @@ namespace Window11_TextRPG
                 "인벤토리",
                 "던전",
                 "퀘스트",
-                "저장하기"
+                "저장하기",
             };
         }
+        // 싱글톤 
         private static LobbyManager? instance;
         public static LobbyManager Instance
         {
@@ -32,8 +35,6 @@ namespace Window11_TextRPG
                 return instance;
             }
         }
-
-        private string[] lobbyList;
 
         public void Enter()
         {
