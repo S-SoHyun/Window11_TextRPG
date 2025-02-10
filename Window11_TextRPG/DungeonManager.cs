@@ -30,7 +30,7 @@ namespace Window11_TextRPG
         List<Monster> monsters = new List<Monster>();
 
         public Dictionary<string,int> monsterCatches = new Dictionary<string, int>();
-        
+
         public void Enter()
         {
             Player player = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
@@ -63,10 +63,6 @@ namespace Window11_TextRPG
             foreach (string monsterTypeName in Enum.GetNames(typeof(MonsterType)))
             {
                 monsterCatches.Add(monsterTypeName, 0);
-            }
-            foreach (KeyValuePair<string, int> pair in monsterCatches)
-            {
-                Console.WriteLine(pair.Key + " : " + pair.Value);
             }
         }
 
