@@ -12,9 +12,9 @@ namespace Window11_TextRPG
         public string name { get; set; }
         public int level { get; set; }
         public int type { get; set; }
-        public float hp { get; set; }
+        public int hp { get; set; }
 
-        public Monster(int level, int type, float hp)
+        public Monster(int level, int type, int hp)
         {
             string name = "";
             switch (type)
@@ -35,7 +35,7 @@ namespace Window11_TextRPG
             this.hp = hp;
         }
 
-        public Monster(string name, int level, int type, float hp) 
+        public Monster(string name, int level, int type, int hp) 
         {
             this.name = name;
             this.level = level;
