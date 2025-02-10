@@ -83,42 +83,44 @@ namespace Window11_TextRPG
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
-                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} HP {monsters[i].hp}");
+                Console.WriteLine($"{i + 1} Lv.{monsters[i].level} {monsters[i].name} HP {monsters[i].hp}");
             }
             AddBlankLine(2);
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
             AddBlankLine();
-            Console.WriteLine("1. 공격");
+            Console.WriteLine("0. 취소");
             AddBlankLine();
             InputInduction();
         }
 
-        public static void DungeonPlayerAttackScene(Player player, Monster monster)
+        public static void DungeonPlayerAttackScene(Player player, Monster monster, int playerDamage, int beforeMonsterHp)
         {
+            Console.Clear();
             Console.WriteLine("Battle!!");
             AddBlankLine();
             Console.WriteLine($"{player.name} 의 공격!");
-            Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : ]");
+            Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : {playerDamage}]");
             AddBlankLine();
             Console.WriteLine($"Lv.{monster.level} {monster.name}");
-            Console.WriteLine($"HP {monster.hp} -> ");
+            Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - playerDamage)}");
             AddBlankLine();
             Console.WriteLine("0. 취소");
             AddBlankLine();
             Console.WriteLine("대상을 선택해주세요.\n>> ");
         }
 
-        public static void DungeonMonsterAttackScene(Player player, Monster monster)
+        public static void DungeonMonsterAttackScene(Player player, Monster monster, int beforePlayerHp)
         {
+            Console.Clear();
             Console.WriteLine("Battle!!");
             AddBlankLine();
             Console.WriteLine($"{monster.name} 의 공격!");
-            Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : ]");
+            Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {monster.Attack()}]");
             AddBlankLine();
             Console.WriteLine($"Lv.{player.level} {player.name}");
-            Console.WriteLine($"HP {player.hp} -> ");
+            Console.WriteLine($"HP {beforePlayerHp} -> ");
             AddBlankLine();
             Console.WriteLine("0. 취소");
             AddBlankLine();
