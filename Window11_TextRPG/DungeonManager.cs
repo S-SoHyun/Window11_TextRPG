@@ -31,12 +31,17 @@ namespace Window11_TextRPG
         public void Enter()
         {
             Player player = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player 부분은 
+            //int monsterDieCnt = 0;
             SetMonsters(player);
             DisplayManager.DungeonScene(player,monsters);
+            //while(!player.Hpcheck() || monsterDieCnt == monsters.Count)
+            //{
+                
+            //}
             PlayerAttackMonster(player);
-            for (int i = 0; i < monsters.Count; i++)
+            foreach (Monster monster in monsters)
             {
-                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} HP {monsters[i].hp}");
+                MonsterAttackPlayer(player, monster);
             }
         }
 
@@ -62,16 +67,26 @@ namespace Window11_TextRPG
                 int beforeMonsterHp = userSelectedMonster.hp;
                 int playerDamage = player.Attack();
                 userSelectedMonster.hp = userSelectedMonster.hp - playerDamage < 0 ? 0 : userSelectedMonster.hp - playerDamage;
+                DisplayManager.DungeonPlayerAttackScene(player,userSelectedMonster, playerDamage, beforeMonsterHp);     //플레이어가 몬스터를 공격하는 장면
             }
             else
             {
+                Console.WriteLine("잘못된 입력입니다.");
                 PlayerAttackMonster(player);
             }
         }
 
-        public void MonsterAttackPlayer()
+        public void MonsterAttackPlayer(Player player, Monster monster)
         {
-
+            int userInput = UtilManager.PlayerInput(0, 0);
+            int beforePlayerHp = player.hp;
+            if (!player.Hpcheck())
+            {
+                DisplayManager.DungeonMonsterAttackScene(player, monster, beforePlayerHp);
+            }else
+            {
+                //Lose 함수 호출
+            }
         }
 
         public void Lose()
