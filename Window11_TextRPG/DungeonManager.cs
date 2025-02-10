@@ -26,7 +26,7 @@ namespace Window11_TextRPG
 
         List<Monster> monsters = new List<Monster>();
 
-        
+        public Dictionary<string,int> monsterCatches = new Dictionary<string, int>();
         
         public void Enter()
         {
@@ -52,6 +52,18 @@ namespace Window11_TextRPG
                 case 0:
                     //상위 메뉴로 이동
                     break;
+            }
+        }
+
+        public void initMonsterCatches()
+        {
+            foreach (string monsterTypeName in Enum.GetNames(typeof(MonsterType)))
+            {
+                monsterCatches.Add(monsterTypeName, 0);
+            }
+            foreach (KeyValuePair<string, int> pair in monsterCatches)
+            {
+                Console.WriteLine(pair.Key + " : " + pair.Value);
             }
         }
 
@@ -91,6 +103,7 @@ namespace Window11_TextRPG
                         if (monster.IsDie())
                         {
                             monsterDieCnt++;
+                            monsterCatches[Enum.GetName(typeof(MonsterType), monster.type)]++;
                         }
                         else
                         {
