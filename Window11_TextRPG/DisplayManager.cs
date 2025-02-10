@@ -96,13 +96,24 @@ namespace Window11_TextRPG
             InputInduction();
         }
 
-        public static void DungeonPlayerAttackScene(Player player, Monster monster, int playerDamage, int beforeMonsterHp)
+        public static void DungeonPlayerAttackScene(Player player, Monster monster, int playerDamage, int beforeMonsterHp,int hitType)
         {
             Clear();
             Console.WriteLine("Battle!!");
             AddBlankLine();
             Console.WriteLine($"{player.name} 의 공격!");
-            Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : {playerDamage}]");
+            switch (hitType)
+            {
+                case 1:
+                    Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 공격했지만 아무일도 일어나지 않았습니다.");
+                    break;
+                case 2:
+                    Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다!! [데미지 : {playerDamage}] -치명타 공격!!");
+                    break;
+                default:
+                    Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : {playerDamage}]");
+                    break;
+            }
             AddBlankLine();
             Console.WriteLine($"Lv.{monster.level} {monster.name}");
             Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - playerDamage)}");
