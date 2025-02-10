@@ -10,34 +10,113 @@ namespace Window11_TextRPG
 {
     public class Reward
     {
+        public Reward()
+        {
+            // 보상 아이템 초기화
+            init_rewardWeapon();
+            init_rewardArmor();
+            init_rewardPotion();
+            init_rewardGold();
+        }
+
+        Func<int, int, int> ranFunc = UtilManager.getRandomInt;
         // 보상 아이템 설정
         List<MountableItem> rewardWeapon = new List<MountableItem>();
         List<MountableItem> rewardArmor = new List<MountableItem>();
         List<PotionItem> rewardPotion = new List<PotionItem>();
+        List<int> rewardGold = new List<int>();
 
-        // 보상 아이템 초기화
-        public void init()
+        // 참조
+        List<MountableItem> mountableItems = InventoryManager.Instance.mountableItems;
+        List<PotionItem> potionItems = InventoryManager.Instance.potions;
+
+        // 50%로 아이템 반환 및 적용
+        MountableItem? Item(Player player)
         {
-            init_rewardWeapon();
-            init_rewardArmor();
-            init_rewardPotion();
+            MountableItem item;
+            // 장비 아이템 얻을 확률 
+            int odds = 50;
+            int random = ranFunc(0, 100);
+            if (odds > random)
+            {
+                // 무기, 방어구 반반
+                if (5 < ranFunc(0, 10))
+                {
+                    item = rewardItem(rewardWeapon, mountableItems);
+                }
+                else
+                {
+                    item = rewardItem(rewardArmor, mountableItems);
+                }
+                return item;
+            }
+            return null;
         }
 
-        void Item(Player player)
+        // Gold 랜덤 반환 및 적용
+        int Gold(Player player)
         {
+            Random random = new Random();
+            int gold = UtilManager.getRandomInt(0, rewardGold.Count);
 
+            player.gold += gold;
+
+            return gold; // 화면 출력용 반환
         }
 
-        void Gold(Player player)
+        // 포션 갯수 반환 및 적용
+        int Potion(Player player)
         {
+            int count = ranFunc(1, 5);
+            PotionItem potion = rewardPotion[0];
 
+            // 포션을 가지고 있는지
+            if (!potionItems.Contains(potion))
+            {
+                potionItems.Add(potion);
+            }
+
+            potion.Count += count;
+
+            return count; // 포션 갯수 반환
         }
 
-        void Level()
-        {
 
+        T rewardItem<T>(List<T> reward, List<T> result) where T : MountableItem
+        {
+            T item;
+            do
+            {
+                item = reward[ranFunc(0, reward.Count)];
+                item.Own = true;
+
+                // 무한 반복 방지
+                int count = 0;
+                foreach (T item2 in reward)
+                {
+                    if (item2.Own)
+                    {
+                        count++;
+                    }
+                }
+                if (count == reward.Count)
+                    break;
+            }
+            // 아이템 중복 검사. 중복이면 한번 더 
+            while (result.Contains(item));
+
+            return item;
         }
 
+
+        void init_rewardGold()
+        {
+            rewardGold.Add(100);
+            rewardGold.Add(200);
+            rewardGold.Add(300);
+            rewardGold.Add(400);
+            rewardGold.Add(500);
+        }
         void init_rewardWeapon()
         {
             rewardWeapon.Add(new MountableItem()
@@ -77,7 +156,7 @@ namespace Window11_TextRPG
                 Equip = false
             });
         }
-        public void init_rewardArmor()
+        void init_rewardArmor()
         {
             rewardArmor.Add(new MountableItem()
             {
@@ -104,7 +183,7 @@ namespace Window11_TextRPG
                 Equip = false
             });
         }
-        public void init_rewardPotion()
+        void init_rewardPotion()
         {
             rewardPotion.Add(new PotionItem()
             {
