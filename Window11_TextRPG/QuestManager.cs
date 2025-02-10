@@ -110,7 +110,7 @@ namespace Window11_TextRPG
                     "모험가인 자네가 좀 처치해주게!\r\n",
                 perForm : "몬스터 처치하기",
                 reward: 5,
-                monsterIndex: 0,
+                monstername: "",
                 killCount: 5));
             quests.Add(new EquiptQuest
                 (name: "장비를 장착해보자"
