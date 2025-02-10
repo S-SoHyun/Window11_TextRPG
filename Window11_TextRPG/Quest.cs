@@ -87,17 +87,17 @@ namespace Window11_TextRPG
     {
         // 처치해야할 몬스터 
         // Monster 타입이면 더 좋을듯
-        private int monsterIndex;
+        private string monsterName;
         private int killCount;
         
         // 프로퍼티
-        public int MonsterIndex => monsterIndex;
+        public string MonsterName => monsterName;
         public int KillCount => killCount;  
 
-        public MonsterKillQuest(string name, string tooltip, int reward ,string perForm ,int monsterIndex , int killCount) : 
+        public MonsterKillQuest(string name, string tooltip, int reward ,string perForm ,string monstername , int killCount) : 
             base(name, tooltip, reward , perForm)
         {
-            this.monsterIndex = monsterIndex;
+            this.monsterName = monstername;
             this.killCount = killCount;
 
             // Func에 연결
