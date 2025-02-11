@@ -54,7 +54,7 @@ namespace Window11_TextRPG
         // Gold 랜덤 반환 및 적용
         public int Gold()
         {
-            Player player = new Player();
+            Player player = new Player(); // 플레이어 받아와야함 (임시코드)
             int gold = UtilManager.getRandomInt(0, rewardGold.Count);
 
             player.gold += gold;
@@ -95,6 +95,9 @@ namespace Window11_TextRPG
             }
             // 아이템 중복 검사. 중복이면 한번 더 
             while (result.Contains(item));
+
+            // 보상아이템 인벤토리로 추가
+            result.Add(item);
 
             return item;
         }
