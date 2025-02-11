@@ -51,6 +51,23 @@ namespace Window11_TextRPG
             return null;
         }
 
+        // 지정 아이템 반환
+        public MountableItem? Item(string name)
+        {
+            List<MountableItem> rewards = new List<MountableItem>();
+            rewards.AddRange(rewardArmor);
+            rewards.AddRange(rewardWeapon);
+
+            for (int i = 0; i < rewards.Count; i++)
+            {
+                if (name == rewards[i].Name)
+                    return rewards[i];
+            }
+
+            // 없으면 null 반환
+            return null;
+        }
+
         // Gold 랜덤 반환 및 적용
         public int Gold()
         {
