@@ -157,20 +157,21 @@ namespace Window11_TextRPG
 
         public override bool TodoMission()
         {
-            bool flag = false;
-
             // 인벤토리 manager의 리스트에 접근
             // 조건 : 아이템타입이 questType 와 같고, equip가 true이면 
             // 조건에 만족하면 return true ( LINQ의 any 사용 )
-            flag = InventoryManager.instance.mountableItems
-                        .Any(item => item.Type == questItemType && item.Equip);
-
+            int count = InventoryManager.instance.mountableItems
+                .Count(item => item.Type == questItemType && item.Equip);
             /*
             var temp = from item in InventoryManager.instance.mountableItems
                        where item.Type == questItemType && item.Equip == true
                        select item;
             */
-            return flag;
+
+            if (count >= wearCount)
+                return true;
+
+            return false;
         }
 
         public override string QuestProgress()
