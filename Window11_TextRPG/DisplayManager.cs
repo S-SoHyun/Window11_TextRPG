@@ -76,6 +76,32 @@ namespace Window11_TextRPG
 
             InputInduction();
         }
+        public static void ChooseNameScene(Player player)
+        {
+            Clear();
+            AddBlankLine(2);
+
+            Console.WriteLine("스파르타 던전에 오신 여러분 환영합니다.");
+            Console.WriteLine("원하시는 이름을 설정해주세요\n>>");
+            
+
+        }
+        public static void ChooseJobScene(Player player)
+        {
+            Clear();
+            Console.WriteLine("[직업선택]");
+            AddBlankLine(2);
+
+            Console.WriteLine("1.전사 HP:130  공격력:10");
+            Console.WriteLine("2.마법사 HP:90  공격력:10");
+            Console.WriteLine("3.도적 HP:100  공격력:15");
+            Console.WriteLine("4.궁수 HP:80  공격력:20");
+            AddBlankLine(2);
+
+            Console.WriteLine("0. 나가기");
+
+            InputInduction();
+        }
 
         public static void DungeonScene(Player player, List<Monster> monsters)
         {
