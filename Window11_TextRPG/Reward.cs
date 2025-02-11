@@ -68,6 +68,12 @@ namespace Window11_TextRPG
             return null;
         }
 
+        // 지정 아이템 획득
+        public void Item(MountableItem item)
+        {
+            mountableItems.Add(item);
+        }
+
         // Gold 랜덤 반환 및 적용
         public int Gold()
         {
