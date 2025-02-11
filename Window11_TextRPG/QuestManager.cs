@@ -172,9 +172,9 @@ namespace Window11_TextRPG
         // 3초후 퀘스트화면으로 돌아가기
         private void WaitAndReturnToQuest() 
         {
-            Console.WriteLine("3초후 퀘스트 화면으로 돌아갑니다");
+            Console.WriteLine("1초후 퀘스트 화면으로 돌아갑니다");
 
-            DelayForSecond(3);
+            DelayForSecond(1);
 
             // 퀘스트 메뉴로 돌아가기
             GameManager.Instance.ChangeScene(SceneState.QuestManager);
@@ -182,7 +182,18 @@ namespace Window11_TextRPG
 
         private void RewardItem() 
         {
-                       
+            // currQuest의 보상 컨테이너에 접근해서 아이템 획득
+            foreach(var temp in currQuest.RewardItemByCount) 
+            {
+                // 아이템 획득처리 type이 item이라 Mountable로 형변환
+                InventoryManager.instance.RewardInstnace.SetItem((MountableItem)temp.Key);
+
+                // 골드추가
+                // 플레이어의 골드 프로퍼티에 접근
+                // ##TODO : PlayerManager에 player변수 프로퍼티 만들어달라고하기
+
+            }
+            
         }
 
 
@@ -230,9 +241,9 @@ namespace Window11_TextRPG
             quests[2].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
 
             // 보상 골드 세팅
-            quests[0].SetRewardGold(InventoryManager.instance.RewardInstnace.Gold());
-            quests[1].SetRewardGold(InventoryManager.instance.RewardInstnace.Gold());
-            quests[2].SetRewardGold(InventoryManager.instance.RewardInstnace.Gold());
+            quests[0].SetRewardGold(100);
+            quests[1].SetRewardGold(200);
+            quests[2].SetRewardGold(300);
         }
     }
 }
