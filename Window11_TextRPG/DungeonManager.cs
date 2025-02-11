@@ -138,8 +138,8 @@ namespace Window11_TextRPG
         public void Victory(Player player, int playerHpBeforeEnter)
         {
             Reward reward = new Reward();
-            
-            DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter);
+
+            DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter, reward.Gold(), reward.Potion(), reward.Item());
         }
 
         public enum MonsterType
