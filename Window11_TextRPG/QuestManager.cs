@@ -115,7 +115,7 @@ namespace Window11_TextRPG
                 case QuestState.complete:
                     rewardOptionByState[0] = "보상받기";
                     rewardOptionByState[1] = "돌아가기";
-                    actionOne += Acception;
+                    actionOne += AcquirReward;
                     actionTwo += ReturnToMenu;
                     break;
             }
@@ -163,8 +163,18 @@ namespace Window11_TextRPG
         {
             Console.WriteLine("보상을 받았습니다. 인벤토리를 확인해주세요!");
 
-            // 보상받는함수필요
-            RewardItem();
+            // 보상 받기
+            // currQuest의 보상 컨테이너에 접근해서 아이템 획득
+            foreach (var temp in currQuest.RewardItemByCount)
+            {
+                // 아이템 획득처리 type이 item이라 Mountable로 형변환
+                InventoryManager.instance.RewardInstnace.SetItem((MountableItem)temp.Key);
+
+                // 골드추가
+                // 플레이어의 골드 프로퍼티에 접근
+                // ##TODO : PlayerManager에 player변수 프로퍼티 만들어달라고하기
+
+            }
 
             WaitAndReturnToQuest();
         }
@@ -178,22 +188,6 @@ namespace Window11_TextRPG
 
             // 퀘스트 메뉴로 돌아가기
             GameManager.Instance.ChangeScene(SceneState.QuestManager);
-        }
-
-        private void RewardItem() 
-        {
-            // currQuest의 보상 컨테이너에 접근해서 아이템 획득
-            foreach(var temp in currQuest.RewardItemByCount) 
-            {
-                // 아이템 획득처리 type이 item이라 Mountable로 형변환
-                InventoryManager.instance.RewardInstnace.SetItem((MountableItem)temp.Key);
-
-                // 골드추가
-                // 플레이어의 골드 프로퍼티에 접근
-                // ##TODO : PlayerManager에 player변수 프로퍼티 만들어달라고하기
-
-            }
-            
         }
 
 
