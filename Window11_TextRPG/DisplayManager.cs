@@ -91,7 +91,7 @@ namespace Window11_TextRPG
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
             AddBlankLine();
-            Console.WriteLine("0. 취소");
+            Console.WriteLine("0.취소 \n1.공격");
             AddBlankLine();
             InputInduction();
         }
