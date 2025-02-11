@@ -1,4 +1,5 @@
-﻿using Window_11_TEXTRPG;
+﻿using System.Linq.Expressions;
+using Window_11_TEXTRPG;
 
 namespace Window11_TextRPG
 {
@@ -26,11 +27,10 @@ namespace Window11_TextRPG
         public Dictionary<Item, int> RewardItemByCount => rewardItemByCount;
 
 
-        public Quest(string name, string tooltip, int reward , string questPerfom) 
+        public Quest(string name, string tooltip, string questPerfom)
         {
             this.questName = name;
             this.questStory = tooltip;
-            this.rewardGold = reward;
             this.questPerform = questPerfom;
             this.questState = QuestState.beforeReceive;     // 생성할 때, 받기전으로 설정 
 
@@ -38,7 +38,7 @@ namespace Window11_TextRPG
                 rewardItemByCount = new Dictionary<Item, int>();
         }
 
-        public void AddToItem(Item item, int count) 
+        public void AddToItem(Item item, int count)
         {
             try
             {
@@ -50,14 +50,28 @@ namespace Window11_TextRPG
             }
         }
 
-        // Func을 실행
-        public bool IsCompleted() 
+        public void SetRewardGold(int gold) 
         {
-            // 만약 Func가 null 이면 false 
-            if (completeQuest == null)
-                return false;
+            this.rewardGold = gold;
+        }
 
-            return completeQuest.Invoke();
+        public void ChangeState(QuestState state) 
+        {
+            this.questState = state;
+        }
+
+        public void CheckState() 
+        {
+            // 받기전이면 return 
+            if (questState == QuestState.beforeReceive)
+                return;
+
+            // 조건을 만족하면
+            if (completeQuest.Invoke()) 
+            {
+                // 완료 state로 변환 
+                this.questState = QuestState.complete;
+            }
         }
 
         // 하위에서 작성해야할 퀘스트 성공 조건
@@ -73,10 +87,12 @@ namespace Window11_TextRPG
 
             foreach (var temp in rewardItemByCount)
             {
-                em += $"{temp.Key} X {temp.Value} \n";
-                // ex) 쓸만한 방패 x 1
-                em += $"{rewardGold} G ";
+                em += $"{temp.Key.Name} X {temp.Value} \n";
+                em += $"{rewardGold} G \n";
             }
+
+            // ex) 쓸만한 방패 x 1
+            // ex) 500 G
             return em;
         }
     }
@@ -92,8 +108,8 @@ namespace Window11_TextRPG
         public string MonsterName => monsterName;
         public int KillCount => killCount;  
 
-        public MonsterKillQuest(string name, string tooltip, int reward ,string perForm ,string monstername , int killCount) : 
-            base(name, tooltip, reward , perForm)
+        public MonsterKillQuest(string name, string tooltip,string perForm ,string monstername , int killCount) : 
+            base(name, tooltip , perForm)
         {
             this.monsterName = monstername;
             this.killCount = killCount;
@@ -104,17 +120,22 @@ namespace Window11_TextRPG
 
         public override bool TodoMission()
         {
-            // 해당하는 처치 몬스터가 Count가 넘으면 
-            if (10 > killCount)
+            // 지금까지 처치한 몬스터 수 
+            int nowKillMonsterCnt = DungeonManager.Instance.monsterCatches[MonsterName];
+
+            // 해당하는 처치 몬스터가 Count가 넘으면 => return true
+            if (nowKillMonsterCnt > killCount)
                 return true;
             return false;
         }
 
         public override string QuestProgress()
         {
-            return $"{this.questPerform} ( {0} / {this.killCount} ";
+            // 지금까지 처치한 몬스터 수 
+            int nowKillMonsterCnt = DungeonManager.Instance.monsterCatches[MonsterName];
 
-            // ##TODO : 0 < 이 부분은 DungeonManager의 함수 실행으로 가져오기 
+            // ex) 미니언 killcount만큼 처지 2 / 5
+            return $"{this.questPerform} ( {nowKillMonsterCnt} / {this.killCount} ) ";
         }
 
     }
@@ -124,8 +145,8 @@ namespace Window11_TextRPG
         private ITEMTYPE questItemType;
         private int wearCount;
 
-        public EquiptQuest(string name, string tooltip, int reward , string perForm , ITEMTYPE type , int wearCnt) 
-            : base(name, tooltip, reward, perForm)
+        public EquiptQuest(string name, string tooltip, string perForm , ITEMTYPE type , int wearCnt) 
+            : base(name, tooltip,  perForm)
         {
             this.questItemType = type;
             this.wearCount = wearCnt;
@@ -136,17 +157,32 @@ namespace Window11_TextRPG
 
         public override bool TodoMission()
         {
-            // 인벤토리 manager에 접근해서 
-            // ITEMTYPE에 맞는 list의 갯수를 들고오던가
-            // 모든 Item을 담는 list라면 ITEMTYPE 타입별로 , LINQ로 갯수 알아내야함 
+            // 인벤토리 manager의 리스트에 접근
+            // 조건 : 아이템타입이 questType 와 같고, equip가 true이면 
+            // 조건에 만족하면 return true ( LINQ의 any 사용 )
+            int count = InventoryManager.instance.mountableItems
+                .Count(item => item.Type == questItemType && item.Equip);
+            /*
+            var temp = from item in InventoryManager.instance.mountableItems
+                       where item.Type == questItemType && item.Equip == true
+                       select item;
+            */
+
+            if (count >= wearCount)
+                return true;
+
             return false;
         }
 
         public override string QuestProgress()
         {
-            // ##TODO : 0 < 이 부분은 InventoryManager의 type에 g해당하는 부분 가져와야할듯 
+            // 조건 : 아이템타입이 questType 와 같고, equip가 true이면 
+            // 조건에 맞는 count 
+            int count = InventoryManager.instance.mountableItems
+                .Count(item => item.Type == questItemType && item.Equip);
 
-            return $"{questPerform} ( {0} / {wearCount} ";
+            // ex) 장비 착용하기 0 / 1
+            return $"{questPerform} ( {count} / {wearCount} )";
         }
     }
 
