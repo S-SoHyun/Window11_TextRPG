@@ -31,9 +31,8 @@ namespace Window_11_TEXTRPG
         private Reward reward;
         public Reward RewardInstnace => reward;
 
-
-        // temp. 완성될 땐 지우기
-        Player player = new Player();
+        // player
+        Player player = PlayerManager.Instance._Player;
 
 
         // 장착 가능 아이템 생성
@@ -297,17 +296,44 @@ namespace Window_11_TEXTRPG
         }
 
 
-        // 물약 사용
-        public void UsePotion(PotionItem potion)
+
+
+
+        //  회복 관련 메서드 //
+
+        // 물약 개수 세기
+        public void CheckPotion(PotionItem potion)
         {
-            if (potion.Count > 0)      // 만약 물약이 한 개 이상 있다면
+            if (potion.Count > 0)
             {
-                potion.Count--;
-                player.hp += potion.Heel;
-                Console.WriteLine("회복을 완료했습니다.");
+                UsePotion(potion);
             }
             else
                 Console.WriteLine("포션이 부족합니다.");
+        }
+
+
+        // 물약 사용
+        public void UsePotion(PotionItem potion)
+        {
+            // temp. 머지할 때는 삭제할 것
+            player.hp = 30;
+            if (player.hp != player.maxhp)                      // 1. 플레이어 체력이 최대 체력과 다를 때
+            {
+                if (player.hp + potion.Heel >= player.maxhp)    // 회복량이 maxhp를 초과할 경우
+                {
+                    player.hp = player.maxhp;
+                }
+                else
+                {
+                    player.hp += potion.Heel;
+                }
+
+                potion.Count -= 1;
+                Console.WriteLine("회복을 완료했습니다.");
+            }
+            else                                                // 2. 플레이어 체력이 최대 체력일 때
+                Console.WriteLine("이미 최대 체력입니다.");
         }
     }
 }
