@@ -171,19 +171,90 @@ namespace Window11_TextRPG
             Console.Write(">> ");
         }
 
-        public static void InventoryScene(Player plyaer, List<Item> items)
+        public static void InventoryScene(Player player, List<MountableItem> items)
         {
+            Clear();
+            Console.Write("[인벤토리]");
 
+            AddBlankLine();
+            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+
+            AddBlankLine();
+            Console.WriteLine("[아이템 목록]");
+
+            AddBlankLine();
+            ViewInventoryItem(items);
+
+            AddBlankLine();
+            Console.WriteLine("1. 장착 관리");
+            Console.WriteLine("0. 나가기");
+
+            AddBlankLine();
 
             InputInduction();
         }
 
-        public static void EquipmentScene(Player plyaer, List<Item> items)
+        public static void EquipmentScene(Player player, List<MountableItem> items)
         {
+            Clear();
+            Console.Write("[인벤토리- 장착 관리]");
 
+            AddBlankLine();
+            Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
+
+            AddBlankLine();
+            Console.WriteLine("[아이템 목록]");
+
+            AddBlankLine();
+            ViewEquipItem(items);
+
+            AddBlankLine();
+            Console.WriteLine("0. 나가기");
 
             InputInduction();
         }
+
+        // 인벤토리 창에서 보일 아이템 목록
+        public static void ViewInventoryItem(List<MountableItem> items)     
+        {
+
+            for (int i = 0; i < items.Count; i++)
+            {
+                string typeName = (items[i].Attack > 0) ? "공격력" : "방어력";
+                int value = (items[i].Attack > 0) ? items[i].Attack : items[i].Defense;
+
+                if (items[i].Equip)
+                {
+                    Console.Write("- [E]");
+                }
+                else
+                {
+                    Console.Write("- ");
+                }
+                Console.WriteLine($"{items[i].Name} | {typeName} + {value} |  {items[i].Description}");
+            }
+        }
+
+        // 장착관리 창에서 보일 아이템 목록
+        public static void ViewEquipItem(List<MountableItem> items)
+        {
+            for (int i = 0; i < items.Count; i++)
+            {
+                string typeName = (items[i].Attack > 0) ? "공격력" : "방어력";
+                int value = (items[i].Attack > 0) ? items[i].Attack : items[i].Defense;
+
+                if (items[i].Equip)
+                {
+                    Console.Write($"- {i + 1} [E]");
+                }
+                else
+                {
+                    Console.Write($"- {i + 1} ");
+                }
+                Console.WriteLine($"{items[i].Name} | {typeName} + {value} | {items[i].Description}");
+            }
+        }
+
 
         public static void StoreScene(Player plyaer, List<MountableItem> items)
         {
