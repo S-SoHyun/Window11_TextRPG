@@ -40,28 +40,24 @@ namespace Window11_TextRPG
             Action nextScene = StoreScene;
             int result = -1;
 
-            do
+            // StoreScene 출력
+            DisplayManager.StoreScene(player, items);
+            result = UtilManager.PlayerInput(0, 2);
+
+            switch (result)
             {
-                // StoreScene 출력
-                DisplayManager.StoreScene(player, items);
-                result = UtilManager.PlayerInput(0, 2);
+                case 0: // 로비
+                    GameManager.Instance.ChangeScene(SceneState.LobbyManager);
+                    return;
 
-                switch (result)
-                {
-                    case 0: // 로비
-                        nextScene = LobbyManager.Instance.Enter;
-                        break;
+                case 1: // 구매 페이지
+                    nextScene = BuyItemScene;
+                    break;
 
-                    case 1: // 구매 페이지
-                        nextScene = BuyItemScene;
-                        break;
-
-                    case 2: // 판매 페이지
-                        nextScene = SellItemScene;
-                        break;
-                }
+                case 2: // 판매 페이지
+                    nextScene = SellItemScene;
+                    break;
             }
-            while (result < 0 || result > 2);
 
             nextScene();
         }
@@ -73,26 +69,22 @@ namespace Window11_TextRPG
 
             int result = -1;
             int inputCount = items.Count();
-            do
-            {
-                // DiplayManager 접근
-                DisplayManager.StoreBuyScene(player, items);
-                
-                result = UtilManager.PlayerInput(0, inputCount);
 
-                // 나가기 버튼
-                if (0 == result)
-                {
-                    nextScene = StoreScene;
-                }
-                // 아이템 구매 접근
-                else
-                {
-                    BuyItem(result);
-                }
+            // DiplayManager 접근
+            DisplayManager.StoreBuyScene(player, items);
                 
+            result = UtilManager.PlayerInput(0, inputCount);
+
+            // 나가기 버튼
+            if (0 == result)
+            {
+                nextScene = StoreScene;
             }
-            while (result < 0 || result > inputCount);
+            // 아이템 구매 접근
+            else
+            {
+                BuyItem(result);
+            }
 
             nextScene();
         }
@@ -104,26 +96,22 @@ namespace Window11_TextRPG
 
             int result = -1;
             int inputCount = items.Count();
-            do
+
+            // DiplayManager 접근
+            DisplayManager.StoreBuyScene(player, items);
+
+            result = UtilManager.PlayerInput(0, inputCount);
+
+            // 나가기 버튼
+            if (0 == result)
             {
-                // DiplayManager 접근
-                DisplayManager.StoreBuyScene(player, items);
-
-                result = UtilManager.PlayerInput(0, inputCount);
-
-                // 나가기 버튼
-                if (0 == result)
-                {
-                    nextScene = StoreScene;
-                }
-                // 아이템 판매 접근
-                else
-                {
-                    SellItem(result);
-                }
-
+                nextScene = StoreScene;
             }
-            while (result < 0 || result > inputCount);
+            // 아이템 판매 접근
+            else
+            {
+                SellItem(result);
+            }
 
             nextScene();
         }
