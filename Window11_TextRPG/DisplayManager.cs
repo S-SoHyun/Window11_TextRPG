@@ -84,14 +84,33 @@ namespace Window11_TextRPG
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
-                Console.WriteLine($"{i + 1} Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
+                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
             }
             AddBlankLine(2);
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
             AddBlankLine();
-            Console.WriteLine("0.취소 \n1.공격");
+            Console.WriteLine("1. 공격");
+            AddBlankLine();
+            InputInduction();
+        }
+
+        public static void DungeonMonsterTargetScene(Player player, List<Monster> monsters)
+        {
+            Clear();
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
+            }
+            AddBlankLine(2);
+            Console.WriteLine("[내정보]");
+            Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
+            Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            AddBlankLine();
+            Console.WriteLine("0. 취소");
             AddBlankLine();
             InputInduction();
         }

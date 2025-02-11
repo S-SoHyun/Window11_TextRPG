@@ -35,19 +35,17 @@ namespace Window11_TextRPG
         public void Enter()
         {
             Player player = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
-            int monsterDieCnt = 0;
             int playerHpBeforeEnter = player.hp;
             SetMonsters(player);
-            while (!player.Hpcheck() && monsterDieCnt != monsters.Count)
+            while (!player.Hpcheck() && GetMonsterDieCount() != monsters.Count)
             {
-                DisplayManager.DungeonScene(player, monsters);
-                PlayerAttackMonster(player,ref monsterDieCnt);
+                TargetMonster(player);
             }
             if (player.Hpcheck())                                      //플레이어의 체력이 0일때
             {
                 Lose(player, playerHpBeforeEnter);
             }
-            else if (monsterDieCnt == monsters.Count)                  //몬스터를 전부 처리할 때
+            else if (GetMonsterDieCount() == monsters.Count)                  //몬스터를 전부 처리할 때
             {
                 Victory(player, playerHpBeforeEnter);
             }
@@ -80,18 +78,29 @@ namespace Window11_TextRPG
             }
         }
 
-        public void PlayerAttackMonster(Player player, ref int monsterDieCnt)
+        public void TargetMonster(Player player)
         {
-            int actionInput = UtilManager.PlayerInput(0, 1);
-            if (actionInput == 0)
+            int actionInput;
+            DisplayManager.DungeonScene(player, monsters);
+            actionInput = UtilManager.PlayerInput(1, 1);
+            if (actionInput == 1)
             {
-                return; // 상위 메뉴로 이동
+                PlayerAttackMonster(player);
+            }else
+            {
+                TargetMonster(player);
             }
-            int userInput = UtilManager.PlayerInput(0, monsters.Count);
+        }
+
+        public void PlayerAttackMonster(Player player)
+        {
+            int userInput;
+            DisplayManager.DungeonMonsterTargetScene(player, monsters);
+            userInput = UtilManager.PlayerInput(0, monsters.Count);
             Monster userSelectedMonster = new Monster();                        //0을 입력시 몬스터 배열의 userInput조회시 -1을 조회시켜 에러발생하여 수정
             if (userInput == 0)
             {
-                //상위 메뉴로
+                TargetMonster(player);
             }
             else
             {
@@ -107,7 +116,6 @@ namespace Window11_TextRPG
                     {
                         if (monster.IsDie())
                         {
-                            monsterDieCnt++;
                             monsterCatches[Enum.GetName(typeof(MonsterType), monster.type)]++;
                         }
                         else
@@ -119,7 +127,7 @@ namespace Window11_TextRPG
                 else
                 {
                     Console.WriteLine("잘못된 입력입니다.");
-                    PlayerAttackMonster(player, ref monsterDieCnt);
+                    PlayerAttackMonster(player);
                 }
             }
         }
@@ -142,9 +150,23 @@ namespace Window11_TextRPG
 
         public void Victory(Player player, int playerHpBeforeEnter)
         {
-            Reward reward = new Reward();
+            Reward reward = InventoryManager.instance.RewardInstnace;
 
             DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter, reward.Gold(), reward.Potion(), reward.Item());
+        }
+
+        private int GetMonsterDieCount()
+        {
+            int monsterDieCnt = 0;
+            foreach (Monster monster in monsters)
+            {
+                if (monster.IsDie())
+                {
+                    monsterDieCnt++;
+                }
+            }
+
+            return monsterDieCnt;
         }
 
         public enum MonsterType
