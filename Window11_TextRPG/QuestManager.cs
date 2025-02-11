@@ -24,8 +24,8 @@ namespace Window11_TextRPG
         private string[] rewardOptionByState;     // 스탯 별 출력해야할 옵션 : 수락 or 퀘받아가세요 or 보상받기
 
         // 퀘스트 수락 or 퀘 받기 or 보상받기 선택 시 실행할 메서드 저장해놓을 Action
-        private Action actionOne;
-        private Action actionTwo;
+        private Action? actionOne;
+        private Action? actionTwo;
 
         // 생성자
         private QuestManager()
@@ -52,6 +52,8 @@ namespace Window11_TextRPG
 
         public void Enter()
         {
+            Console.Clear();
+
             // 목록(리스트) 출력
             DisplayManager.PrintMenu(questOption);
 
@@ -60,12 +62,20 @@ namespace Window11_TextRPG
 
             // 현재 퀘스트 
             currQuest = quests[input - 1];
+            // 완료여부에 따라 state변화 (내부에서 처리함)
+            currQuest.CheckState();
 
             // 퀘스트 print
             PrintQuest();
 
             // 성공여부에 따라 print 다름 
             PrintRewardBystate();
+        }
+
+        // UTilManager로 옮기기
+        public void DelayForSecond(int second)
+        {
+            Thread.Sleep(second * 1000);   // ex) 3 * 1000 : 3초 대기
         }
 
         private void PrintQuest()
@@ -85,6 +95,9 @@ namespace Window11_TextRPG
 
         private void PrintRewardBystate() 
         {
+            actionOne = null;
+            actionTwo = null;
+
             switch (currQuest.QuestState) 
             {
                 case QuestState.beforeReceive:
@@ -109,57 +122,69 @@ namespace Window11_TextRPG
 
             // 목록(리스트) 출력
             DisplayManager.PrintMenu(rewardOptionByState);
+
+            // 플레이어 입력
+            int input = UtilManager.PlayerInput(1,2);
+
+            // 1이면 action첫번째꺼, 2이면 action 두번째꺼
+            if (input == 1)
+                actionOne.Invoke();
+            else 
+                actionTwo.Invoke();
         }
 
         private void Acception() 
         {
             // 퀘스트 수락 -> 현재 퀘스트를 accept 로 바꾸기
-            currQuest.QuestState = QuestState.afterReceive;
+            currQuest.ChangeState(QuestState.afterReceive);
+
+            WaitAndReturnToQuest();
         }
         private void DeclineQuest() 
         {
             Console.WriteLine("퀘스트를 거절하셨습니다 ");
 
-            DelayForSecond("3초후 퀘스트 화면으로 돌아갑니다", 3);
-
-            // 퀘스트 거절 -> 퀘스트씬으로 돌아가기 
-            GameManager.Instance.ChangeScene(SceneState.QuestManager);
+            WaitAndReturnToQuest();
         }
         private void CompleteAndComeBack() 
         {
             // 퀘스트 완료필요 -> 완료하고 오세요 ! 
             Console.WriteLine("퀘스트를 완료하고 오세요!");
 
-            DelayForSecond("3초후 퀘스트 화면으로 돌아갑니다", 3);
-
-            // 퀘스트 메뉴로 돌아가기
-            GameManager.Instance.ChangeScene(SceneState.QuestManager);
+            WaitAndReturnToQuest();
         }
 
         private void ReturnToMenu() 
         {
-            DelayForSecond("3초후 퀘스트 화면으로 돌아갑니다", 3);
-
-            // 퀘스트 메뉴로 돌아가기
-            GameManager.Instance.ChangeScene(SceneState.QuestManager);
+            WaitAndReturnToQuest();
         }
 
         private void AcquirReward() 
         {
             Console.WriteLine("보상을 받았습니다. 인벤토리를 확인해주세요!");
 
-            DelayForSecond("3초후 퀘스트 화면으로 돌아갑니다", 3);
+            // 보상받는함수필요
+            RewardItem();
+
+            WaitAndReturnToQuest();
+        }
+
+        // 3초후 퀘스트화면으로 돌아가기
+        private void WaitAndReturnToQuest() 
+        {
+            Console.WriteLine("3초후 퀘스트 화면으로 돌아갑니다");
+
+            DelayForSecond(3);
 
             // 퀘스트 메뉴로 돌아가기
             GameManager.Instance.ChangeScene(SceneState.QuestManager);
         }
 
-        // UTilManager로 옮기기
-        public void DelayForSecond(string str, int second) 
+        private void RewardItem() 
         {
-            Console.WriteLine(str);
-            Thread.Sleep(second * 1000 );   // ex) 3 * 1000 : 3초 대기
+                       
         }
+
 
         private void InitQuestList()
         {
@@ -179,7 +204,6 @@ namespace Window11_TextRPG
                     "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
                     "모험가인 자네가 좀 처치해주게!\r\n",
                 perForm : "몬스터 처치하기",
-                reward: 5,
                 monstername: "Minion",
                 killCount: 5));
             quests.Add(new EquiptQuest
@@ -187,7 +211,6 @@ namespace Window11_TextRPG
                 , tooltip: "모험가 자네 아직도 장비를 장착하지 않았는가?\r\n" +
                     "인벤토리에서 아무 장비나 장착하게! \r\n",
                 perForm : "인벤토리에서 Armor 장비 장착하기",
-                reward: 5,
                 type : ITEMTYPE.ARMOR ,
                 wearCnt : 2));
             quests.Add(new EquiptQuest
@@ -196,60 +219,20 @@ namespace Window11_TextRPG
                     "무기를 끼면 강해진다네 \r\n" +
                     "인벤토리에서 무기를 착용하고 오게 \r\n",
                 perForm: "인벤토리에서 Weapon 장비 장착하기",
-                reward: 5,
                 type: ITEMTYPE.WEAPON,
                 wearCnt : 1));
             #endregion
 
             // 보상 아이템 세팅 ( ##TODO : 물약도 넣고싶은데 이건 물약넣는부분에서 수정후에  )
-            quests[0].AddToItem(new MountableItem()
-            {
-                Name = "첫번째 퀘스트 옷",
-                Description = "수련에 도움을 주는 갑옷입니다.",
-                Price = 1000,
-                Type = ITEMTYPE.ARMOR,
+            quests[0].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("나뭇가지"), 1);
+            quests[1].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("낡은 검"), 1); 
+            quests[2].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("풀옷"), 1);
+            quests[2].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
 
-                Attack = 0,
-                Defense = 4,
-                Own = false,
-                Equip = false
-            }, 1);
-            quests[1].AddToItem(new MountableItem()
-            {
-                Name = "두번째 퀘스트 옷",
-                Description = "수련에 도움을 주는 갑옷입니다.",
-                Price = 1000,
-                Type = ITEMTYPE.ARMOR,
-
-                Attack = 0,
-                Defense = 4,
-                Own = false,
-                Equip = false
-            }, 1); 
-            quests[2].AddToItem(new MountableItem()
-            {
-                Name = "대충짱센갑옷123",
-                Description = "수련에 도움을 주는 갑옷입니다.",
-                Price = 1000,
-                Type = ITEMTYPE.ARMOR,
-
-                Attack = 0,
-                Defense = 4,
-                Own = false,
-                Equip = false
-            }, 1);
-            quests[2].AddToItem(new MountableItem()
-            {
-                Name = "대충짱센값옷346678",
-                Description = "수련에 도움을 주는 갑옷입니다.",
-                Price = 1000,
-                Type = ITEMTYPE.ARMOR,
-
-                Attack = 0,
-                Defense = 4,
-                Own = false,
-                Equip = false
-            }, 1);
+            // 보상 골드 세팅
+            quests[0].SetRewardGold(InventoryManager.instance.RewardInstnace.Gold());
+            quests[1].SetRewardGold(InventoryManager.instance.RewardInstnace.Gold());
+            quests[2].SetRewardGold(InventoryManager.instance.RewardInstnace.Gold());
         }
     }
 }
