@@ -49,9 +49,7 @@ namespace Window11_TextRPG
                 switch (result)
                 {
                     case 0: // 로비
-                        Console.WriteLine("debug로비로 간다");
-                        Thread.Sleep(1000);
-                        nextScene = StoreScene;
+                        nextScene = LobbyManager.Instance.Enter;
                         break;
 
                     case 1: // 구매 페이지

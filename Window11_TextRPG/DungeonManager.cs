@@ -22,12 +22,15 @@ namespace Window11_TextRPG
                 return instance;
             }
         }
-        private DungeonManager() { }
+        private DungeonManager() 
+        {
+            InitMonsterCatches();
+        }
 
         List<Monster> monsters = new List<Monster>();
 
-        
-        
+        public Dictionary<string,int> monsterCatches = new Dictionary<string, int>();
+
         public void Enter()
         {
             Player player = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
@@ -52,6 +55,14 @@ namespace Window11_TextRPG
                 case 0:
                     //상위 메뉴로 이동
                     break;
+            }
+        }
+
+        public void InitMonsterCatches()
+        {
+            foreach (string monsterTypeName in Enum.GetNames(typeof(MonsterType)))
+            {
+                monsterCatches.Add(monsterTypeName, 0);
             }
         }
 
@@ -84,13 +95,14 @@ namespace Window11_TextRPG
                     int beforeMonsterHp = userSelectedMonster.hp;
                     var (playerDamage, hitType) = player.AttackCalculator(player.Attack()); //playerDamage의 최종 데미지 계산 
                     userSelectedMonster.hp = userSelectedMonster.hp - playerDamage < 0 ? 0 : userSelectedMonster.hp - playerDamage;
-                    DisplayManager.DungeonPlayerAttackScene(player, userSelectedMonster, playerDamage, beforeMonsterHp);     //플레이어가 몬스터를 공격하는 장면
+                    DisplayManager.DungeonPlayerAttackScene(player, userSelectedMonster, playerDamage, beforeMonsterHp,hitType);     //플레이어가 몬스터를 공격하는 장면
                     int next = UtilManager.PlayerInput(0, 0);
                     foreach (Monster monster in monsters)
                     {
                         if (monster.IsDie())
                         {
                             monsterDieCnt++;
+                            monsterCatches[Enum.GetName(typeof(MonsterType), monster.type)]++;
                         }
                         else
                         {
@@ -127,7 +139,7 @@ namespace Window11_TextRPG
 
         }
 
-        enum MonsterType
+        public enum MonsterType
         {
             Minion = 0,
             Canon,
