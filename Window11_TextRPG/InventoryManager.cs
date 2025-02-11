@@ -10,8 +10,6 @@ namespace Window_11_TEXTRPG
 {
     public class InventoryManager : IScene
     {
-        private Reward reward;
-
         // Singleton
         private InventoryManager()
         {
@@ -29,11 +27,14 @@ namespace Window_11_TEXTRPG
             }
         }
 
+        // reward
+        private Reward reward;
         public Reward RewardInstnace => reward;
 
 
         // temp. 완성될 땐 지우기
         Player player = new Player();
+
 
         // 장착 가능 아이템 생성
         public List<MountableItem> mountableItems = new List<MountableItem>()
@@ -130,9 +131,7 @@ namespace Window_11_TEXTRPG
             Heel = 30
         };
 
-        // MP 포션?
-
-
+        
 
         // 상점에서 산 아이템 리스트 생성
         public List<MountableItem> ownItems = new List<MountableItem>();
@@ -143,18 +142,18 @@ namespace Window_11_TEXTRPG
         List<MountableItem> ownArmors = new List<MountableItem>();
 
 
+        // 중앙 통제
         public void Enter()
         {
-            MoveInventoryScene();    // 인벤토리 창으로 이동
-            //GameManager.Instance.ChangeScene(SceneState.InventoryManager);    // ??
+            MoveInventoryScene();
         }
 
 
         // 인벤토리 창으로 이동
         public void MoveInventoryScene()
         {
-            DivisionOwnItem();
-            DivisionType();
+            DivisionOwnItem(mountableItems);
+            DivisionType(ownItems);
             ownItems = ownItems.Distinct().ToList();    // 목록 중복되는 문제 distinct로 제거
 
             DisplayManager.InventoryScene(player, ownItems);
@@ -192,46 +191,43 @@ namespace Window_11_TEXTRPG
 
 
         // 상점에서 산 아이템들 따로 리스트에 넣기
-        public void DivisionOwnItem()
+        public void DivisionOwnItem(List<MountableItem> items)
         {
-            for (int i = 0; i < mountableItems.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                if (mountableItems[i].Own)
-                    ownItems.Add(mountableItems[i]);
+                if (items[i].Own)
+                    ownItems.Add(items[i]);
             }
         }
 
 
         // 상점에서 산 아이템들 중에서 타입에 따라 또 나누기 (웨폰 / 아머)
-        public void DivisionType()
+        public void DivisionType(List<MountableItem> items)
         {
-            for (int i = 0; i < ownItems.Count; i++)
+            for (int i = 0; i < items.Count; i++)
             {
-                if (ownItems[i].Type == ITEMTYPE.WEAPON)
+                if (items[i].Type == ITEMTYPE.WEAPON)
                 {
-                    ownWeapons.Add(ownItems[i]);
+                    ownWeapons.Add(items[i]);
                 }
-                else if (ownItems[i].Type == ITEMTYPE.ARMOR)
+                else if (items[i].Type == ITEMTYPE.ARMOR)
                 {
-                    ownArmors.Add(ownItems[i]);
+                    ownArmors.Add(items[i]);
                 }
             }
         }
 
 
-        public void Equip(int input)    // 장착 (타입에 따라 중복 장착이 안 되도록)
+        // 장착 (타입에 따라 중복 장착이 안 되도록)
+        public void Equip(int input)
         {
-            DivisionOwnItem();    // own인 것만 골라서 리스트 추가
-            DivisionType();       // own인 것 중 웨폰/아머 종류별로 나눠서 리스트 각각 추가
             MountableItem select = ownItems[input - 1];
             MountableItem equipped = null;
 
-
-            // 1. 고른 게 웨폰이라면 weaponItems에서 장착된 게 있는지 확인 후 장착
-            if (select.Type == ITEMTYPE.WEAPON)
+            
+            if (select.Type == ITEMTYPE.WEAPON)                     // < 고른 게 웨폰이라면 장착된 게 있는지 확인 후 장착>  
             {
-                // weapon만 있는 리스트에서 equip이 true인 것 찾기
-                for (int i = 0; i < ownWeapons.Count; i++)
+                for (int i = 0; i < ownWeapons.Count; i++)          // weapon만 있는 리스트에서 equip이 true인 것 찾기
                 {
                     if (ownWeapons[i].Equip)
                     {
@@ -240,27 +236,25 @@ namespace Window_11_TEXTRPG
                     }
                 }
 
-                if (equipped != null && equipped == select)    // 장착 아이템이 있는데 이게 선택한 아이템과 같다면
+                if (equipped != null && equipped == select)         // 1. 장착 아이템이 있는데 이게 선택한 아이템과 같다면
                 {
                     Unequip(equipped);
-                    //player.atk += select.Attack;
                 }
-                else if (equipped != null && equipped != select)    // 장착 아이템이 있는데 이게 선택한 아이템과 다르다면
+                else if (equipped != null && equipped != select)    // 2. 장착 아이템이 있는데 이게 선택한 아이템과 다르다면
                 {
                     Unequip(equipped);
                     select.Equip = true;
+                    player.atk += select.Attack;
                 }
-                else if (equipped == null)    //  장착된 게 없다면
+                else                                                // 3. 장착된 게 없다면
                 {
                     select.Equip = true;
-                    //player.atk += select.Attack;
+                    player.atk += select.Attack;
                 }
             }
-            // 2. 고른 게 아머라면 armorItems에서 장착된 게 있는지 확인 후 장착
-            else if (select.Type == ITEMTYPE.ARMOR)
+            else if (select.Type == ITEMTYPE.ARMOR)                 // < 고른 게 아머라면 장착된 게 있는지 확인 후 장착 > 
             {
-                // ownArmorItems에서 equip이 true인 것 찾기
-                for (int i = 0; i < ownArmors.Count; i++)
+                for (int i = 0; i < ownArmors.Count; i++)           // 아머만 있는 리스트에서 equip이 true인 것 찾기
                 {
                     if (ownArmors[i].Equip)
                     {
@@ -269,41 +263,42 @@ namespace Window_11_TEXTRPG
                     }
                 }
 
-                if (equipped != null && equipped == select)
+                if (equipped != null && equipped == select)         // 1. 장착 아이템이 있는데 이게 선택한 아이템과 같다면
                 {
                     Unequip(equipped);
-                    //player.def += select.Defense;
                 }
-                else if (equipped != null && equipped != select)    // equipped가 있고 select와 다르다면
+                else if (equipped != null && equipped != select)    // 2. 장착 아이템이 있는데 이게 선택한 아이템과 다르다면
                 {
                     Unequip(equipped);
                     select.Equip = true;
+                    player.def += select.Defense;
                 }
-                else if (equipped == null)
+                else                                                // 3. 장착된 게 없다면
                 {
                     select.Equip = true;
-                    //player.def += select.Defense;
+                    player.def += select.Defense;
                 }
             }
         }
 
 
+        // 장착 해제
         public void Unequip(MountableItem equipped)
         {
             equipped.Equip = false;
-            //if (select.Type == ITEMTYPE.ARMOR)
-            //{
-            // 스탯 줄이기
-            //}
-            //else if (select.Type == ITEMTYPE.ARMOR)
-            //{
-            // 스탯 줄이기
-            //}
+            if (equipped.Type == ITEMTYPE.WEAPON)
+            {
+                player.atk -= equipped.Attack;
+            }
+            else if (equipped.Type == ITEMTYPE.ARMOR)
+            {
+                player.def -= equipped.Defense;
+            }
         }
 
 
-
-        public void UsePotion(PotionItem potion)    // 물약 사용
+        // 물약 사용
+        public void UsePotion(PotionItem potion)
         {
             if (potion.Count > 0)      // 만약 물약이 한 개 이상 있다면
             {
@@ -316,3 +311,7 @@ namespace Window_11_TEXTRPG
         }
     }
 }
+
+
+
+
