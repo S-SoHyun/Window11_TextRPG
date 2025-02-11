@@ -10,8 +10,13 @@ namespace Window_11_TEXTRPG
 {
     public class InventoryManager : IScene
     {
+        private Reward reward;
+
         // Singleton
-        private InventoryManager() { }
+        private InventoryManager() 
+        {
+            reward = new Reward();
+        }
         public static InventoryManager? instance;
 
         public static InventoryManager Instance
@@ -23,6 +28,9 @@ namespace Window_11_TEXTRPG
                 return instance;
             }
         }
+
+        public Reward RewardInstnace => reward;
+
 
         // temp. 완성될 땐 지우기
         Player player = new Player();
