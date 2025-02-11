@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Window_11_TEXTRPG;
+﻿using Window_11_TEXTRPG;
 
 namespace Window11_TextRPG
 {
@@ -14,6 +9,7 @@ namespace Window11_TextRPG
         protected string questStory;  // 퀘스트 스토리 (ex) 미니언들이 너무 많아졋다고 생각~
         protected int rewardGold;               // 리워드 
         protected string questPerform;          // 수행내역 
+        protected QuestState questState;        // 수행 스탯 
 
         // 컨테이너
         protected Dictionary<Item, int> rewardItemByCount;        // 보상 아이템별 count
@@ -26,6 +22,7 @@ namespace Window11_TextRPG
         public string QuestStory => questStory;
         public int QuestGold => rewardGold;
         public string QuestPerform => questPerform;
+        public QuestState QuestState { get => questState; set { questState = value; } }
         public Dictionary<Item, int> RewardItemByCount => rewardItemByCount;
 
 
@@ -35,6 +32,7 @@ namespace Window11_TextRPG
             this.questStory = tooltip;
             this.rewardGold = reward;
             this.questPerform = questPerfom;
+            this.questState = QuestState.beforeReceive;     // 생성할 때, 받기전으로 설정 
 
             if (rewardItemByCount == null)
                 rewardItemByCount = new Dictionary<Item, int>();

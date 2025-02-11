@@ -38,6 +38,8 @@ namespace Window11_TextRPG
 
         public void Enter()
         {
+            Console.Clear();
+
             // 출력
             DisplayManager.PrintMenu(lobbyList);
 

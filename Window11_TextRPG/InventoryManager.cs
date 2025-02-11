@@ -13,9 +13,9 @@ namespace Window_11_TEXTRPG
         private Reward reward;
 
         // Singleton
-        private InventoryManager() 
+        private InventoryManager()
         {
-            reward = new Reward();
+            reward = new Reward(mountableItems, potion);
         }
         public static InventoryManager? instance;
 
@@ -47,7 +47,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 0,
                 Defense = 4,
-                Own = false,
+                Own = true,
                 Equip = false
             },
 
@@ -60,7 +60,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 0,
                 Defense = 9,
-                Own = false,
+                Own = true,
                 Equip = false
             },
 
@@ -86,7 +86,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 5,
                 Defense = 0,
-                Own = false,
+                Own = true,
                 Equip = false
             },
 
@@ -99,7 +99,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 10,
                 Defense = 0,
-                Own = false,
+                Own = true,
                 Equip = false
             },
 
@@ -155,7 +155,7 @@ namespace Window_11_TEXTRPG
         {
             DivisionOwnItem();
             DivisionType();
-            ownItems = ownItems.Distinct().ToList();    // 목록 증식되는 문제 distinct로 막아두기
+            ownItems = ownItems.Distinct().ToList();    // 목록 중복되는 문제 distinct로 제거
 
             DisplayManager.InventoryScene(player, ownItems);
             int input = UtilManager.PlayerInput(0, 1);
@@ -189,7 +189,6 @@ namespace Window_11_TEXTRPG
                 MoveEquipmentScene(items);
             }
         }
-
 
 
         // 상점에서 산 아이템들 따로 리스트에 넣기
@@ -231,7 +230,7 @@ namespace Window_11_TEXTRPG
             // 1. 고른 게 웨폰이라면 weaponItems에서 장착된 게 있는지 확인 후 장착
             if (select.Type == ITEMTYPE.WEAPON)
             {
-                // waapon만 있는 리스트에서 equip이 true인 것 찾기
+                // weapon만 있는 리스트에서 equip이 true인 것 찾기
                 for (int i = 0; i < ownWeapons.Count; i++)
                 {
                     if (ownWeapons[i].Equip)
@@ -241,19 +240,21 @@ namespace Window_11_TEXTRPG
                     }
                 }
 
-                if (equipped != null)
+                if (equipped != null && equipped == select)    // 장착 아이템이 있는데 이게 선택한 아이템과 같다면
+                {
+                    Unequip(equipped);
+                    //player.atk += select.Attack;
+                }
+                else if (equipped != null && equipped != select)    // 장착 아이템이 있는데 이게 선택한 아이템과 다르다면
                 {
                     Unequip(equipped);
                     select.Equip = true;
-                    //player.atk += select.Attack;
                 }
-                else if (equipped == null)
+                else if (equipped == null)    //  장착된 게 없다면
                 {
                     select.Equip = true;
                     //player.atk += select.Attack;
                 }
-
-
             }
             // 2. 고른 게 아머라면 armorItems에서 장착된 게 있는지 확인 후 장착
             else if (select.Type == ITEMTYPE.ARMOR)
@@ -268,13 +269,17 @@ namespace Window_11_TEXTRPG
                     }
                 }
 
-                if (equipped != null)
+                if (equipped != null && equipped == select)
+                {
+                    Unequip(equipped);
+                    //player.def += select.Defense;
+                }
+                else if (equipped != null && equipped != select)    // equipped가 있고 select와 다르다면
                 {
                     Unequip(equipped);
                     select.Equip = true;
-                    //player.def += select.Defense;
                 }
-                else
+                else if (equipped == null)
                 {
                     select.Equip = true;
                     //player.def += select.Defense;
@@ -288,11 +293,11 @@ namespace Window_11_TEXTRPG
             equipped.Equip = false;
             //if (select.Type == ITEMTYPE.ARMOR)
             //{
-
+            // 스탯 줄이기
             //}
             //else if (select.Type == ITEMTYPE.ARMOR)
             //{
-
+            // 스탯 줄이기
             //}
         }
 
