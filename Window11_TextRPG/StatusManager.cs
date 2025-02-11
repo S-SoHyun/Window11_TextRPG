@@ -24,6 +24,14 @@ namespace Window11_TextRPG
         public void Enter()
         {
             DisplayManager.StatusScene(PlayerManager.Instance._Player);
+
+            string t = Console.ReadLine();
+            if (t == "0")
+            {
+                GameManager.Instance.ChangeScene(SceneState.LobbyManager);
+            }
+            else StatusManager.Instance.Enter();
+            
         }
     }
 }
