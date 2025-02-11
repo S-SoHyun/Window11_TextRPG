@@ -11,12 +11,15 @@ namespace Window11_TextRPG
 {
     public class Reward
     {
-        public Reward()
+        public Reward(List<MountableItem> _mountableItems, PotionItem _potion)
         {
             // 보상 아이템 초기화
             init_rewardWeapon();
             init_rewardArmor();
             init_rewardGold();
+
+            this.mountableItems = _mountableItems;
+            this.potion = _potion;
         }
 
         Func<int, int, int> ranFunc = UtilManager.getRandomInt;
@@ -26,8 +29,8 @@ namespace Window11_TextRPG
         List<int> rewardGold = new List<int>();
 
         // 참조
-        List<MountableItem> mountableItems = InventoryManager.Instance.mountableItems;
-        PotionItem potion = InventoryManager.Instance.potion;
+        List<MountableItem> mountableItems;
+        PotionItem potion;
 
         // 50%로 아이템 반환 및 적용
         public MountableItem? Item()
