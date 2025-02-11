@@ -49,10 +49,10 @@ namespace Window11_TextRPG
 
         public void Enter()
         {
-            string input = Console.ReadLine().ToString();
-          
-           
 
+            DisplayManager.ChooseNameScene(player);
+            string input = Console.ReadLine().ToString();
+            DisplayManager.ChooseJobScene(player);
 
             //직업정하기
 

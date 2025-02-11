@@ -23,6 +23,7 @@ namespace Window11_TextRPG
         }
 
         Func<int, int, int> ranFunc = UtilManager.getRandomInt;
+
         // 보상 아이템 설정
         List<MountableItem> rewardWeapon = new List<MountableItem>();
         List<MountableItem> rewardArmor = new List<MountableItem>();
@@ -75,6 +76,7 @@ namespace Window11_TextRPG
         public void SetItem(MountableItem item)
         {
             mountableItems.Add(item);
+            item.Own = true;
         }
 
         // Gold 랜덤 반환 및 적용

@@ -84,14 +84,33 @@ namespace Window11_TextRPG
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
-                Console.WriteLine($"{i + 1} Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
+                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
             }
             AddBlankLine(2);
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
             AddBlankLine();
-            Console.WriteLine("0.취소 \n1.공격");
+            Console.WriteLine("1. 공격");
+            AddBlankLine();
+            InputInduction();
+        }
+
+        public static void DungeonMonsterTargetScene(Player player, List<Monster> monsters)
+        {
+            Clear();
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                Console.WriteLine($"{i + 1}. Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
+            }
+            AddBlankLine(2);
+            Console.WriteLine("[내정보]");
+            Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
+            Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            AddBlankLine();
+            Console.WriteLine("0. 취소");
             AddBlankLine();
             InputInduction();
         }
@@ -120,7 +139,7 @@ namespace Window11_TextRPG
             AddBlankLine();
             Console.WriteLine("0. 다음");
             AddBlankLine();
-            Console.WriteLine("대상을 선택해주세요.\n>> ");
+            Console.Write(">> ");
         }
 
         public static void DungeonMonsterAttackScene(Player player, Monster monster, int beforePlayerHp)
@@ -139,7 +158,7 @@ namespace Window11_TextRPG
             Console.Write(">> ");
         }
 
-        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter)
+        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter, int gold, int potionCount, MountableItem? item)
         {
             Clear();
             Console.WriteLine("Battle!! - Result");
@@ -148,8 +167,26 @@ namespace Window11_TextRPG
             AddBlankLine();
             Console.WriteLine($"던전에서 몬스터 {monsterCount}마리를 잡았습니다.");
             AddBlankLine();
+            Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"Lv.{player.level} {player.name}");
             Console.WriteLine($"HP {playerHpBeforeEnter} -> {player.hp}");
+            if (gold != 0 || potionCount != 0 || item != null)
+            {
+                AddBlankLine();
+                Console.WriteLine("[획득 아이템]");
+                if (gold != 0)
+                {
+                    Console.WriteLine($"{gold} Gold");
+                }
+                if (potionCount != 0)
+                {
+                    Console.WriteLine($"포션 - {potionCount}");
+                }
+                if (item != null)
+                {
+                    Console.WriteLine($"{item.Name} - 1");
+                }
+            }
             AddBlankLine();
             Console.WriteLine("0. 다음");
             AddBlankLine();
