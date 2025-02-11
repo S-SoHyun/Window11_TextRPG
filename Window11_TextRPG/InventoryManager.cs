@@ -48,7 +48,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 0,
                 Defense = 4,
-                Own = true,
+                Own = false,
                 Equip = false
             },
 
@@ -61,7 +61,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 0,
                 Defense = 9,
-                Own = true,
+                Own = false,
                 Equip = false
             },
 
@@ -87,7 +87,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 5,
                 Defense = 0,
-                Own = true,
+                Own = false,
                 Equip = false
             },
 
@@ -100,7 +100,7 @@ namespace Window_11_TEXTRPG
 
                 Attack = 10,
                 Defense = 0,
-                Own = true,
+                Own = false,
                 Equip = false
             },
 

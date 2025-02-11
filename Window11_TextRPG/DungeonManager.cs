@@ -34,20 +34,21 @@ namespace Window11_TextRPG
 
         public void Enter()
         {
-            Player player = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
-            int playerHpBeforeEnter = player.hp;
-            SetMonsters(player);
-            while (!player.Hpcheck() && GetMonsterDieCount() != monsters.Count)
+            //Player enterPlayer = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
+            Player enterPlayer = PlayerManager.Instance._Player;     
+            int playerHpBeforeEnter = enterPlayer.hp;
+            SetMonsters(enterPlayer);
+            while (!enterPlayer.Hpcheck() && GetMonsterDieCount() != monsters.Count)
             {
-                TargetMonster(player);
+                TargetMonster(enterPlayer);
             }
-            if (player.Hpcheck())                                      //플레이어의 체력이 0일때
+            if (enterPlayer.Hpcheck())                                      //플레이어의 체력이 0일때
             {
-                Lose(player, playerHpBeforeEnter);
+                Lose(enterPlayer, playerHpBeforeEnter);
             }
             else if (GetMonsterDieCount() == monsters.Count)                  //몬스터를 전부 처리할 때
             {
-                Victory(player, playerHpBeforeEnter);
+                Victory(enterPlayer, playerHpBeforeEnter);
             }
             switch (UtilManager.PlayerInput(0,0))
             {
