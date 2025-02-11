@@ -14,7 +14,8 @@ namespace Window11_TextRPG
     public class PlayerManager : IScene
     {
 
-        private PlayerManager() { }
+        private PlayerManager() {
+        }
         private static PlayerManager? instance;
         public static PlayerManager Instance
         {
@@ -26,7 +27,16 @@ namespace Window11_TextRPG
             }
         }
 
-        Player player;
+        Player player =new Player();
+        public Player _Player
+        {
+            get { return player; }
+        }
+
+
+
+
+ 
 
         //public static void LevelCheck(Player player, Monster monster)
         //{
@@ -45,7 +55,7 @@ namespace Window11_TextRPG
         //        }
         //    }
         //}
-      
+
 
         public void Enter()
         {
@@ -79,6 +89,8 @@ namespace Window11_TextRPG
             }
             Console.WriteLine(player.name);
             Console.WriteLine(player.job);
+
+            GameManager.Instance.ChangeScene(SceneState.LobbyManager);
 
 
         }
