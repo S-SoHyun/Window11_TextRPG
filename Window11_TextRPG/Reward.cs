@@ -29,7 +29,7 @@ namespace Window11_TextRPG
         PotionItem potion = InventoryManager.Instance.potion;
 
         // 50%로 아이템 반환 및 적용
-        public MountableItem? Item(Player player)
+        public MountableItem? Item()
         {
             MountableItem item;
             // 장비 아이템 얻을 확률 
@@ -52,9 +52,9 @@ namespace Window11_TextRPG
         }
 
         // Gold 랜덤 반환 및 적용
-        public int Gold(Player player)
+        public int Gold()
         {
-            Random random = new Random();
+            Player player = new Player();
             int gold = UtilManager.getRandomInt(0, rewardGold.Count);
 
             player.gold += gold;
@@ -63,7 +63,7 @@ namespace Window11_TextRPG
         }
 
         // 포션 갯수 반환 및 적용
-        public int Potion(Player player)
+        public int Potion()
         {
             int count = ranFunc(1, 6);
  
