@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -52,11 +53,10 @@ namespace Window11_TextRPG
         }
 
         // 지정 아이템 반환
-        public MountableItem? Item(string name)
+        public MountableItem? GetItem(string name)
         {
-            List<MountableItem> rewards = new List<MountableItem>();
-            rewards.AddRange(rewardArmor);
-            rewards.AddRange(rewardWeapon);
+            // 보상 장비(무기, 방어구) 리스트
+            List<MountableItem> rewards = rewardArmor.Concat(rewardWeapon).ToList();
 
             for (int i = 0; i < rewards.Count; i++)
             {
@@ -69,7 +69,7 @@ namespace Window11_TextRPG
         }
 
         // 지정 아이템 획득
-        public void Item(MountableItem item)
+        public void SetItem(MountableItem item)
         {
             mountableItems.Add(item);
         }
@@ -78,7 +78,7 @@ namespace Window11_TextRPG
         public int Gold()
         {
             Player player = new Player(); // 플레이어 받아와야함 (임시코드)
-            int gold = UtilManager.getRandomInt(0, rewardGold.Count);
+            int gold = rewardGold[UtilManager.getRandomInt(0, rewardGold.Count)];
 
             player.gold += gold;
 
