@@ -25,7 +25,7 @@ namespace Window11_TextRPG
         List<MountableItem> items = InventoryManager.Instance.mountableItems;
 
         // 임시 변수들
-        Player player = new Player() { gold = 100000 };    
+        Player player = PlayerManager.Instance._Player;
 
         // GameManager에서 접근하는 곳
         public void Enter()
@@ -40,28 +40,24 @@ namespace Window11_TextRPG
             Action nextScene = StoreScene;
             int result = -1;
 
-            do
+            // StoreScene 출력
+            DisplayManager.StoreScene(player, items);
+            result = UtilManager.PlayerInput(0, 2);
+
+            switch (result)
             {
-                // StoreScene 출력
-                DisplayManager.StoreScene(player, items);
-                result = UtilManager.PlayerInput(0, 2);
+                case 0: // 로비
+                    GameManager.Instance.ChangeScene(SceneState.LobbyManager);
+                    return;
 
-                switch (result)
-                {
-                    case 0: // 로비
-                        nextScene = LobbyManager.Instance.Enter;
-                        break;
+                case 1: // 구매 페이지
+                    nextScene = BuyItemScene;
+                    break;
 
-                    case 1: // 구매 페이지
-                        nextScene = BuyItemScene;
-                        break;
-
-                    case 2: // 판매 페이지
-                        nextScene = SellItemScene;
-                        break;
-                }
+                case 2: // 판매 페이지
+                    nextScene = SellItemScene;
+                    break;
             }
-            while (result < 0 || result > 2);
 
             nextScene();
         }
@@ -73,26 +69,22 @@ namespace Window11_TextRPG
 
             int result = -1;
             int inputCount = items.Count();
-            do
-            {
-                // DiplayManager 접근
-                DisplayManager.StoreBuyScene(player, items);
-                
-                result = UtilManager.PlayerInput(0, inputCount);
 
-                // 나가기 버튼
-                if (0 == result)
-                {
-                    nextScene = StoreScene;
-                }
-                // 아이템 구매 접근
-                else
-                {
-                    BuyItem(result);
-                }
+            // DiplayManager 접근
+            DisplayManager.StoreBuyScene(player, items);
                 
+            result = UtilManager.PlayerInput(0, inputCount);
+
+            // 나가기 버튼
+            if (0 == result)
+            {
+                nextScene = StoreScene;
             }
-            while (result < 0 || result > inputCount);
+            // 아이템 구매 접근
+            else
+            {
+                BuyItem(result);
+            }
 
             nextScene();
         }
@@ -104,26 +96,22 @@ namespace Window11_TextRPG
 
             int result = -1;
             int inputCount = items.Count();
-            do
+
+            // DiplayManager 접근
+            DisplayManager.StoreBuyScene(player, items);
+
+            result = UtilManager.PlayerInput(0, inputCount);
+
+            // 나가기 버튼
+            if (0 == result)
             {
-                // DiplayManager 접근
-                DisplayManager.StoreBuyScene(player, items);
-
-                result = UtilManager.PlayerInput(0, inputCount);
-
-                // 나가기 버튼
-                if (0 == result)
-                {
-                    nextScene = StoreScene;
-                }
-                // 아이템 판매 접근
-                else
-                {
-                    SellItem(result);
-                }
-
+                nextScene = StoreScene;
             }
-            while (result < 0 || result > inputCount);
+            // 아이템 판매 접근
+            else
+            {
+                SellItem(result);
+            }
 
             nextScene();
         }
@@ -172,9 +160,8 @@ namespace Window11_TextRPG
                 if (item.Equip)
                 {
                     // 아이템 성능 만큼 캐릭터 성능 하향
-                    //equipmentScene.MountItem(item, false);
+                    InventoryManager.Instance.Unequip(item);
                 }
-                item.Own = false;
                 player.gold += (int)((float)item.Price * 0.85f);
                 Console.WriteLine("판매를 완료했습니다.");
                 Thread.Sleep(1000);

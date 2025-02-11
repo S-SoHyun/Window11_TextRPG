@@ -82,7 +82,7 @@ namespace Window11_TextRPG
         // Gold 랜덤 반환 및 적용
         public int Gold()
         {
-            Player player = new Player(); // 플레이어 받아와야함 (임시코드)
+            Player player = PlayerManager.Instance._Player;
             int gold = rewardGold[UtilManager.getRandomInt(0, rewardGold.Count)];
 
             player.gold += gold;
