@@ -78,7 +78,7 @@ namespace Window11_TextRPG
         public int Gold()
         {
             Player player = new Player(); // 플레이어 받아와야함 (임시코드)
-            int gold = UtilManager.getRandomInt(0, rewardGold.Count);
+            int gold = rewardGold[UtilManager.getRandomInt(0, rewardGold.Count)];
 
             player.gold += gold;
 
