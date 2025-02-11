@@ -81,6 +81,11 @@ namespace Window11_TextRPG
 
         public void PlayerAttackMonster(Player player, ref int monsterDieCnt)
         {
+            int actionInput = UtilManager.PlayerInput(0, 1);
+            if (actionInput == 0)
+            {
+                return; // 상위 메뉴로 이동
+            }
             int userInput = UtilManager.PlayerInput(0, monsters.Count);
             Monster userSelectedMonster = new Monster();                        //0을 입력시 몬스터 배열의 userInput조회시 -1을 조회시켜 에러발생하여 수정
             if (userInput == 0)
