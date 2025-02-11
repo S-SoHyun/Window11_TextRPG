@@ -50,7 +50,7 @@ namespace Window11_TextRPG
             {
                 case 1:
                     // 플레이어 Manger로 이동
-                    GameManager.Instance.ChangeScene(SceneState.PlayerManager);
+                    GameManager.Instance.ChangeScene(SceneState.StatusManager);
                     break;
                 case 2:
                     // 던전 Manger로 이동
