@@ -160,9 +160,8 @@ namespace Window11_TextRPG
                 if (item.Equip)
                 {
                     // 아이템 성능 만큼 캐릭터 성능 하향
-                    //equipmentScene.MountItem(item, false);
+                    InventoryManager.Instance.Unequip(item);
                 }
-                item.Own = false;
                 player.gold += (int)((float)item.Price * 0.85f);
                 Console.WriteLine("판매를 완료했습니다.");
                 Thread.Sleep(1000);
