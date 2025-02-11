@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -42,13 +43,13 @@ namespace Window11_TextRPG
                 DisplayManager.DungeonScene(player, monsters);
                 PlayerAttackMonster(player,ref monsterDieCnt);
             }
-            if (player.Hpcheck())
+            if (player.Hpcheck())                                      //플레이어의 체력이 0일때
             {
-                DisplayManager.DungeonLoseResultScene(player, playerHpBeforeEnter);
+                Lose(player, playerHpBeforeEnter);
             }
-            else if (monsterDieCnt == monsters.Count) 
+            else if (monsterDieCnt == monsters.Count)                  //몬스터를 전부 처리할 때
             {
-                DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter);
+                Victory(player, playerHpBeforeEnter);
             }
             switch (UtilManager.PlayerInput(0,0))
             {
@@ -129,14 +130,16 @@ namespace Window11_TextRPG
             }
         }
 
-        public void Lose()
+        public void Lose(Player player, int playerHpBeforeEnter)
         {
-
+            DisplayManager.DungeonLoseResultScene(player, playerHpBeforeEnter);
         }
 
-        public void Victory()
+        public void Victory(Player player, int playerHpBeforeEnter)
         {
-
+            Reward reward = new Reward();
+            
+            DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter);
         }
 
         public enum MonsterType
