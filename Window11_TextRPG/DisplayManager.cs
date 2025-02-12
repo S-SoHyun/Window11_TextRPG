@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Window_11_TEXTRPG;
 
@@ -30,15 +31,85 @@ namespace Window11_TextRPG
         private static void InputInduction()
         {
             AddBlankLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요");
+            ColorText("원하시는 행동을 입력해주세요", 255, 255, 255);
+            // Console.WriteLine("원하시는 행동을 입력해주세요");
             // Console.Write(">>> ");
         }
 
+        public enum TEXTCOLOR
+        {
+            BLACK = ConsoleColor.Black,
+            BLUE = ConsoleColor.Blue,
+            CYAN = ConsoleColor.Cyan,
+            DBLUE = ConsoleColor.DarkBlue,
+            DCYAN = ConsoleColor.DarkCyan,
+            DGRAY = ConsoleColor.DarkGray,
+            DGREEN = ConsoleColor.DarkGreen,
+            DMAGENTA = ConsoleColor.DarkMagenta,
+            DRED = ConsoleColor.DarkRed,
+            DYELLOW = ConsoleColor.DarkYellow,
+            GRAY = ConsoleColor.Gray,
+            GREEN = ConsoleColor.Green,
+            MAGENTA = ConsoleColor.Magenta,
+            RED = ConsoleColor.Red,
+            WHITE = ConsoleColor.White,
+            YELLOW = ConsoleColor.Yellow,
+        }
+        public struct COLOR
+        {
+            public int r;
+            public int g;
+            public int b;
+
+            public COLOR(int r = 0, int g = 0, int b = 0)
+            {
+                this.r = r;
+                this.g = g;
+                this.b = b;
+            }
+        }
+
+        // 지정 색상 사용
+        public static void ColorText(string message, TEXTCOLOR color, bool lineChange = true)
+        {
+            Console.ForegroundColor = (ConsoleColor)color;
+            Console.Write(message);
+            Console.ResetColor();
+            if (lineChange)
+                Console.WriteLine("");
+        }
+        // 추가 색상 사용
+        public static void ColorText(string message, int r=0, int g=0, int b=0, bool lineChange = true)
+        {
+            // ANSI TrueColor
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Write($"\u001b[38;2;{r};{g};{b}m"); 
+            Console.Write(message);
+            Console.Write("\u001b[0m");
+            if (lineChange)
+                Console.WriteLine("");
+        }
+        public static void ColorText(string message, COLOR color, bool lineChange = true)
+        {
+            ColorText(message, color.r, color.g, color.b, lineChange);
+        }
+
+
+        public static void ColorText(Dictionary<string, COLOR> stringList, bool lineChange = true)
+        {
+            foreach (var item in stringList)
+            {
+                ColorText(item.Key, item.Value, lineChange);
+
+            }
+            if (lineChange)
+                Console.WriteLine("");
+        }
 
         public static void StatusScene(Player player)
         {
             Clear();
-            Console.WriteLine("[상태보기]");
+            ColorText("[상태보기]", 255, 165, 0);
             AddBlankLine(2);
 
             Console.WriteLine("이름: " + player.name);
@@ -89,13 +160,13 @@ namespace Window11_TextRPG
         public static void ChooseJobScene(Player player)
         {
             Clear();
-            Console.WriteLine("[직업선택]");
+            ColorText("[직업선택]", 255, 165, 0);
             AddBlankLine(2);
 
-            Console.WriteLine("1.전사 HP:130  공격력:10");
-            Console.WriteLine("2.마법사 HP:90  공격력:10");
-            Console.WriteLine("3.도적 HP:100  공격력:15");
-            Console.WriteLine("4.궁수 HP:80  공격력:20");
+            Console.WriteLine("1.전사    HP:130    공격력:10");
+            Console.WriteLine("2.마법사  HP:90     공격력:17");
+            Console.WriteLine("3.도적    HP:100    공격력:15");
+            Console.WriteLine("4.궁수    HP:80     공격력:20");
             AddBlankLine(2);
 
             Console.WriteLine("0. 나가기");
@@ -106,7 +177,7 @@ namespace Window11_TextRPG
         public static void DungeonScene(Player player, List<Monster> monsters)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
@@ -116,7 +187,7 @@ namespace Window11_TextRPG
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
-            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
+            Console.WriteLine($"MP {player.mp}/{player.maxmp}");
             AddBlankLine();
             Console.WriteLine("1. 공격");
             Console.WriteLine("2. 스킬");
@@ -124,10 +195,10 @@ namespace Window11_TextRPG
             InputInduction();
         }
 
-        public static void DungeonMonsterTargetScene(Player player, List<Monster> monsters)
+        public static void DungeonMonsterTargetScene(Player player, List<Monster> monsters, bool isFail = false)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
@@ -137,17 +208,130 @@ namespace Window11_TextRPG
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
-            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
+            Console.WriteLine($"MP {player.mp}/{player.maxmp}");
             AddBlankLine();
+            if(isFail){
+                Console.WriteLine("시전할수 없는 대상입니다.");
+                AddBlankLine();
+            }
             Console.WriteLine("0. 취소");
             AddBlankLine();
             InputInduction();
         }
 
+        public static void DungeonSkillList(Player player, List<Monster> monsters)
+        {
+            Clear();
+            ColorText("Battle!!", 255, 165, 0);
+            AddBlankLine();
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
+            }
+            AddBlankLine(2);
+            Console.WriteLine("[내정보]");
+            Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
+            Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            Console.WriteLine($"MP {player.mp}/{player.maxmp}");
+            AddBlankLine();
+            for (int i = 0; i < player.skills.Count; i++)
+            {
+                Skill skill = player.skills[i];
+                Console.WriteLine($"{i + 1}. {skill.name} - MP {skill.mp}");
+                Console.WriteLine($"{skill.description}");
+            }
+            AddBlankLine();
+            Console.WriteLine("0. 취소");
+            AddBlankLine();
+            Console.Write(">> ");
+        }
+
+        public static void CantUseSkill(Skill skill)
+        {
+            Clear();
+            ColorText("Battle!!", 255, 165, 0);
+            AddBlankLine();
+            Console.WriteLine($"마나가 부족하여 스킬 {skill.name}을 사용할 수 없습니다.");
+            AddBlankLine();
+            Console.WriteLine("0. 취소");
+            AddBlankLine();
+            Console.Write(">> ");
+        }
+
+        public static void DungeonSkillOneResult(Player player, Monster monster, Skill skill, int beforeMonsterHp, int skillDamage)
+        {
+            Clear();
+            ColorText("Battle!!", 255, 165, 0);
+            AddBlankLine();
+            Console.WriteLine($"{player.name} 의 {skill.name}!");
+            Console.WriteLine($"몬스터에게 {skill.name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+            AddBlankLine();
+            Console.WriteLine($"Lv.{monster.level} {monster.name}");
+            Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - skillDamage)}");
+            AddBlankLine();
+            Console.WriteLine("0. 다음");
+            AddBlankLine();
+            Console.Write(">> ");
+        }
+
+        public static void BeforeRunRandom2(Skill skill)
+        {
+            Clear();
+            ColorText("Battle!!", 255, 165, 0);
+            AddBlankLine();
+            Console.WriteLine($"정말로 {skill.name}을 시전하시겠습니까?");
+            AddBlankLine();
+            Console.WriteLine("1. 시전");
+            Console.WriteLine("0. 취소");
+            AddBlankLine();
+            Console.Write(">> ");
+        }
+
+        public static void DungeonSkillRandom2Result(Player player, Skill skill, int[] beforeMonsterHps, int skillDamage, Monster monster1, Monster? monster2 = null)
+        {
+            Clear();
+            ColorText("Battle!!", 255, 165, 0);
+            AddBlankLine();
+            Console.WriteLine($"{player.name} 의 {skill.name}!");
+            Console.WriteLine($"두마리의 몬스터에게 {skill.name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+            AddBlankLine();
+            Console.WriteLine($"Lv.{monster1.level} {monster1.name}");
+            Console.WriteLine($"HP {beforeMonsterHps[0]} -> {(monster1.IsDie() ? "Dead" : beforeMonsterHps[0] - skillDamage)}");
+            AddBlankLine();
+            if (monster2 != null)
+            {
+                Console.WriteLine($"Lv.{monster2.level} {monster2.name}");
+                Console.WriteLine($"HP {beforeMonsterHps[1]} -> {(monster2.IsDie() ? "Dead" : beforeMonsterHps[1] - skillDamage)}");
+                AddBlankLine();
+            }
+            Console.WriteLine("0. 다음");
+            AddBlankLine();
+            Console.Write(">> ");
+        }
+
+        public static void DungeonSkillAllResult(Player player, Skill skill, int[] beforeMonsterHps, int skillDamage, List<Monster> monsters)
+        {
+            Clear();
+            ColorText("Battle!!", 255, 165, 0);
+            AddBlankLine();
+            Console.WriteLine($"{player.name} 의 {skill.name}!");
+            Console.WriteLine($"모든 몬스터에게 {skill.name} 을(를) 맞췄습니다. [데미지 : {skillDamage}]");
+            AddBlankLine();
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name}");
+                Console.WriteLine($"HP {beforeMonsterHps[i]} -> {(monsters[i].IsDie() ? "Dead" : beforeMonsterHps[i] - skillDamage)}");
+            }
+            AddBlankLine();
+            Console.WriteLine("0. 다음");
+            AddBlankLine();
+            Console.Write(">> ");
+        }
+
         public static void DungeonPlayerAttackScene(Player player, Monster monster, int playerDamage, int beforeMonsterHp,int hitType)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine($"{player.name} 의 공격!");
             switch (hitType)
@@ -174,14 +358,14 @@ namespace Window11_TextRPG
         public static void DungeonMonsterAttackScene(Player player, Monster monster, int beforePlayerHp)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine($"{monster.name} 의 공격!");
             Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {monster.Attack()}]");
             AddBlankLine();
             Console.WriteLine($"Lv.{player.level} {player.name}");
             Console.WriteLine($"HP {beforePlayerHp} -> {player.hp}");
-            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
+            Console.WriteLine($"MP {player.mp}/{player.maxmp}");
             AddBlankLine();
             Console.WriteLine("0. 다음");
             AddBlankLine();
@@ -201,7 +385,7 @@ namespace Window11_TextRPG
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
-            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
+            Console.WriteLine($"MP {player.mp}/{player.maxmp}");
             AddBlankLine();
             for (int i = 0; i < player.skills.Count; i++)
             {
@@ -215,10 +399,10 @@ namespace Window11_TextRPG
             Console.Write(">> ");
         }
 
-        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter, int gold, int potionCount, MountableItem? item)
+        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter, int playerMpBeforeEnter, int gold, int potionCount,MountableItem? item, int gainedExp, int expBeforeGain, int expForNextLevel, bool leveledUp)
         {
             Clear();
-            Console.WriteLine("Battle!! - Result");
+            ColorText("Battle!! - Result", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine("Victory");
             AddBlankLine();
@@ -227,6 +411,21 @@ namespace Window11_TextRPG
             Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"Lv.{player.level} {player.name}");
             Console.WriteLine($"HP {playerHpBeforeEnter} -> {player.hp}");
+            Console.WriteLine($"MP {playerMpBeforeEnter} -> {player.mp}");
+            AddBlankLine();
+
+            Console.WriteLine($"[경험치 획득] {gainedExp} EXP 획득!");
+
+            if (leveledUp)
+            {
+                Console.WriteLine($"레벨업! Lv.{player.level} 으로 상승!");
+            }
+            else
+            {
+                int expNeeded = expForNextLevel - player.exp;
+                Console.WriteLine($"다음 레벨까지 {expNeeded} EXP 필요");
+            }
+
             if (gold != 0 || potionCount != 0 || item != null)
             {
                 AddBlankLine();
@@ -250,15 +449,16 @@ namespace Window11_TextRPG
             Console.Write(">> ");
         }
 
-        public static void DungeonLoseResultScene(Player player, int playerHpBeforeEnter)
+        public static void DungeonLoseResultScene(Player player, int playerHpBeforeEnter, int playerMpBeforeEnter)
         {
             Clear();
-            Console.WriteLine("Battle!! - Result");
+            ColorText("Battle!! - Result", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine("You Lose");
             AddBlankLine();
             Console.WriteLine($"Lv.{player.level} {player.name}");
             Console.WriteLine($"HP {playerHpBeforeEnter} -> 0");
+            Console.WriteLine($"MP {playerMpBeforeEnter} -> {player.mp}");
             AddBlankLine();
             Console.WriteLine("0. 다음");
             AddBlankLine();
@@ -353,7 +553,7 @@ namespace Window11_TextRPG
         public static void StoreScene(Player plyaer, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[상점]");
+            ColorText("[상점]", 255, 165, 0);
 
             AddBlankLine();
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
@@ -380,7 +580,7 @@ namespace Window11_TextRPG
         public static void StoreBuyScene(Player plyaer, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[상점 - 구매]");
+            ColorText("[상점 - 구매]", new COLOR(255, 165, 0));
 
             AddBlankLine();
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
@@ -403,7 +603,7 @@ namespace Window11_TextRPG
         public static void StoreSellScene(Player plyaer, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[상점 - 판매]");
+            ColorText("[상점 - 판매]", new COLOR(255, 165, 0));
 
             AddBlankLine();
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");

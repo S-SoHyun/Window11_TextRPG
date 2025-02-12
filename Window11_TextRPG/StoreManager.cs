@@ -105,7 +105,7 @@ namespace Window11_TextRPG
             int inputCount = items.Count();
 
             // DiplayManager 접근
-            DisplayManager.StoreBuyScene(player, items);
+            DisplayManager.StoreSellScene(player, items);
 
             result = UtilManager.PlayerInput(0, inputCount);
 
@@ -176,6 +176,14 @@ namespace Window11_TextRPG
                     InventoryManager.Instance.Unequip(item);
                 }
                 player.gold += (int)((float)item.Price * 0.85f);
+
+                // 보상아이템이라면 
+                if (InventoryManager.Instance.RewardInstnace.rewardItems.Contains(item))
+                {
+                    // 리스트에서 삭제
+                    items.Remove(item);
+                }
+
                 Console.WriteLine("판매를 완료했습니다.");
                 UtilManager.DelayForSecond(1);
             }

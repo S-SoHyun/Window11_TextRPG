@@ -160,9 +160,17 @@ namespace Window11_TextRPG
 
         public void Victory(Player player, int playerHpBeforeEnter)
         {
-            Reward reward = InventoryManager.instance.RewardInstnace;
+            int totalExp = monsters.Sum(monster => monster.level); // 몬스터 레벨 합산하여 경험치 추가
 
-            DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter, reward.Gold(), reward.Potion(), reward.Item());
+            // 경험치 추가 전 레벨 저장
+            int beforeLevel = player.level;
+            int expBeforeGain = player.exp;
+            player.GainExp(totalExp);
+            bool leveledUp = (beforeLevel < player.level);
+            int expForNextLevel = player.GetExpForNextLevel();
+            Reward reward = InventoryManager.instance.RewardInstnace;
+            DisplayManager.DungeonWinResultScene(
+        player, monsters.Count, playerHpBeforeEnter, reward.Gold(), reward.Potion(), reward.Item(),totalExp, expBeforeGain, expForNextLevel, leveledUp );
         }
 
         private int GetMonsterDieCount()
