@@ -70,11 +70,16 @@ namespace Window11_TextRPG
 
         public bool GetSave() 
         {
-            Player player = PlayerManager.Instance._Player;
-            List<MountableItem> mountableItems = InventoryManager.Instance.mountableItems;
-            PotionItem potion = InventoryManager.Instance.potion;
+            Player player                           = PlayerManager.Instance._Player;
+            List<MountableItem> mountableItems      = InventoryManager.Instance.mountableItems;
+            PotionItem potion                       =  InventoryManager.Instance.potion;
+            List<SaveQuestWrapper> saveQuestWrapper = QuestManager.Instance.SaveWrapper;
 
-            bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion);
+            for (int i = 0; i < saveQuestWrapper.Count; i++)
+                Console.WriteLine(saveQuestWrapper[i].Name + " / " + saveQuestWrapper[i].QuestType);
+
+            bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion , saveQuestWrapper);
+            UtilManager.DelayForSecond(2);
             ChangeScene(SceneState.LobbyManager);
             return success;
         }
@@ -84,6 +89,7 @@ namespace Window11_TextRPG
             PotionItem potion = InventoryManager.Instance.potion;
 
             bool success = LoadGame(potion);
+            UtilManager.DelayForSecond(2);
             ChangeScene(SceneState.LobbyManager);
             return success;
         }
@@ -94,7 +100,7 @@ namespace Window11_TextRPG
         static string projectDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
         // 게임 저장 메서드
-        public bool SaveGame(Player player, List<MountableItem> mountableItems, PotionItem potionItem)
+        public bool SaveGame(Player player, List<MountableItem> mountableItems, PotionItem potionItem , List<SaveQuestWrapper> saveQuestWrapper)
         {
             bool success = true;
             try { SaveCharacter(player); }
@@ -104,6 +110,9 @@ namespace Window11_TextRPG
             catch { Failed("MountableItem 저장"); success = false; }
 
             try { SaveItems(potionItem, "PotionItem"); }
+            catch { Failed("PotionItem 저장"); success = false; }
+
+            try { SaveQuestWrapper(saveQuestWrapper, "QuestWrapper"); }
             catch { Failed("PotionItem 저장"); success = false; }
 
             return success;
@@ -155,16 +164,30 @@ namespace Window11_TextRPG
             Console.WriteLine("아이템 저장 완료!");
             Console.WriteLine(filePath);
         }
+
+        void SaveQuestWrapper(List<SaveQuestWrapper> saveQuestWrapper, string str) 
+        {
+            // 퀘스트 Wrapper 저장(Quest)
+            string filePath = Path.Combine(projectDir, "data", $"{str}.json");
+            string json = JsonSerializer.Serialize(saveQuestWrapper
+                , new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
+            File.WriteAllText(filePath, json);
+            Console.WriteLine("퀘스트 저장 완료!");
+            Console.WriteLine(filePath);
+        }
+
         //============게임 로드 관련 메서드===============
         void LoadCharacter()
         {
             // 캐릭터 로드
             string filePath = Path.Combine(projectDir, "data", "character.json");
             string jsn = File.ReadAllText(filePath);
-
-            PlayerManager.Instance._Player = JsonSerializer.Deserialize<Player>(jsn);
+            Player load = new Player();
+            load = JsonSerializer.Deserialize<Player>(jsn);
+            PlayerManager.Instance._Player = load;
 
             Console.WriteLine("캐릭터 불러오기 완료!");
+            load.SetSkills(load.job);
             Console.WriteLine(filePath);
         }
         void LoadItems(string _str)
