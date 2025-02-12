@@ -1,0 +1,8 @@
+{
+  "Count": 99999,
+  "Heel": 30,
+  "Name": "HP 포션",
+  "Description": "HP를 30 회복할 수 있는 포션입니다.",
+  "Price": 500,
+  "Type": 2
+}

@@ -57,8 +57,14 @@ namespace Window11_TextRPG
             // 목록(리스트) 출력
             DisplayManager.PrintMenu(questOption);
 
+            Console.WriteLine("\n0. 로비로 돌아가기 \n");
+
             // player input 
-            int input = UtilManager.PlayerInput(1, questOption.Length);
+            int input = UtilManager.PlayerInput(0, questOption.Length);
+            
+            // 4 입력하면 되돌아가기 => 퀘스트화면으로
+            if (input == 0)
+                GameManager.Instance.ChangeScene(SceneState.LobbyManager);
 
             // 현재 퀘스트 
             currQuest = quests[input - 1];
@@ -70,12 +76,6 @@ namespace Window11_TextRPG
 
             // 성공여부에 따라 print 다름 
             PrintRewardBystate();
-        }
-
-        // UTilManager로 옮기기
-        public void DelayForSecond(int second)
-        {
-            Thread.Sleep(second * 1000);   // ex) 3 * 1000 : 3초 대기
         }
 
         private void PrintQuest()
@@ -184,7 +184,7 @@ namespace Window11_TextRPG
         {
             Console.WriteLine("1초후 퀘스트 화면으로 돌아갑니다");
 
-            DelayForSecond(1);
+            UtilManager.DelayForSecond(1);
 
             // 퀘스트 메뉴로 돌아가기
             GameManager.Instance.ChangeScene(SceneState.QuestManager);

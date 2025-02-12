@@ -98,7 +98,7 @@ namespace Window11_TextRPG
             Console.WriteLine("4.궁수 HP:80  공격력:20");
             AddBlankLine(2);
 
-            Console.WriteLine("0. 나가기");
+
 
             InputInduction();
         }

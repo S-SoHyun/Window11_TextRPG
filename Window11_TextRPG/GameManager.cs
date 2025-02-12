@@ -17,7 +17,8 @@ namespace Window11_TextRPG
         InventoryManager,
         StoreManager,
         QuestManager,
-        StatusManager
+        StatusManager,
+        HealManager
     }
 
     internal class GameManager
@@ -51,6 +52,7 @@ namespace Window11_TextRPG
             ISceneList[(int)SceneState.StoreManager]        = StoreManager.Instance;
             ISceneList[(int)SceneState.QuestManager]        = QuestManager.Instance;
             ISceneList[(int)SceneState.StatusManager]       = StatusManager.Instance;
+            ISceneList[(int)SceneState.HealManager]         = HealManager.Instance;
         }
 
         // 씬 (manager) 변화 
@@ -65,41 +67,61 @@ namespace Window11_TextRPG
             }
         }
 
-        public void GetSave() 
+
+        public bool GetSave() 
         {
-            Console.WriteLine("GameManager의 Save 함수입니다.");
+            Player player = PlayerManager.Instance._Player;
+            List<MountableItem> mountableItems = InventoryManager.Instance.mountableItems;
+            PotionItem potion = InventoryManager.Instance.potion;
+
+            bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion);
+            ChangeScene(SceneState.LobbyManager);
+            return success;
         }
 
-        // 임시변수 (추후 삭제)
-        List<MountableItem> mountableItems;
-        List<PotionItem> potions;
+        public bool GetLoad()
+        {
+            PotionItem potion = InventoryManager.Instance.potion;
+
+            bool success = LoadGame(potion);
+            ChangeScene(SceneState.LobbyManager);
+            return success;
+        }
+
+        
 
         // 프로젝트 경로
         static string projectDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
         // 게임 저장 메서드
-        public void SaveGame(Player player, List<MountableItem> mountableItems, List<PotionItem> potionItem)
+        public bool SaveGame(Player player, List<MountableItem> mountableItems, PotionItem potionItem)
         {
+            bool success = true;
             try { SaveCharacter(player); }
-            catch { Failed("캐릭터 저장"); }
+            catch { Failed("캐릭터 저장"); success = false; }
 
             try { SaveItems(mountableItems, "MountableItem"); }
-            catch { Failed("MountableItem 저장"); }
+            catch { Failed("MountableItem 저장"); success = false; }
 
             try { SaveItems(potionItem, "PotionItem"); }
-            catch { Failed("PotionItem 저장"); }
+            catch { Failed("PotionItem 저장"); success = false; }
+
+            return success;
         }
         // 게임 불러오기 메서드
-        public void LoadGame(Player player, List<MountableItem> mountableItems, List<PotionItem> potionItem)
+        public bool LoadGame(PotionItem potion)
         {
-            try { LoadCharacter(ref player); }
-            catch { Failed("캐릭터 불러오기"); }
+            bool success = true;
+            try { LoadCharacter(); }
+            catch { Failed("캐릭터 불러오기"); success = false; }
 
-            try { LoadItems(ref mountableItems, "MountableItem"); }
-            catch { Failed("MountableItem 불러오기"); }
+            try { LoadItems("MountableItem"); }
+            catch { Failed("MountableItem 불러오기"); success = false; }
 
-            try { LoadItems(ref potionItem, "PotionItem"); }
-            catch { Failed("PotionItem 불러오기"); }
+            try { LoadItems(potion, "PotionItem"); }
+            catch { Failed("PotionItem 불러오기"); success = false; }
+
+            return success;
         }
 
         //============게임 저장 관련 메서드===============
@@ -123,7 +145,7 @@ namespace Window11_TextRPG
             Console.WriteLine("아이템 저장 완료!");
             Console.WriteLine(filePath);
         }
-        void SaveItems(List<PotionItem> _items, string _str)
+        void SaveItems(PotionItem _items, string _str)
         {
             // 아이템 저장(PotionItem)
             string filePath = Path.Combine(projectDir, "data", $"{_str}.json");
@@ -134,35 +156,35 @@ namespace Window11_TextRPG
             Console.WriteLine(filePath);
         }
         //============게임 로드 관련 메서드===============
-        void LoadCharacter(ref Player player)
+        void LoadCharacter()
         {
             // 캐릭터 로드
             string filePath = Path.Combine(projectDir, "data", "character.json");
             string jsn = File.ReadAllText(filePath);
 
-            player = JsonSerializer.Deserialize<Player>(jsn);
+            PlayerManager.Instance._Player = JsonSerializer.Deserialize<Player>(jsn);
 
             Console.WriteLine("캐릭터 불러오기 완료!");
             Console.WriteLine(filePath);
         }
-        void LoadItems(ref List<MountableItem> _items, string _str)
+        void LoadItems(string _str)
         {
             // 아이템 로드(MountableItem)
             string filePath = Path.Combine(projectDir, "data", $"{_str}.json");
             string jsn = File.ReadAllText(filePath);
 
-            _items = JsonSerializer.Deserialize<List<MountableItem>>(jsn);
+            InventoryManager.Instance.mountableItems = JsonSerializer.Deserialize<List<MountableItem>>(jsn);
 
             Console.WriteLine("아이템 불러오기 완료!");
             Console.WriteLine(filePath);
         }
-        void LoadItems(ref List<PotionItem> _items, string _str)
+        void LoadItems(PotionItem item, string _str)
         {
             // 아이템 로드(PotionItem)
             string filePath = Path.Combine(projectDir, "data", $"{_str}.json");
             string jsn = File.ReadAllText(filePath);
 
-            _items = JsonSerializer.Deserialize<List<PotionItem>>(jsn);
+            InventoryManager.Instance.potion = JsonSerializer.Deserialize<PotionItem>(jsn);
 
             Console.WriteLine("아이템 불러오기 완료!");
             Console.WriteLine(filePath);

@@ -14,7 +14,7 @@ namespace Window11_TextRPG
         // 생성자
         private LobbyManager() 
         {
-            lobbyList = new string[6]
+            lobbyList = new string[7]
             {
                 "상태 보기",
                 "전투 시작",
@@ -22,6 +22,7 @@ namespace Window11_TextRPG
                 "상점",
                 "퀘스트",
                 "저장하기",
+                "불러오기",
             };
         }
         // 싱글톤 
@@ -71,6 +72,10 @@ namespace Window11_TextRPG
                 case 6:
                     // 저장하기
                     GameManager.Instance.GetSave();
+                    break;
+                case 7:
+                    // 불러오기
+                    GameManager.Instance.GetLoad();
                     break;
                 default:
                     // 다시 로비로 돌아가기
