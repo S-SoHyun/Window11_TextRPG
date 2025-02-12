@@ -47,9 +47,6 @@ namespace Window11_TextRPG
             // 퀘스트 리스트 
             InitQuestList();
 
-            // 수행가능한 퀘스트 이름만 빼서 배열로 저장 (LINQ)
-            questOption = performableQuests.Select(q => q.QuestName).ToArray();
-
         }
         // 싱글톤
         private static QuestManager? instance;
@@ -67,6 +64,8 @@ namespace Window11_TextRPG
         {
             Console.Clear();
 
+            // 수행가능한 퀘스트 이름만 빼서 배열로 저장 (LINQ)
+            questOption = performableQuests.Select(q => q.QuestName).ToArray();
             // 목록(리스트) 출력
             DisplayManager.PrintMenu(questOption);
 
@@ -75,13 +74,14 @@ namespace Window11_TextRPG
             // player input 
             int input = UtilManager.PlayerInput(0, questOption.Length);
             
-            // 4 입력하면 되돌아가기 => 퀘스트화면으로
+            // 0 : 입력하면 되돌아가기 => 퀘스트화면으로
             if (input == 0)
                 GameManager.Instance.ChangeScene(SceneState.LobbyManager);
 
-            // 현재 퀘스트 
-            currQuest = quests[input - 1];
-            // 완료여부에 따라 state변화 (내부에서 처리함)
+            // 1 ~ N 퀘스트 고르기 성공
+            // 1. 현재 퀘스트 
+            currQuest = performableQuests[input - 1];
+            // 2. 완료여부에 따라 state변화 (내부에서 처리함)
             currQuest.CheckState();
 
             // 퀘스트 print
@@ -180,16 +180,46 @@ namespace Window11_TextRPG
             // currQuest의 보상 컨테이너에 접근해서 아이템 획득
             foreach (var temp in currQuest.RewardItemByCount)
             {
+                // ##TODO : 획득할 아이템의 갯수도 dicrionary에 있긴한데
+                // inventory에 갯수만큼 획득 이라는 기능이 없어서 보류
+
                 // 아이템 획득처리 type이 item이라 Mountable로 형변환
                 InventoryManager.instance.RewardInstnace.SetItem((MountableItem)temp.Key);
-
-                // 골드추가
-                // 플레이어의 골드 프로퍼티에 접근
-                // ##TODO : PlayerManager에 player변수 프로퍼티 만들어달라고하기
-
             }
 
+            // 골드추가
+            // 플레이어 골드 += 현재 퀘스트 클리어골드
+            PlayerManager.Instance._Player.gold += currQuest.QuestGold;
+
+            // 최종 완료 퀘스트 세팅 
+            RemovePerfomListAndAddToChild();
+
             WaitAndReturnToQuest();
+        }
+
+        private void RemovePerfomListAndAddToChild() 
+        {
+            // 현재 퀘스트의 state를 done으로
+            // 퀘스트 수락 -> 현재 퀘스트를 accept 로 바꾸기
+            currQuest.ChangeState(QuestState.done);
+
+            // currQuest와 같은 quest 반환
+            var temp = performableQuests.Find( quest => quest.Equals(currQuest));
+
+            // 수행가능 리스트에서 삭제
+            if (temp != null) 
+            {
+                performableQuests.Remove(temp);
+            }
+
+            // done 리스트에 추가
+            doneQuest.Add(currQuest);
+
+            // 현재 퀘스트의 child리스트에 접근해서 가능한 퀘스트리스트에 넣어야 함 
+            for (int i = 0; i < currQuest.ChildQuest.Count; i++) 
+            {
+                performableQuests.Add(currQuest.ChildQuest[i]);
+            }
         }
 
         // 3초후 퀘스트화면으로 돌아가기
@@ -221,24 +251,28 @@ namespace Window11_TextRPG
                 , tooltip: "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n" +
                     "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
                     "모험가인 자네가 좀 처치해주게!\r\n",
-                perForm : "Minion 처치하기");
+                perForm : "",
+                rewardGold : 1000 );
             Quest kill2 = new MonsterKillQuest
-               (name: "마을을 위협하는 대포 미니언 처치"
+               (name: "대포 미니언 처치"
                , tooltip: "미니언들을 처지하니 대포미니언이 나타났군!\r\n" +
-                   "모험가인 자네가 좀 처치해주게!\r\n",
-               perForm: "Canon 처치하기");
+                   "저정도는 잡을 수 있겟지!\r\n",
+               perForm: "",
+               rewardGold: 2000);
             Quest kill3 = new MonsterKillQuest
-               (name: "마을을 위협하는 미니언 처치"
-               , tooltip: "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n" +
-                   "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
-                   "모험가인 자네가 좀 처치해주게!\r\n",
-               perForm: "VoidMonster 처치하기");
+               (name: "공허충 처치하기"
+               , tooltip: "저건 대체 뭐란말인가! \r\n" +
+                   "마을에 공허충이 돌아다디는게 말이되나 모험가? \r\n" +
+                   "싹다 잡고오게!\r\n",
+               perForm: "",
+               rewardGold: 3000);
             Quest kill4 = new MonsterKillQuest
-               (name: "마을을 위협하는 미니언 처치"
-               , tooltip: "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n" +
-                   "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
-                   "모험가인 자네가 좀 처치해주게!\r\n",
-               perForm: "몬스터 처치하기");
+               (name: "피니셔 - 세상의멸망 "
+               , tooltip: "세상이 멸망하려나보군 \r\n" +
+                   "미니언,대포미니언,공허충이 한번에 마을에 나타나다니 \r\n" +
+                   "모험가, 마을을 지켜주게!\r\n",
+               perForm: $"한개이상 장비를 낀 채로",
+               rewardGold: 99999);
 
             // ? 역할 : null이 발생하면 메서드를 실행하지 않음 
             (kill1 as MonsterKillQuest)?.AddtoKillMonsterList("Minion", 5);
@@ -246,7 +280,7 @@ namespace Window11_TextRPG
             (kill3 as MonsterKillQuest)?.AddtoKillMonsterList("VoidMonster", 2);
             (kill4 as MonsterKillQuest)?.AddtoKillMonsterList("Minion", 40);
             (kill4 as MonsterKillQuest)?.AddtoKillMonsterList("Canon", 25);
-            (kill3 as MonsterKillQuest)?.AddtoKillMonsterList("VoidMonster", 10);
+            (kill4 as MonsterKillQuest)?.AddtoKillMonsterList("VoidMonster", 10);
 
             #endregion
 
@@ -257,7 +291,8 @@ namespace Window11_TextRPG
                     "인벤토리에서 아무 장비나 장착하게! \r\n",
                 perForm: "인벤토리에서 Armor 장비 장착하기",
                 type: ITEMTYPE.ARMOR,
-                wearCnt: 1);
+                wearCnt: 1,
+                rewardGold: 500);
             Quest equip2 = new EquiptQuest
                 (name: "더욱 더 강해지기!"
                 , tooltip: "자네 맨손으로 싸우고있었나?\r\n" +
@@ -265,39 +300,71 @@ namespace Window11_TextRPG
                     "인벤토리에서 무기를 착용하고 오게 \r\n",
                 perForm: "인벤토리에서 Weapon 장비 장착하기",
                 type: ITEMTYPE.WEAPON,
-                wearCnt: 1);
+                wearCnt: 1,
+                rewardGold: 1500);
             Quest equip3 = new EquiptQuest
                 (name: "인벤토리가 가득!"
-                , tooltip: "무기와 장비를 장책했군 ! ?\r\n" +
+                , tooltip: "무기와 장비를 장착했군 ! ?\r\n" +
                     "그럼 이제 인벤토리를 가득 채워보세 \r\n" +
                     "인벤토리에 15개 이상 아이템을 가지고있게 \r\n",
                 perForm: "인벤토리에서 15개 이상 아이템 소유",
                 type: null,
-                wearCnt: 15);
+                wearCnt: 15,
+                rewardGold: 99999);
             #endregion
 
-            // 보상 아이템 세팅
-            stringByQuest.Add(kill1.QuestName , kill1);
-            stringByQuest.Add(kill2.QuestName , kill2);
-            stringByQuest.Add(kill3.QuestName , kill3);
-            stringByQuest.Add(kill4.QuestName , kill4);
-            
-            stringByQuest.Add(equip1.QuestName , equip1);
-            stringByQuest.Add(equip2.QuestName , equip2);
-            stringByQuest.Add(equip3.QuestName , equip3);
+            // 전체 딕셔너리에 넣기
+            try 
+            {
+                stringByQuest.Add(kill1.QuestName, kill1);
+                stringByQuest.Add(kill2.QuestName, kill2);
+                stringByQuest.Add(kill3.QuestName, kill3);
+                stringByQuest.Add(kill4.QuestName, kill4);
+
+                stringByQuest.Add(equip1.QuestName, equip1);
+                stringByQuest.Add(equip2.QuestName, equip2);
+                stringByQuest.Add(equip3.QuestName, equip3);
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
 
             // 트리 연결하기 
             // 연계퀘스트 내역은 는 피그마 확인해주세요!
-            stringByQuest[kill1.QuestName].AddChild(kill2);
-            stringByQuest[kill1.QuestName].AddChild(kill3);
-            stringByQuest[kill2.QuestName].AddChild(kill4);
+            try 
+            {
+                stringByQuest[kill1.QuestName].AddChild(kill2);
+                stringByQuest[kill1.QuestName].AddChild(kill3);
+                stringByQuest[kill2.QuestName].AddChild(kill4);
 
-            stringByQuest[equip1.QuestName].AddChild(equip2);
-            stringByQuest[equip2.QuestName].AddChild(equip3);
+                stringByQuest[equip1.QuestName].AddChild(equip2);
+                stringByQuest[equip2.QuestName].AddChild(equip3);
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
+            // 보상 세팅
+            try 
+            {
+                stringByQuest[kill1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[kill2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[kill3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+
+                stringByQuest[equip1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[equip2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
 
             // 수행가능한 퀘스트 추가 
-            performableQuests.Add(kill1);
-            performableQuests.Add(equip1);
+            try
+            {
+                performableQuests.Add(kill1);
+                performableQuests.Add(equip1);
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
         }
     }
 }
