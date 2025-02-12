@@ -17,7 +17,8 @@ namespace Window11_TextRPG
         InventoryManager,
         StoreManager,
         QuestManager,
-        StatusManager
+        StatusManager,
+        HealManager
     }
 
     internal class GameManager
@@ -51,6 +52,7 @@ namespace Window11_TextRPG
             ISceneList[(int)SceneState.StoreManager]        = StoreManager.Instance;
             ISceneList[(int)SceneState.QuestManager]        = QuestManager.Instance;
             ISceneList[(int)SceneState.StatusManager]       = StatusManager.Instance;
+            ISceneList[(int)SceneState.HealManager]         = HealManager.Instance;
         }
 
         // 씬 (manager) 변화 
