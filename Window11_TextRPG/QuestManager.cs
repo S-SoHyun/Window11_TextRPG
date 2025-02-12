@@ -10,18 +10,24 @@ namespace Window11_TextRPG
 {
     public enum QuestState
     {
-        beforeReceive,
-        afterReceive,
-        complete
+        beforeReceive,  // 받기전
+        afterReceive,   // 받은 후 
+        complete,       // 받은 후 보상수령 가능한 상태
+        done            // 보상수령을 했다면 아얘 끝난 상태
     }
 
 
     internal class QuestManager : IScene
     {
-        private List<Quest> quests;     // 퀘스트 컨테이너 
-        private Quest currQuest;        // 현재 퀘스트 저장 
         private string[] questOption;     // 퀘스트 씬 옵션 목록
         private string[] rewardOptionByState;     // 스탯 별 출력해야할 옵션 : 수락 or 퀘받아가세요 or 보상받기
+
+        // 퀘스트 컨테이너
+        private Dictionary<string, Quest> stringByQuest;    // 전체 퀘스트 컨테이너 
+        private Quest currQuest;                            // 현재 퀘스트 저장 
+
+        private List<Quest> performableQuests;  // 수행가능 퀘스트
+        private List<Quest> doneQuest;          // 아얘 끝난 퀘스트 
 
         // 퀘스트 수락 or 퀘 받기 or 보상받기 선택 시 실행할 메서드 저장해놓을 Action
         private Action? actionOne;
@@ -30,13 +36,20 @@ namespace Window11_TextRPG
         // 생성자
         private QuestManager()
         {
+            // 컨테이너 초기화
+            stringByQuest       = new Dictionary<string, Quest>();
+            performableQuests   = new List<Quest>();
+            doneQuest           = new List<Quest>();
+
+            rewardOptionByState = new string[2];
+
+
             // 퀘스트 리스트 
             InitQuestList();
 
-            // quest에서 이름만 빼서 배열로 저장 (LINQ)
-            questOption = quests.Select(q => q.QuestName).ToArray();
+            // 수행가능한 퀘스트 이름만 빼서 배열로 저장 (LINQ)
+            questOption = performableQuests.Select(q => q.QuestName).ToArray();
 
-            rewardOptionByState = new string[2];
         }
         // 싱글톤
         private static QuestManager? instance;
@@ -193,7 +206,7 @@ namespace Window11_TextRPG
 
         private void InitQuestList()
         {
-            quests = new List<Quest>();
+            
 
             // 1번 : 미니언처치
             // -> Dungeon에서 Monster 생성 후 몇마리 처치 했는지 저장 필요함 
@@ -202,42 +215,89 @@ namespace Window11_TextRPG
             // -> InventoryManager안에 아이템list가 있는데 item에는 장착했는지 여부에 대한 enum 이 있어서
             // enum 기준으로 LINQ 한 다음에 배열이 0이상이면 있음 없음 정도로 해보면될듯
 
-            #region 장비 리스트 초기화 
-            quests.Add(new MonsterKillQuest
+            #region Monster Kill 퀘스트 생성 
+            Quest kill1 =new MonsterKillQuest
                 (name: "마을을 위협하는 미니언 처치"
                 , tooltip: "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n" +
                     "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
                     "모험가인 자네가 좀 처치해주게!\r\n",
-                perForm : "몬스터 처치하기",
-                monstername: "Minion",
-                killCount: 5));
-            quests.Add(new EquiptQuest
+                perForm : "Minion 처치하기");
+            Quest kill2 = new MonsterKillQuest
+               (name: "마을을 위협하는 대포 미니언 처치"
+               , tooltip: "미니언들을 처지하니 대포미니언이 나타났군!\r\n" +
+                   "모험가인 자네가 좀 처치해주게!\r\n",
+               perForm: "Canon 처치하기");
+            Quest kill3 = new MonsterKillQuest
+               (name: "마을을 위협하는 미니언 처치"
+               , tooltip: "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n" +
+                   "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
+                   "모험가인 자네가 좀 처치해주게!\r\n",
+               perForm: "VoidMonster 처치하기");
+            Quest kill4 = new MonsterKillQuest
+               (name: "마을을 위협하는 미니언 처치"
+               , tooltip: "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n" +
+                   "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
+                   "모험가인 자네가 좀 처치해주게!\r\n",
+               perForm: "몬스터 처치하기");
+
+            // ? 역할 : null이 발생하면 메서드를 실행하지 않음 
+            (kill1 as MonsterKillQuest)?.AddtoKillMonsterList("Minion", 5);
+            (kill2 as MonsterKillQuest)?.AddtoKillMonsterList("Canon", 5);
+            (kill3 as MonsterKillQuest)?.AddtoKillMonsterList("VoidMonster", 2);
+            (kill4 as MonsterKillQuest)?.AddtoKillMonsterList("Minion", 40);
+            (kill4 as MonsterKillQuest)?.AddtoKillMonsterList("Canon", 25);
+            (kill3 as MonsterKillQuest)?.AddtoKillMonsterList("VoidMonster", 10);
+
+            #endregion
+
+            #region Equip 퀘스트 생성
+            Quest equip1 = new EquiptQuest
                 (name: "장비를 장착해보자"
                 , tooltip: "모험가 자네 아직도 장비를 장착하지 않았는가?\r\n" +
                     "인벤토리에서 아무 장비나 장착하게! \r\n",
-                perForm : "인벤토리에서 Armor 장비 장착하기",
-                type : ITEMTYPE.ARMOR ,
-                wearCnt : 2));
-            quests.Add(new EquiptQuest
+                perForm: "인벤토리에서 Armor 장비 장착하기",
+                type: ITEMTYPE.ARMOR,
+                wearCnt: 1);
+            Quest equip2 = new EquiptQuest
                 (name: "더욱 더 강해지기!"
                 , tooltip: "자네 맨손으로 싸우고있었나?\r\n" +
                     "무기를 끼면 강해진다네 \r\n" +
                     "인벤토리에서 무기를 착용하고 오게 \r\n",
                 perForm: "인벤토리에서 Weapon 장비 장착하기",
                 type: ITEMTYPE.WEAPON,
-                wearCnt : 1));
+                wearCnt: 1);
+            Quest equip3 = new EquiptQuest
+                (name: "인벤토리가 가득!"
+                , tooltip: "무기와 장비를 장책했군 ! ?\r\n" +
+                    "그럼 이제 인벤토리를 가득 채워보세 \r\n" +
+                    "인벤토리에 15개 이상 아이템을 가지고있게 \r\n",
+                perForm: "인벤토리에서 15개 이상 아이템 소유",
+                type: null,
+                wearCnt: 15);
             #endregion
 
-            // 보상 아이템 세팅 ( ##TODO : 물약도 넣고싶은데 이건 물약넣는부분에서 수정후에  )
-            quests[0].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("나뭇가지"), 1);
-            quests[1].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("낡은 검"), 1); 
-            quests[2].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("풀옷"), 1);
-            quests[2].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+            // 보상 아이템 세팅
+            stringByQuest.Add(kill1.QuestName , kill1);
+            stringByQuest.Add(kill2.QuestName , kill2);
+            stringByQuest.Add(kill3.QuestName , kill3);
+            stringByQuest.Add(kill4.QuestName , kill4);
+            
+            stringByQuest.Add(equip1.QuestName , equip1);
+            stringByQuest.Add(equip2.QuestName , equip2);
+            stringByQuest.Add(equip3.QuestName , equip3);
 
-            // 보상 골드 세팅
-            quests[0].SetRewardGold(100);
-            quests[1].SetRewardGold(200);
-            quests[2].SetRewardGold(300);
+            // 트리 연결하기 
+            // 연계퀘스트 내역은 는 피그마 확인해주세요!
+            stringByQuest[kill1.QuestName].AddChild(kill2);
+            stringByQuest[kill1.QuestName].AddChild(kill3);
+            stringByQuest[kill2.QuestName].AddChild(kill4);
+
+            stringByQuest[equip1.QuestName].AddChild(equip2);
+            stringByQuest[equip2.QuestName].AddChild(equip3);
+
+            // 수행가능한 퀘스트 추가 
+            performableQuests.Add(kill1);
+            performableQuests.Add(equip1);
         }
     }
 }
