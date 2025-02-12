@@ -123,6 +123,8 @@ namespace Window11_TextRPG
 
         public void SetSkills(string job)
         {
+            skills = new List<Skill>();
+
             switch (job)
             {
                 case "전사":
