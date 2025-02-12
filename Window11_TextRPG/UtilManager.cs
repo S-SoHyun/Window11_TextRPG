@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Window11_TextRPG;
 
 namespace Window_11_TEXTRPG
 {
@@ -54,6 +55,13 @@ namespace Window_11_TEXTRPG
             Thread.Sleep(second * 1000);   // ex) 3 * 1000 : 3초 대기
         }
 
+
+        // 플레이어 체력 계산
+        public static int CalcPlayerHp(Player player, int num)
+        {
+            int hp = player.hp + num >= player.maxhp ? player.maxhp : player.hp + num;
+            return hp;
+        }
 
     }
 }
