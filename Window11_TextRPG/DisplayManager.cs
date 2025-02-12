@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 using Window_11_TEXTRPG;
@@ -704,10 +705,18 @@ namespace Window11_TextRPG
 
 
         // DisplayerManger에 함수 옮기기!
-        public static void PrintMenu(string[] list)
+        public static void PrintMenu(string[] list, int? stage = 0)
         {
             for (int i = 0; i < list.Length; i++)
             {
+                if (list[i].Equals("전투 시작"))
+                {
+                    list[i] = list[i].Insert(list[i].Length,$" (현재 진행 : {stage}층)");
+                }
+                else if (list[i].Contains("전투 시작") && list[i].Contains((stage - 1) + ""))
+                {
+                    list[i] = list[i].Replace($" (현재 진행 : {stage - 1}층)", $" (현재 진행 : {stage}층)");
+                }
                 Console.WriteLine($"{i + 1} . {list[i]}");
             }
         }

@@ -42,8 +42,10 @@ namespace Window11_TextRPG
         {
             Console.Clear();
 
+            Player player = PlayerManager.Instance._Player;
+
             // 출력
-            DisplayManager.PrintMenu(lobbyList);
+            DisplayManager.PrintMenu(lobbyList, player.stage);
 
             // player input 
             int input = UtilManager.PlayerInput(1, lobbyList.Length);

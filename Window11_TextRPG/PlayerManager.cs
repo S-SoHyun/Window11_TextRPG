@@ -29,9 +29,7 @@ namespace Window11_TextRPG
       }
     }
 
-    //Player player = new Player();
     Player player;
-    // 플레이어에 static 박기
 
     public Player _Player
     {
@@ -42,35 +40,8 @@ namespace Window11_TextRPG
 
     }
 
-
-
-
-
-
-
-
-    //public static void LevelCheck(Player player, Monster monster)
-    //{
-    //    //몬스터가 죽으면 몬스터 레벨만큼 경험치 받기
-    //    //겅혐치통 공식 (5 * (level * (level - 1)) / 2) + 10
-    //    // 레벨 업하면 player.atk , def 증가
-    //    if (monster.IsDie())
-    //    {
-    //        player.exp += monster.level;
-    //        if (player.exp >= 5 * (player.level * (player.level - 1) / 2) + 10)
-    //        {
-    //            player.exp = player.exp % (5 * (player.level * (player.level - 1) / 2) + 10);
-    //            player.level += 1;
-    //            player.atk += 0.5f; ;
-    //            player.def += 1;
-    //        }
-    //    }
-    //}
-
-
     public void Enter()
     {
-
       DisplayManager.ChooseNameScene(player);
       string input = Console.ReadLine().ToString();
       DisplayManager.ChooseJobScene(player);
