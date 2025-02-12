@@ -1,4 +1,5 @@
 ﻿using System.Linq.Expressions;
+using System.Net;
 using Window_11_TEXTRPG;
 
 namespace Window11_TextRPG
@@ -18,6 +19,10 @@ namespace Window11_TextRPG
         // 단일 반환값을 사용해서 delegate보다는 Func이 더 알맞다고생각
         // 델리게이트는 메서드를 한개의 이벤트 처럼 사용할 때 유용하다고 생각 
 
+        // 트리구조
+        protected Quest parentQuest;
+        protected List<Quest> childQuest;
+
         // 프로퍼티
         public string QuestName => questName;
         public string QuestStory => questStory;
@@ -25,17 +30,21 @@ namespace Window11_TextRPG
         public string QuestPerform => questPerform;
         public QuestState QuestState { get => questState; set { questState = value; } }
         public Dictionary<Item, int> RewardItemByCount => rewardItemByCount;
+        public Quest ParentQuest { get => parentQuest; set { parentQuest = value; } }
+        public List<Quest> ChildQuest => childQuest;
 
-
-        public Quest(string name, string tooltip, string questPerfom)
+        public Quest(string name, string tooltip, string questPerfom , int rewardGold)
         {
             this.questName = name;
             this.questStory = tooltip;
             this.questPerform = questPerfom;
             this.questState = QuestState.beforeReceive;     // 생성할 때, 받기전으로 설정 
+            this.rewardGold = rewardGold;
 
             if (rewardItemByCount == null)
                 rewardItemByCount = new Dictionary<Item, int>();
+            if(childQuest == null)
+                childQuest = new List<Quest>(); 
         }
 
         public void AddToItem(Item item, int count)
@@ -48,11 +57,6 @@ namespace Window11_TextRPG
             {
                 Console.WriteLine("Quest 클래스 : Item Dicrionary 추가 오류 ");
             }
-        }
-
-        public void SetRewardGold(int gold) 
-        {
-            this.rewardGold = gold;
         }
 
         public void ChangeState(QuestState state) 
@@ -95,58 +99,100 @@ namespace Window11_TextRPG
             // ex) 500 G
             return em;
         }
+
+        // child 자식 대입
+        public void AddChild(Quest child) 
+        {
+            child.parentQuest = this;
+            childQuest.Add(child);
+        }
     }
 
     public class MonsterKillQuest : Quest
     {
         // 처치해야할 몬스터 
         // Monster 타입이면 더 좋을듯
-        private string monsterName;
-        private int killCount;
+        private List<string> monsterNameList;
+        private List<int> killCountList;
         
         // 프로퍼티
-        public string MonsterName => monsterName;
-        public int KillCount => killCount;  
+        public List<string> MonsterNameList => monsterNameList;
+        public List<int> KillCountList => killCountList;  
 
-        public MonsterKillQuest(string name, string tooltip,string perForm ,string monstername , int killCount) : 
-            base(name, tooltip , perForm)
+        public MonsterKillQuest(string name, string tooltip,string perForm , int rewardGold) : 
+            base(name, tooltip , perForm , rewardGold)
         {
-            this.monsterName = monstername;
-            this.killCount = killCount;
-
             // Func에 연결
             completeQuest += TodoMission;
         }
 
+        public void AddtoKillMonsterList(string name , int cnt ) 
+        {
+            if (monsterNameList == null)
+                monsterNameList = new List<string>();
+            if (killCountList == null)
+                killCountList = new List<int>();
+
+            // 리스트에 각각 추가
+            monsterNameList.Add(name);
+            killCountList.Add(cnt);
+        }
+
         public override bool TodoMission()
         {
-            // 지금까지 처치한 몬스터 수 
-            int nowKillMonsterCnt = DungeonManager.Instance.monsterCatches[MonsterName];
+            bool flag = true;
 
-            // 해당하는 처치 몬스터가 Count가 넘으면 => return true
-            if (nowKillMonsterCnt > killCount)
-                return true;
-            return false;
+            // 지금까지 처치한 몬스터 수 
+            for (int i = 0; i < monsterNameList.Count; i++) 
+            {
+                string nowMonster = monsterNameList[i];
+                int countToKill = killCountList[i];
+
+                // 잡은횟수
+                int killCnt = DungeonManager.Instance.monsterCatches[nowMonster];
+
+                // 처치한 몬스터가 kill count보다 낮으면 -> 실패
+                if (killCnt < countToKill)
+                { 
+                    flag = false;
+                    break;
+                }
+            }
+
+            // for문안의 조건문에 걸리지않으면 -> killcount대로 다 잡은것 
+            return flag;
         }
 
         public override string QuestProgress()
         {
+            string str = String.Empty;
+
             // 지금까지 처치한 몬스터 수 
-            int nowKillMonsterCnt = DungeonManager.Instance.monsterCatches[MonsterName];
+            for (int i = 0; i < monsterNameList.Count; i++)
+            {
+                string nowMonster = monsterNameList[i];
+                int nowKillCnt = killCountList[i];
+
+                // 잡은횟수
+                int killCnt = DungeonManager.Instance.monsterCatches[nowMonster];
+
+                str += $"{this.questPerform} {nowMonster} 몬스터 처지하기 ( {killCnt} / {nowKillCnt} ) \n";
+            }
 
             // ex) 미니언 killcount만큼 처지 2 / 5
-            return $"{this.questPerform} ( {nowKillMonsterCnt} / {this.killCount} ) ";
+            // ex) 대포 미니언 killcount만큼 처지 1 / 5
+            return str;
         }
 
     }
 
     public class EquiptQuest : Quest
     {
-        private ITEMTYPE questItemType;
+        private ITEMTYPE? questItemType;
         private int wearCount;
 
-        public EquiptQuest(string name, string tooltip, string perForm , ITEMTYPE type , int wearCnt) 
-            : base(name, tooltip,  perForm)
+        public EquiptQuest(string name, string tooltip, string perForm , ITEMTYPE? type , int wearCnt , int rewardGold) 
+            : base(name, tooltip,  perForm , rewardGold)
         {
             this.questItemType = type;
             this.wearCount = wearCnt;
@@ -157,18 +203,8 @@ namespace Window11_TextRPG
 
         public override bool TodoMission()
         {
-            // 인벤토리 manager의 리스트에 접근
-            // 조건 : 아이템타입이 questType 와 같고, equip가 true이면 
-            // 조건에 만족하면 return true ( LINQ의 any 사용 )
-            int count = InventoryManager.instance.mountableItems
-                .Count(item => item.Type == questItemType && item.Equip);
-            /*
-            var temp = from item in InventoryManager.instance.mountableItems
-                       where item.Type == questItemType && item.Equip == true
-                       select item;
-            */
-
-            if (count >= wearCount)
+            // type별 조건에 만족하는 갯수가 착용해야하는 갯수보다 많으면 (=>성공)
+            if ( typeByStisFiedCount() >= wearCount)
                 return true;
 
             return false;
@@ -176,13 +212,32 @@ namespace Window11_TextRPG
 
         public override string QuestProgress()
         {
+           
+            // ex) 장비 착용하기 ( 조건에 만족하는 아이템 갯수  / 1 )
+            return $"{questPerform} ( {typeByStisFiedCount()} / {wearCount} )";
+        }
+
+        private int typeByStisFiedCount() 
+        {
+            int count = 0;
+            //  type이 null 이면 ?
+            // 인벤토리 리스트의 count를 검사해야함
+            if (questItemType == null)
+            {
+                // own 변수가 true인 것만 count
+                count = InventoryManager.instance.mountableItems
+                        .Count(item => item.Own);
+            }
+
             // 조건 : 아이템타입이 questType 와 같고, equip가 true이면 
             // 조건에 맞는 count 
-            int count = InventoryManager.instance.mountableItems
-                .Count(item => item.Type == questItemType && item.Equip);
+            else
+            {
+                count = InventoryManager.instance.mountableItems
+                    .Count(item => item.Type == questItemType && item.Equip);
+            }
 
-            // ex) 장비 착용하기 0 / 1
-            return $"{questPerform} ( {count} / {wearCount} )";
+            return count;
         }
     }
 
