@@ -30,7 +30,7 @@ namespace Window11_TextRPG
         public Item armor { get; set; } = null;
         [JsonIgnore]
         public List<Skill> skills { get; set; }
-        public int stage { get; set; }
+        public int stage { get; set; } = 1;
 
         public Player(string job, string name, int maxhp, float atk)
         {  //이름 ,직업, 체력, 최대 체력 , 공격력 ,방어력 ,돈, 경험치?
@@ -46,7 +46,6 @@ namespace Window11_TextRPG
             mp = maxmp;
             gold = 1500;
             exp = 0;
-            stage = 1;
 
             skills = new List<Skill>();
             int skillAtk = UtilManager.GetCeiling(atk);
@@ -144,6 +143,11 @@ namespace Window11_TextRPG
                     skills.Add(new Skill("멀티샷", "(공격력 * 1.5) - 대상 수만큼 모든 적을 공격합니다.", 20, (int)DungeonManager.SkillType.all, SkillManager.MultiShot));
                     break;
             }
+        }
+
+        public void NextStage()
+        {
+            stage += 1;
         }
     }
 }
