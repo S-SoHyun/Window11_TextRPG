@@ -153,7 +153,6 @@ namespace Window_11_TEXTRPG
         {
             DivisionOwnItem(mountableItems);
             DivisionType(ownItems);
-            ownItems = ownItems.Distinct().ToList();    // 목록 중복되는 문제 distinct로 제거
 
             DisplayManager.InventoryScene(player, ownItems);
             int input = UtilManager.PlayerInput(0, 1);
@@ -192,6 +191,8 @@ namespace Window_11_TEXTRPG
         // 상점에서 산 아이템들 따로 리스트에 넣기
         public void DivisionOwnItem(List<MountableItem> items)
         {
+            // 리스트 비우기
+            ownItems.Clear();
             for (int i = 0; i < items.Count; i++)
             {
                 if (items[i].Own)
