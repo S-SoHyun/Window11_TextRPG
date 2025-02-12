@@ -156,12 +156,10 @@ namespace Window11_TextRPG
             // 경험치 추가 전 레벨 저장
             int beforeLevel = player.level;
             int expBeforeGain = player.exp;
+            player.GainExp(totalExp);
             bool leveledUp = (beforeLevel < player.level);
             int expForNextLevel = player.GetExpForNextLevel();
-
-            player.GainExp(totalExp);
             Reward reward = InventoryManager.instance.RewardInstnace;
-
             DisplayManager.DungeonWinResultScene(
         player, monsters.Count, playerHpBeforeEnter, reward.Gold(), reward.Potion(), reward.Item(),totalExp, expBeforeGain, expForNextLevel, leveledUp );
         }
