@@ -184,7 +184,7 @@ namespace Window11_TextRPG
             Console.Write(">> ");
         }
 
-        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter, int gold, int potionCount, MountableItem? item)
+        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter, int gold, int potionCount,MountableItem? item, int gainedExp, int expBeforeGain, int expForNextLevel, bool leveledUp)
         {
             Clear();
             Console.WriteLine("Battle!! - Result");
@@ -196,6 +196,20 @@ namespace Window11_TextRPG
             Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"Lv.{player.level} {player.name}");
             Console.WriteLine($"HP {playerHpBeforeEnter} -> {player.hp}");
+            AddBlankLine();
+
+            Console.WriteLine($"[경험치 획득] {gainedExp} EXP 획득!");
+
+            if (leveledUp)
+            {
+                Console.WriteLine($"레벨업! Lv.{player.level} 으로 상승!");
+            }
+            else
+            {
+                int expNeeded = expForNextLevel - player.exp;
+                Console.WriteLine($"다음 레벨까지 {expNeeded} EXP 필요");
+            }
+
             if (gold != 0 || potionCount != 0 || item != null)
             {
                 AddBlankLine();
