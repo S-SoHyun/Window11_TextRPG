@@ -12,15 +12,16 @@ namespace Window11_TextRPG
         private string[] lobbyList;
 
         // 생성자
-        private LobbyManager() 
+        private LobbyManager()
         {
-            lobbyList = new string[7]
+            lobbyList = new string[8]
             {
                 "상태 보기",
                 "전투 시작",
                 "인벤토리",
                 "상점",
                 "퀘스트",
+                "회복",
                 "저장하기",
                 "불러오기",
             };
@@ -47,7 +48,7 @@ namespace Window11_TextRPG
             // player input 
             int input = UtilManager.PlayerInput(1, lobbyList.Length);
 
-            switch (input) 
+            switch (input)
             {
                 case 1:
                     // 플레이어 Manger로 이동
@@ -70,10 +71,14 @@ namespace Window11_TextRPG
                     GameManager.Instance.ChangeScene(SceneState.QuestManager);
                     break;
                 case 6:
+                    // 힐 Manager로 변환 
+                    GameManager.Instance.ChangeScene(SceneState.HealManager);
+                    break;
+                case 7:
                     // 저장하기
                     GameManager.Instance.GetSave();
                     break;
-                case 7:
+                case 8:
                     // 불러오기
                     GameManager.Instance.GetLoad();
                     break;

@@ -468,7 +468,7 @@ namespace Window11_TextRPG
         public static void InventoryScene(Player player, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[인벤토리]");
+            ColorText("[인벤토리]", 255, 165, 0);
 
             AddBlankLine();
             Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
@@ -491,7 +491,7 @@ namespace Window11_TextRPG
         public static void EquipmentScene(Player player, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[인벤토리- 장착 관리]");
+            ColorText("[인벤토리- 장착 관리]", 255, 165, 0);
 
             AddBlankLine();
             Console.WriteLine("보유 중인 아이템을 관리할 수 있습니다.");
@@ -680,6 +680,28 @@ namespace Window11_TextRPG
                 }
             }
         }
+
+
+        // 회복 씬
+        public static void HealScene(Player player, PotionItem potion)
+        {
+            Clear();
+            ColorText("[회복]", 255, 165, 0);
+            Console.WriteLine("포션을 사용하면 체력을 30 회복할 수 있습니다.");
+            Console.WriteLine($"( 현재 체력 : {player.hp} )");
+            Console.WriteLine($"( 남은 포션 : {potion.Count} )");
+
+            AddBlankLine();
+            Console.WriteLine("1. 사용하기");
+            Console.WriteLine("0. 나가기");
+
+            AddBlankLine();
+
+            InputInduction();
+        }
+
+
+
 
         // DisplayerManger에 함수 옮기기!
         public static void PrintMenu(string[] list)
