@@ -77,6 +77,27 @@ namespace Window11_TextRPG
             return (finalDamage, hit); // 두 개의 값을 튜플로 반환
         }
 
+        public int GetExpForNextLevel()
+        {
+            return 10 + 5 * (level * (level - 1) / 2);
+        }
+
+        public void GainExp(int amount)
+        {
+            exp += amount;
+            LevelUpCheck();
+        }
+
+        public void LevelUpCheck()
+        {
+            while (exp >= GetExpForNextLevel()) 
+            {
+                exp -= GetExpForNextLevel();
+                level++;
+                atk += 0.5f;
+                def += 1;
+            }
+        }
 
 
         public bool Hpcheck()
