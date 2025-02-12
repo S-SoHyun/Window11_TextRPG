@@ -35,22 +35,6 @@ namespace Window_11_TEXTRPG
             return input;
         }
 
-        // ##TODO : 각각 mager에서 그냥 array만들어서 저장한 다음에 넣으면 좋을듯?
-        // ex) string[] array = new string[4]{"1.플레이어정보","2.상점","3.인벤토리","4.저장"}
-        // playerinput에 0 , array.length()를 넣으면 편할듯?
-        // 추가로
-        // disPlayermanager에서도 배열만 받으면
-        // 배열의 길이만큼 돌면서 출력하면되서 편할듯
-        // !!!!좀더 생각필요!
-
-        public static void PrintSelectList(string[] array) 
-        {
-            for (int i = 0; i < array.Length; i++)
-            {
-                Console.WriteLine();
-            }
-        }
-
         //소수점 올림
         public static int GetCeiling(double number)
         {
@@ -62,6 +46,14 @@ namespace Window_11_TEXTRPG
         {
             return new Random().Next(min, max);
         }
+
+
+        // N초동안 기다리기
+        public static void DelayForSecond(int second)
+        {
+            Thread.Sleep(second * 1000);   // ex) 3 * 1000 : 3초 대기
+        }
+
 
     }
 }

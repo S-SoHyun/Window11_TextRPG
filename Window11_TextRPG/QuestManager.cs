@@ -78,12 +78,6 @@ namespace Window11_TextRPG
             PrintRewardBystate();
         }
 
-        // UTilManager로 옮기기
-        public void DelayForSecond(int second)
-        {
-            Thread.Sleep(second * 1000);   // ex) 3 * 1000 : 3초 대기
-        }
-
         private void PrintQuest()
         {
             if (currQuest == null)
@@ -190,7 +184,7 @@ namespace Window11_TextRPG
         {
             Console.WriteLine("1초후 퀘스트 화면으로 돌아갑니다");
 
-            DelayForSecond(1);
+            UtilManager.DelayForSecond(1);
 
             // 퀘스트 메뉴로 돌아가기
             GameManager.Instance.ChangeScene(SceneState.QuestManager);
