@@ -343,16 +343,16 @@ namespace Window11_TextRPG
             // 보상 세팅
             try 
             {
-                stringByQuest[kill1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[kill2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[kill3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[kill1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("흙 검"), 1);
+                stringByQuest[kill2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("구리 검"), 1);
+                stringByQuest[kill3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("은 검"), 1);
+                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("철 활"), 1);
+                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("칠흑나무 활"), 1);
 
                 stringByQuest[equip1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[equip2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[equip2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("워셔블밀라노 스웨터"), 1);
+                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("코튼엑스트라윔"), 1);
+                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("플러피얀후리스풀집 재킷"), 1);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
