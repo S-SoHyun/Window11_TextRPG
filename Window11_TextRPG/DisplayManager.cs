@@ -342,14 +342,20 @@ namespace Window11_TextRPG
                     break;
                 case 2:
                     Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다!! [데미지 : {playerDamage}] -치명타 공격!!");
+                    AddBlankLine();
+                    Console.WriteLine($"Lv.{monster.level} {monster.name}");
+                    Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - playerDamage)}");
                     break;
                 default:
                     Console.WriteLine($"Lv.{monster.level} {monster.name} 을(를) 맞췄습니다. [데미지 : {playerDamage}]");
+                    AddBlankLine();
+                    Console.WriteLine($"Lv.{monster.level} {monster.name}");
+                    Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - playerDamage)}");
                     break;
             }
-            AddBlankLine();
-            Console.WriteLine($"Lv.{monster.level} {monster.name}");
-            Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - playerDamage)}");
+            //AddBlankLine();
+            //Console.WriteLine($"Lv.{monster.level} {monster.name}");
+            //Console.WriteLine($"HP {beforeMonsterHp} -> {(monster.IsDie() ? "Dead" : beforeMonsterHp - playerDamage)}");
             AddBlankLine();
             Console.WriteLine("0. 다음");
             AddBlankLine();
