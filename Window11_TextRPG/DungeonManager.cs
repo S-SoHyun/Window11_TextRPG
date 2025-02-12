@@ -26,11 +26,12 @@ namespace Window11_TextRPG
         private DungeonManager() 
         {
             InitMonsterCatches();
+            monsters = new List<Monster>();
         }
 
-        List<Monster> monsters = new List<Monster>();
+        List<Monster> monsters;
 
-        public Dictionary<string,int> monsterCatches = new Dictionary<string, int>();
+        public Dictionary<string, int> monsterCatches;
 
         public void Enter()
         {
@@ -61,6 +62,7 @@ namespace Window11_TextRPG
 
         public void InitMonsterCatches()
         {
+            monsterCatches = new Dictionary<string, int>();
             foreach (string monsterTypeName in Enum.GetNames(typeof(MonsterType)))
             {
                 monsterCatches.Add(monsterTypeName, 0);
