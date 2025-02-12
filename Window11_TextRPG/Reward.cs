@@ -29,6 +29,9 @@ namespace Window11_TextRPG
         List<MountableItem> rewardArmor = new List<MountableItem>();
         List<int> rewardGold = new List<int>();
 
+
+        public List<MountableItem> rewardItems;
+
         // 참조
         List<MountableItem> mountableItems;
         PotionItem potion;
@@ -61,6 +64,7 @@ namespace Window11_TextRPG
         {
             // 보상 장비(무기, 방어구) 리스트
             List<MountableItem> rewards = rewardArmor.Concat(rewardWeapon).ToList();
+            rewardItems = rewards;
 
             for (int i = 0; i < rewards.Count; i++)
             {
