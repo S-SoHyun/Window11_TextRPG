@@ -23,8 +23,11 @@ namespace Window11_TextRPG
         private string[] rewardOptionByState;     // 스탯 별 출력해야할 옵션 : 수락 or 퀘받아가세요 or 보상받기
 
         // 퀘스트 컨테이너
-        private Dictionary<string, Quest> stringByQuest;    // 전체 퀘스트 컨테이너 
+        private Dictionary<string, Quest> nameByQuest;    // 전체 퀘스트 컨테이너 
         private Quest currQuest;                            // 현재 퀘스트 저장 
+
+        // 저장용 컨테이너
+        private List<Quest> saveQuest;          // 딕셔너리의 value값을 json으로 직렬화가 안됨
 
         private List<Quest> performableQuests;  // 수행가능 퀘스트
         private List<Quest> doneQuest;          // 아얘 끝난 퀘스트 
@@ -33,13 +36,16 @@ namespace Window11_TextRPG
         private Action? actionOne;
         private Action? actionTwo;
 
+        public List<Quest> NameToQuest => saveQuest;
+
         // 생성자
         private QuestManager()
         {
             // 컨테이너 초기화
-            stringByQuest       = new Dictionary<string, Quest>();
+            nameByQuest       = new Dictionary<string, Quest>();
             performableQuests   = new List<Quest>();
             doneQuest           = new List<Quest>();
+            saveQuest           = new List<Quest>();
 
             rewardOptionByState = new string[2];
 
@@ -316,14 +322,27 @@ namespace Window11_TextRPG
             // 전체 딕셔너리에 넣기
             try 
             {
-                stringByQuest.Add(kill1.QuestName, kill1);
-                stringByQuest.Add(kill2.QuestName, kill2);
-                stringByQuest.Add(kill3.QuestName, kill3);
-                stringByQuest.Add(kill4.QuestName, kill4);
+                nameByQuest.Add(kill1.QuestName, kill1);
+                nameByQuest.Add(kill2.QuestName, kill2);
+                nameByQuest.Add(kill3.QuestName, kill3);
+                nameByQuest.Add(kill4.QuestName, kill4);
 
-                stringByQuest.Add(equip1.QuestName, equip1);
-                stringByQuest.Add(equip2.QuestName, equip2);
-                stringByQuest.Add(equip3.QuestName, equip3);
+                nameByQuest.Add(equip1.QuestName, equip1);
+                nameByQuest.Add(equip2.QuestName, equip2);
+                nameByQuest.Add(equip3.QuestName, equip3);
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+            
+            // 저장용 리스트에 넣기
+            try
+            {
+                saveQuest.Add(kill1);
+                saveQuest.Add(kill2);
+                saveQuest.Add(kill3);
+                saveQuest.Add(kill4);
+                saveQuest.Add(equip1);
+                saveQuest.Add(equip2);
+                saveQuest.Add(equip3);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
@@ -331,28 +350,28 @@ namespace Window11_TextRPG
             // 연계퀘스트 내역은 는 피그마 확인해주세요!
             try 
             {
-                stringByQuest[kill1.QuestName].AddChild(kill2);
-                stringByQuest[kill1.QuestName].AddChild(kill3);
-                stringByQuest[kill2.QuestName].AddChild(kill4);
+                nameByQuest[kill1.QuestName].AddChild(kill2);
+                nameByQuest[kill1.QuestName].AddChild(kill3);
+                nameByQuest[kill2.QuestName].AddChild(kill4);
 
-                stringByQuest[equip1.QuestName].AddChild(equip2);
-                stringByQuest[equip2.QuestName].AddChild(equip3);
+                nameByQuest[equip1.QuestName].AddChild(equip2);
+                nameByQuest[equip2.QuestName].AddChild(equip3);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
             // 보상 세팅
             try 
             {
-                stringByQuest[kill1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("흙 검"), 1);
-                stringByQuest[kill2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("구리 검"), 1);
-                stringByQuest[kill3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("은 검"), 1);
-                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("철 활"), 1);
-                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("칠흑나무 활"), 1);
+                nameByQuest[kill1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("흙 검"), 1);
+                nameByQuest[kill2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("구리 검"), 1);
+                nameByQuest[kill3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("은 검"), 1);
+                nameByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("철 활"), 1);
+                nameByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("칠흑나무 활"), 1);
 
-                stringByQuest[equip1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                stringByQuest[equip2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("워셔블밀라노 스웨터"), 1);
-                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("코튼엑스트라윔"), 1);
-                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("플러피얀후리스풀집 재킷"), 1);
+                nameByQuest[equip1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                nameByQuest[equip2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("워셔블밀라노 스웨터"), 1);
+                nameByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("코튼엑스트라윔"), 1);
+                nameByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("플러피얀후리스풀집 재킷"), 1);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
