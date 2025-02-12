@@ -162,10 +162,10 @@ namespace Window11_TextRPG
             ColorText("[직업선택]", 255, 165, 0);
             AddBlankLine(2);
 
-            Console.WriteLine("1.전사 HP:130  공격력:10");
-            Console.WriteLine("2.마법사 HP:90  공격력:10");
-            Console.WriteLine("3.도적 HP:100  공격력:15");
-            Console.WriteLine("4.궁수 HP:80  공격력:20");
+            Console.WriteLine("1.전사    HP:130    공격력:10");
+            Console.WriteLine("2.마법사  HP:90     공격력:17");
+            Console.WriteLine("3.도적    HP:100    공격력:15");
+            Console.WriteLine("4.궁수    HP:80     공격력:20");
             AddBlankLine(2);
 
 
