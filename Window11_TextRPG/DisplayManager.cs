@@ -30,15 +30,85 @@ namespace Window11_TextRPG
         private static void InputInduction()
         {
             AddBlankLine();
-            Console.WriteLine("원하시는 행동을 입력해주세요");
+            ColorText("원하시는 행동을 입력해주세요", 255, 255, 255);
+            // Console.WriteLine("원하시는 행동을 입력해주세요");
             // Console.Write(">>> ");
         }
 
+        public enum TEXTCOLOR
+        {
+            BLACK = ConsoleColor.Black,
+            BLUE = ConsoleColor.Blue,
+            CYAN = ConsoleColor.Cyan,
+            DBLUE = ConsoleColor.DarkBlue,
+            DCYAN = ConsoleColor.DarkCyan,
+            DGRAY = ConsoleColor.DarkGray,
+            DGREEN = ConsoleColor.DarkGreen,
+            DMAGENTA = ConsoleColor.DarkMagenta,
+            DRED = ConsoleColor.DarkRed,
+            DYELLOW = ConsoleColor.DarkYellow,
+            GRAY = ConsoleColor.Gray,
+            GREEN = ConsoleColor.Green,
+            MAGENTA = ConsoleColor.Magenta,
+            RED = ConsoleColor.Red,
+            WHITE = ConsoleColor.White,
+            YELLOW = ConsoleColor.Yellow,
+        }
+        public struct COLOR
+        {
+            public int r;
+            public int g;
+            public int b;
+
+            public COLOR(int r = 0, int g = 0, int b = 0)
+            {
+                this.r = r;
+                this.g = g;
+                this.b = b;
+            }
+        }
+
+        // 지정 색상 사용
+        public static void ColorText(string message, TEXTCOLOR color, bool lineChange = true)
+        {
+            Console.ForegroundColor = (ConsoleColor)color;
+            Console.Write(message);
+            Console.ResetColor();
+            if (lineChange)
+                Console.WriteLine("");
+        }
+        // 추가 색상 사용
+        public static void ColorText(string message, int r=0, int g=0, int b=0, bool lineChange = true)
+        {
+            // ANSI TrueColor
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
+            Console.Write($"\u001b[38;2;{r};{g};{b}m"); 
+            Console.Write(message);
+            Console.Write("\u001b[0m");
+            if (lineChange)
+                Console.WriteLine("");
+        }
+        public static void ColorText(string message, COLOR color, bool lineChange = true)
+        {
+            ColorText(message, color.r, color.g, color.b, lineChange);
+        }
+
+
+        public static void ColorText(Dictionary<string, COLOR> stringList, bool lineChange = true)
+        {
+            foreach (var item in stringList)
+            {
+                ColorText(item.Key, item.Value, lineChange);
+
+            }
+            if (lineChange)
+                Console.WriteLine("");
+        }
 
         public static void StatusScene(Player player)
         {
             Clear();
-            Console.WriteLine("[상태보기]");
+            ColorText("[상태보기]", 255, 165, 0);
             AddBlankLine(2);
 
             Console.WriteLine("이름: " + player.name);
@@ -89,7 +159,7 @@ namespace Window11_TextRPG
         public static void ChooseJobScene(Player player)
         {
             Clear();
-            Console.WriteLine("[직업선택]");
+            ColorText("[직업선택]", 255, 165, 0);
             AddBlankLine(2);
 
             Console.WriteLine("1.전사 HP:130  공격력:10");
@@ -106,7 +176,7 @@ namespace Window11_TextRPG
         public static void DungeonScene(Player player, List<Monster> monsters)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
@@ -125,7 +195,7 @@ namespace Window11_TextRPG
         public static void DungeonMonsterTargetScene(Player player, List<Monster> monsters)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             for (int i = 0; i < monsters.Count; i++)
             {
@@ -144,7 +214,7 @@ namespace Window11_TextRPG
         public static void DungeonPlayerAttackScene(Player player, Monster monster, int playerDamage, int beforeMonsterHp,int hitType)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine($"{player.name} 의 공격!");
             switch (hitType)
@@ -171,7 +241,7 @@ namespace Window11_TextRPG
         public static void DungeonMonsterAttackScene(Player player, Monster monster, int beforePlayerHp)
         {
             Clear();
-            Console.WriteLine("Battle!!");
+            ColorText("Battle!!", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine($"{monster.name} 의 공격!");
             Console.WriteLine($"{player.name} 을(를) 맞췄습니다. [데미지 : {monster.Attack()}]");
@@ -184,10 +254,10 @@ namespace Window11_TextRPG
             Console.Write(">> ");
         }
 
-        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter, int gold, int potionCount, MountableItem? item)
+        public static void DungeonWinResultScene(Player player, int monsterCount, int playerHpBeforeEnter, int gold, int potionCount,MountableItem? item, int gainedExp, int expBeforeGain, int expForNextLevel, bool leveledUp)
         {
             Clear();
-            Console.WriteLine("Battle!! - Result");
+            ColorText("Battle!! - Result", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine("Victory");
             AddBlankLine();
@@ -196,6 +266,20 @@ namespace Window11_TextRPG
             Console.WriteLine("[캐릭터 정보]");
             Console.WriteLine($"Lv.{player.level} {player.name}");
             Console.WriteLine($"HP {playerHpBeforeEnter} -> {player.hp}");
+            AddBlankLine();
+
+            Console.WriteLine($"[경험치 획득] {gainedExp} EXP 획득!");
+
+            if (leveledUp)
+            {
+                Console.WriteLine($"레벨업! Lv.{player.level} 으로 상승!");
+            }
+            else
+            {
+                int expNeeded = expForNextLevel - player.exp;
+                Console.WriteLine($"다음 레벨까지 {expNeeded} EXP 필요");
+            }
+
             if (gold != 0 || potionCount != 0 || item != null)
             {
                 AddBlankLine();
@@ -222,7 +306,7 @@ namespace Window11_TextRPG
         public static void DungeonLoseResultScene(Player player, int playerHpBeforeEnter)
         {
             Clear();
-            Console.WriteLine("Battle!! - Result");
+            ColorText("Battle!! - Result", 255, 165, 0);
             AddBlankLine();
             Console.WriteLine("You Lose");
             AddBlankLine();
@@ -322,7 +406,7 @@ namespace Window11_TextRPG
         public static void StoreScene(Player plyaer, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[상점]");
+            ColorText("[상점]", 255, 165, 0);
 
             AddBlankLine();
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
@@ -349,7 +433,7 @@ namespace Window11_TextRPG
         public static void StoreBuyScene(Player plyaer, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[상점 - 구매]");
+            ColorText("[상점 - 구매]", new COLOR(255, 165, 0));
 
             AddBlankLine();
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
@@ -372,7 +456,7 @@ namespace Window11_TextRPG
         public static void StoreSellScene(Player plyaer, List<MountableItem> items)
         {
             Clear();
-            Console.Write("[상점 - 판매]");
+            ColorText("[상점 - 판매]", new COLOR(255, 165, 0));
 
             AddBlankLine();
             Console.WriteLine("필요한 아이템을 얻을 수 있는 상점입니다.");
