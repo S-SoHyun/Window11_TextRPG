@@ -54,6 +54,18 @@ namespace Window_11_TEXTRPG
             Thread.Sleep(second * 1000);   // ex) 3 * 1000 : 3초 대기
         }
 
-
+        //데미지 계산
+        public static int CalcDamage(int hp, int damage)
+        {
+            if (hp - damage < 0)
+            {
+                hp = 0;
+            }
+            else
+            {
+                hp -= damage;
+            }
+            return hp;
+        }
     }
 }
