@@ -210,6 +210,7 @@ namespace Window11_TextRPG
             Reward reward = InventoryManager.instance.RewardInstnace;
             SetMonsterCatches();
             player.stage += 1;
+            player.mp = player.mp + 10 > player.maxmp ? player.maxmp : player.mp + 10;
             DisplayManager.DungeonWinResultScene(player, monsters.Count, playerHpBeforeEnter, playerMpBeforeEnter, reward.Gold(), reward.Potion(), reward.Item(), totalExp, expBeforeGain, expForNextLevel, leveledUp);
         }
 
