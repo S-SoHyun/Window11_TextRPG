@@ -15,6 +15,7 @@ namespace Window11_TextRPG
     {
 
         private PlayerManager() {
+            player = new Player();
         }
         private static PlayerManager? instance;
         public static PlayerManager Instance
@@ -27,16 +28,33 @@ namespace Window11_TextRPG
             }
         }
 
-        Player player =new Player();
+        //Player player = new Player();
+        Player player;
+        // 플레이어에 static 박기
+
         public Player _Player
         {
-            get { return player; } set { player = value; }
+            get
+            {
+                if (player != null)
+                {
+                    Console.WriteLine(player.GetHashCode());
+                    Thread.Sleep(3000);
+                }
+
+
+                return player;
+            }
+            set { player = value; }
+
         }
 
 
 
 
- 
+
+
+
 
         //public static void LevelCheck(Player player, Monster monster)
         //{
