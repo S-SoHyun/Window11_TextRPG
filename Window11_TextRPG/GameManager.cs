@@ -70,13 +70,12 @@ namespace Window11_TextRPG
 
         public bool GetSave() 
         {
-            Player player                       = PlayerManager.Instance._Player;
-            List<MountableItem> mountableItems  = InventoryManager.Instance.mountableItems;
-            PotionItem potion                   = InventoryManager.Instance.potion;
-            List<Quest> quest                   = QuestManager.Instance.NameToQuest;
+            Player player = PlayerManager.Instance._Player;
+            List<MountableItem> mountableItems = InventoryManager.Instance.mountableItems;
+            PotionItem potion = InventoryManager.Instance.potion;
 
-            bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion, quest);
-            //ChangeScene(SceneState.LobbyManager);
+            bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion);
+            ChangeScene(SceneState.LobbyManager);
             return success;
         }
 
@@ -89,14 +88,13 @@ namespace Window11_TextRPG
             return success;
         }
 
-
+        
 
         // 프로젝트 경로
-        // 경로 : D:\Window11_TextRPG\Window11_TextRPG\data
         static string projectDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
         // 게임 저장 메서드
-        public bool SaveGame(Player player, List<MountableItem> mountableItems, PotionItem potionItem , List<Quest> quest)
+        public bool SaveGame(Player player, List<MountableItem> mountableItems, PotionItem potionItem)
         {
             bool success = true;
             try { SaveCharacter(player); }
@@ -107,9 +105,6 @@ namespace Window11_TextRPG
 
             try { SaveItems(potionItem, "PotionItem"); }
             catch { Failed("PotionItem 저장"); success = false; }
-
-            try { SaveQuest(quest, "Quest"); }
-            catch(Exception e) { Console.WriteLine(e); Failed("퀘스트 저장"); success = false; }
 
             return success;
         }
@@ -147,7 +142,7 @@ namespace Window11_TextRPG
             string json = JsonSerializer.Serialize(_items
                 , new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
             File.WriteAllText(filePath, json);
-            Console.WriteLine("Mountable 저장 완료!");
+            Console.WriteLine("아이템 저장 완료!");
             Console.WriteLine(filePath);
         }
         void SaveItems(PotionItem _items, string _str)
@@ -157,20 +152,9 @@ namespace Window11_TextRPG
             string json = JsonSerializer.Serialize(_items
                 , new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
             File.WriteAllText(filePath, json);
-            Console.WriteLine("Potion 저장 완료!");
+            Console.WriteLine("아이템 저장 완료!");
             Console.WriteLine(filePath);
         }
-        void SaveQuest(List<Quest> quest, string _str) 
-        {
-            // 아이템 저장(MountableItem)
-            string filePath = Path.Combine(projectDir, "data", $"{_str}.json");
-            string json = JsonSerializer.Serialize(quest
-                , new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
-            File.WriteAllText(filePath, json);
-            Console.WriteLine("퀘스트 저장 완료!");
-            Console.WriteLine(filePath);
-        }
-
         //============게임 로드 관련 메서드===============
         void LoadCharacter()
         {
