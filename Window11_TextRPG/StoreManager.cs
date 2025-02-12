@@ -22,20 +22,21 @@ namespace Window11_TextRPG
             }
         }
         // 인벤토리에서 가져온 아이템 리스트
-        List<MountableItem> items = InventoryManager.Instance.mountableItems;
-
-        // 임시 변수들
-        Player player = PlayerManager.Instance._Player;
+        
 
         // GameManager에서 접근하는 곳
         public void Enter()
         {
+
             // StoreScene 진입
             StoreScene();
         }
 
         private void StoreScene()
         {
+            List<MountableItem> items = InventoryManager.Instance.mountableItems;
+            Player player = PlayerManager.Instance._Player;
+
             // 다음 Scene 지정
             Action nextScene = StoreScene;
             int result = -1;
@@ -64,6 +65,9 @@ namespace Window11_TextRPG
 
         private void BuyItemScene()
         {
+            List<MountableItem> items = InventoryManager.Instance.mountableItems;
+            Player player = PlayerManager.Instance._Player;
+
             // 다음 Scene 지정
             Action nextScene = BuyItemScene;
 
@@ -91,6 +95,9 @@ namespace Window11_TextRPG
 
         private void SellItemScene()
         {
+            List<MountableItem> items = InventoryManager.Instance.mountableItems;
+            Player player = PlayerManager.Instance._Player;
+
             // 다음 Scene 지정
             Action nextScene = SellItemScene;
 
@@ -118,6 +125,9 @@ namespace Window11_TextRPG
 
         private void BuyItem(int idx)
         {
+            List<MountableItem> items = InventoryManager.Instance.mountableItems;
+            Player player = PlayerManager.Instance._Player;
+
             // 구매 불가
             if (items[idx - 1].Own)
             {
@@ -146,6 +156,9 @@ namespace Window11_TextRPG
 
         private void SellItem(int idx)
         {
+            List<MountableItem> items = InventoryManager.Instance.mountableItems;
+            Player player = PlayerManager.Instance._Player;
+
             MountableItem item = items[idx - 1];
             // 판매 불가
             if (!item.Own)
