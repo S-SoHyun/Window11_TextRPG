@@ -79,7 +79,8 @@ namespace Window11_TextRPG
                 Console.WriteLine(saveQuestWrapper[i].Name + " / " + saveQuestWrapper[i].QuestType);
 
             bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion , saveQuestWrapper);
-            //ChangeScene(SceneState.LobbyManager);
+            UtilManager.DelayForSecond(2);
+            ChangeScene(SceneState.LobbyManager);
             return success;
         }
 
@@ -88,6 +89,7 @@ namespace Window11_TextRPG
             PotionItem potion = InventoryManager.Instance.potion;
 
             bool success = LoadGame(potion);
+            UtilManager.DelayForSecond(2);
             ChangeScene(SceneState.LobbyManager);
             return success;
         }
@@ -180,10 +182,12 @@ namespace Window11_TextRPG
             // 캐릭터 로드
             string filePath = Path.Combine(projectDir, "data", "character.json");
             string jsn = File.ReadAllText(filePath);
-
-            PlayerManager.Instance._Player = JsonSerializer.Deserialize<Player>(jsn);
+            Player load = new Player();
+            load = JsonSerializer.Deserialize<Player>(jsn);
+            PlayerManager.Instance._Player = load;
 
             Console.WriteLine("캐릭터 불러오기 완료!");
+            load.SetSkills(load.job);
             Console.WriteLine(filePath);
         }
         void LoadItems(string _str)
