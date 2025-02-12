@@ -192,6 +192,7 @@ namespace Window11_TextRPG
             Console.WriteLine("1. 공격");
             Console.WriteLine("2. 스킬");
             AddBlankLine();
+            Console.WriteLine("0. 나가기");
             InputInduction();
         }
 
@@ -215,7 +216,6 @@ namespace Window11_TextRPG
                 AddBlankLine();
             }
             Console.WriteLine("0. 취소");
-            AddBlankLine();
             InputInduction();
         }
 
