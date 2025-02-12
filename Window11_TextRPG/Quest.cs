@@ -4,6 +4,21 @@ using Window_11_TEXTRPG;
 
 namespace Window11_TextRPG
 {
+    public class SaveQuestWrapper
+    {
+        private string name;
+        private QuestState questType;
+
+        public SaveQuestWrapper(string n , QuestState state ) 
+        {
+            this.name = n;
+            this.questType = state;
+        }
+
+        public string Name => name;
+        public QuestState QuestType => questType;
+    }
+
     public abstract class Quest
     {
         // 필드 

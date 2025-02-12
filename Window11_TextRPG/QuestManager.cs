@@ -32,11 +32,16 @@ namespace Window11_TextRPG
         private List<Quest> performableQuests;  // 수행가능 퀘스트
         private List<Quest> doneQuest;          // 아얘 끝난 퀘스트 
 
+        // save Wrapper
+        private List<SaveQuestWrapper> saveWrapper;
+
         // 퀘스트 수락 or 퀘 받기 or 보상받기 선택 시 실행할 메서드 저장해놓을 Action
         private Action? actionOne;
         private Action? actionTwo;
 
-        public List<Quest> NameToQuest => saveQuest;
+
+        public List<SaveQuestWrapper> SaveWrapper => saveWrapper;
+
 
         // 생성자
         private QuestManager()
@@ -45,7 +50,9 @@ namespace Window11_TextRPG
             nameByQuest       = new Dictionary<string, Quest>();
             performableQuests   = new List<Quest>();
             doneQuest           = new List<Quest>();
-            saveQuest           = new List<Quest>();
+
+            saveWrapper         = new List<SaveQuestWrapper>();
+
 
             rewardOptionByState = new string[2];
 
@@ -346,9 +353,23 @@ namespace Window11_TextRPG
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
+            try 
+            {
+                saveWrapper.Add(new SaveQuestWrapper(kill1.QuestName , kill1.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(kill2.QuestName , kill2.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(kill3.QuestName , kill3.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(kill4.QuestName , kill4.QuestState));
+
+                saveWrapper.Add(new SaveQuestWrapper(equip1.QuestName , equip1.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(equip2.QuestName , equip2.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(equip3.QuestName , equip3.QuestState));
+            }
+            catch (Exception ex) { Console.WriteLine(ex); }
+
+
             // 트리 연결하기 
             // 연계퀘스트 내역은 는 피그마 확인해주세요!
-            try 
+            try
             {
                 nameByQuest[kill1.QuestName].AddChild(kill2);
                 nameByQuest[kill1.QuestName].AddChild(kill3);

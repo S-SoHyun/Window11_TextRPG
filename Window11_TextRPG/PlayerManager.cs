@@ -30,7 +30,8 @@ namespace Window11_TextRPG
         Player player =new Player();
         public Player _Player
         {
-            get { return player; } set { player = value; }
+            get { return player; }
+            set { player = value; }
         }
 
 

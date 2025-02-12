@@ -70,13 +70,19 @@ namespace Window11_TextRPG
 
         public bool GetSave() 
         {
-            Player player                       = PlayerManager.Instance._Player;
-            List<MountableItem> mountableItems  = InventoryManager.Instance.mountableItems;
-            PotionItem potion                   = InventoryManager.Instance.potion;
-            List<Quest> quest                   = QuestManager.Instance.NameToQuest;
 
-            bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion, quest);
-            //ChangeScene(SceneState.LobbyManager);
+            Player player                           = PlayerManager.Instance._Player;
+            List<MountableItem> mountableItems      = InventoryManager.Instance.mountableItems;
+            PotionItem potion                       =  InventoryManager.Instance.potion;
+            List<SaveQuestWrapper> saveQuestWrapper = QuestManager.Instance.SaveWrapper;
+
+            for (int i = 0; i < saveQuestWrapper.Count; i++)
+                Console.WriteLine(saveQuestWrapper[i].Name + " / " + saveQuestWrapper[i].QuestType);
+
+            bool success = SaveGame(PlayerManager.Instance._Player, mountableItems, potion , saveQuestWrapper);
+            UtilManager.DelayForSecond(2);
+            ChangeScene(SceneState.LobbyManager);
+
             return success;
         }
 
@@ -85,6 +91,7 @@ namespace Window11_TextRPG
             PotionItem potion = InventoryManager.Instance.potion;
 
             bool success = LoadGame(potion);
+            UtilManager.DelayForSecond(2);
             ChangeScene(SceneState.LobbyManager);
             return success;
         }
@@ -96,7 +103,9 @@ namespace Window11_TextRPG
         static string projectDir = Directory.GetParent(Directory.GetCurrentDirectory()).Parent.Parent.FullName;
 
         // 게임 저장 메서드
-        public bool SaveGame(Player player, List<MountableItem> mountableItems, PotionItem potionItem , List<Quest> quest)
+
+        public bool SaveGame(Player player, List<MountableItem> mountableItems, PotionItem potionItem , List<SaveQuestWrapper> saveQuestWrapper)
+
         {
             bool success = true;
             try { SaveCharacter(player); }
@@ -108,8 +117,10 @@ namespace Window11_TextRPG
             try { SaveItems(potionItem, "PotionItem"); }
             catch { Failed("PotionItem 저장"); success = false; }
 
-            try { SaveQuest(quest, "Quest"); }
-            catch(Exception e) { Console.WriteLine(e); Failed("퀘스트 저장"); success = false; }
+
+            try { SaveQuestWrapper(saveQuestWrapper, "QuestWrapper"); }
+            catch { Failed("PotionItem 저장"); success = false; }
+
 
             return success;
         }
@@ -160,11 +171,14 @@ namespace Window11_TextRPG
             Console.WriteLine("Potion 저장 완료!");
             Console.WriteLine(filePath);
         }
-        void SaveQuest(List<Quest> quest, string _str) 
+
+
+        void SaveQuestWrapper(List<SaveQuestWrapper> saveQuestWrapper, string str) 
         {
-            // 아이템 저장(MountableItem)
-            string filePath = Path.Combine(projectDir, "data", $"{_str}.json");
-            string json = JsonSerializer.Serialize(quest
+            // 퀘스트 Wrapper 저장(Quest)
+            string filePath = Path.Combine(projectDir, "data", $"{str}.json");
+            string json = JsonSerializer.Serialize(saveQuestWrapper
+
                 , new JsonSerializerOptions { WriteIndented = true, Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping });
             File.WriteAllText(filePath, json);
             Console.WriteLine("퀘스트 저장 완료!");
@@ -177,10 +191,12 @@ namespace Window11_TextRPG
             // 캐릭터 로드
             string filePath = Path.Combine(projectDir, "data", "character.json");
             string jsn = File.ReadAllText(filePath);
-
-            PlayerManager.Instance._Player = JsonSerializer.Deserialize<Player>(jsn);
+            Player load = new Player();
+            load = JsonSerializer.Deserialize<Player>(jsn);
+            PlayerManager.Instance._Player = load;
 
             Console.WriteLine("캐릭터 불러오기 완료!");
+            load.SetSkills(load.job);
             Console.WriteLine(filePath);
         }
         void LoadItems(string _str)
