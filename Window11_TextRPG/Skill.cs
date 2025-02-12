@@ -53,6 +53,15 @@ namespace Window11_TextRPG
             }
             return result;
         }
+
+        public bool CanUse(Player player)
+        {
+            if (player.mp - mp < 0)
+            {
+                return false;
+            }
+            return true;
+        }
     }
 
 
