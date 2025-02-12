@@ -31,6 +31,7 @@ namespace Window11_TextRPG
         public Player _Player
         {
             get { return player; }
+            set { player = value; }
         }
 
 
