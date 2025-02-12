@@ -98,7 +98,7 @@ namespace Window11_TextRPG
             Console.WriteLine("4.궁수 HP:80  공격력:20");
             AddBlankLine(2);
 
-
+            Console.WriteLine("0. 나가기");
 
             InputInduction();
         }
@@ -116,8 +116,10 @@ namespace Window11_TextRPG
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
             AddBlankLine();
             Console.WriteLine("1. 공격");
+            Console.WriteLine("2. 스킬");
             AddBlankLine();
             InputInduction();
         }
@@ -135,6 +137,7 @@ namespace Window11_TextRPG
             Console.WriteLine("[내정보]");
             Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
             Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
             AddBlankLine();
             Console.WriteLine("0. 취소");
             AddBlankLine();
@@ -178,8 +181,36 @@ namespace Window11_TextRPG
             AddBlankLine();
             Console.WriteLine($"Lv.{player.level} {player.name}");
             Console.WriteLine($"HP {beforePlayerHp} -> {player.hp}");
+            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
             AddBlankLine();
             Console.WriteLine("0. 다음");
+            AddBlankLine();
+            Console.Write(">> ");
+        }
+
+        public static void DungeonUseSkill(Player player, List<Monster> monsters)
+        {
+            Clear();
+            Console.WriteLine("Battle!!");
+            AddBlankLine();
+            for (int i = 0; i < monsters.Count; i++)
+            {
+                Console.WriteLine($"Lv.{monsters[i].level} {monsters[i].name} {(monsters[i].hp <= 0 ? "Dead" : "HP " + monsters[i].hp)}");
+            }
+            AddBlankLine(2);
+            Console.WriteLine("[내정보]");
+            Console.WriteLine($"Lv.{player.level} {player.name} ({player.job})");
+            Console.WriteLine($"HP {player.hp}/{player.maxhp}");
+            Console.WriteLine($"HP {player.mp}/{player.maxmp}");
+            AddBlankLine();
+            for (int i = 0; i < player.skills.Count; i++)
+            {
+                Skill skill = player.skills[i];
+                Console.WriteLine($"{i + 1}. {skill.name} - MP {skill.mp}");
+                Console.WriteLine($"{skill.description}");
+            }
+            AddBlankLine();
+            Console.WriteLine("0. 취소");
             AddBlankLine();
             Console.Write(">> ");
         }
