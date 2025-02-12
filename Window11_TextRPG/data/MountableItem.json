@@ -1,0 +1,62 @@
+[
+  {
+    "Attack": 0,
+    "Defense": 4,
+    "Own": true,
+    "Equip": false,
+    "Name": "수련자의 갑옷",
+    "Description": "수련에 도움을 주는 갑옷입니다.",
+    "Price": 1000,
+    "Type": 1
+  },
+  {
+    "Attack": 0,
+    "Defense": 9,
+    "Own": true,
+    "Equip": false,
+    "Name": "무쇠갑옷",
+    "Description": "무쇠로 만들어져 튼튼한 갑옷입니다.",
+    "Price": 2000,
+    "Type": 1
+  },
+  {
+    "Attack": 0,
+    "Defense": 15,
+    "Own": true,
+    "Equip": false,
+    "Name": "스파르타의 갑옷",
+    "Description": "스파르타의 전사들이 사용했다는 전설의 갑옷입니다.",
+    "Price": 3500,
+    "Type": 1
+  },
+  {
+    "Attack": 5,
+    "Defense": 0,
+    "Own": true,
+    "Equip": false,
+    "Name": "낡은 검",
+    "Description": "쉽게 볼 수 있는 낡은 검 입니다.",
+    "Price": 600,
+    "Type": 0
+  },
+  {
+    "Attack": 10,
+    "Defense": 0,
+    "Own": true,
+    "Equip": false,
+    "Name": "청동 도끼",
+    "Description": "어디선가 사용됐던거 같은 도끼입니다.",
+    "Price": 1500,
+    "Type": 0
+  },
+  {
+    "Attack": 20,
+    "Defense": 0,
+    "Own": true,
+    "Equip": false,
+    "Name": "스파르타의 창",
+    "Description": "스파르타의 전사들이 사용했다는 전설의 창입니다.",
+    "Price": 2500,
+    "Type": 0
+  }
+]

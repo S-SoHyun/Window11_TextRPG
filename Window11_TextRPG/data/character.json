@@ -1,0 +1,13 @@
+{
+  "name": "niceguy",
+  "level": 10,
+  "job": "당사자",
+  "atk": 99999,
+  "def": 99999,
+  "maxhp": 90,
+  "hp": 90,
+  "gold": 150000000,
+  "exp": 0,
+  "weapon": null,
+  "armor": null
+}
