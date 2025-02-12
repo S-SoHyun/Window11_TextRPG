@@ -171,8 +171,8 @@ namespace Window11_TextRPG
             });
             rewardWeapon.Add(new MountableItem()
             {
-                Name = "낡은 검",
-                Description = "낡은 검이다.",
+                Name = "흙 검",
+                Description = "흙으로 만든 검",
                 Price = 100,
                 Type = ITEMTYPE.WEAPON,
 
@@ -181,6 +181,67 @@ namespace Window11_TextRPG
                 Own = false,
                 Equip = false
             });
+            rewardWeapon.Add(new MountableItem()
+            {
+                Name = "구리 검",
+                Description = "낡은 검보다 강하며 철 검보다 약하다.",
+                Price = 150,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 5,
+                Defense = 0,
+                Own = false,
+                Equip = false
+            });
+            rewardWeapon.Add(new MountableItem()
+            {
+                Name = "은 검",
+                Description = "현존하는 가장 강한 검",
+                Price = 200,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 10,
+                Defense = 0,
+                Own = false,
+                Equip = false
+            });
+            rewardWeapon.Add(new MountableItem()
+            {
+                Name = "나무 활",
+                Description = "가장 약한 활",
+                Price = 200,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 10,
+                Defense = 0,
+                Own = false,
+                Equip = false
+            });
+            rewardWeapon.Add(new MountableItem()
+            {
+                Name = "철 활",
+                Description = "나무 활 보다 강력하다",
+                Price = 200,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 10,
+                Defense = 0,
+                Own = false,
+                Equip = false
+            });
+            rewardWeapon.Add(new MountableItem()
+            {
+                Name = "칠흑나무 활",
+                Description = "칠흑나무로 만든 활",
+                Price = 200,
+                Type = ITEMTYPE.WEAPON,
+
+                Attack = 10,
+                Defense = 0,
+                Own = false,
+                Equip = false
+            });
+
         }
         void init_rewardArmor()
         {
@@ -200,11 +261,47 @@ namespace Window11_TextRPG
             {
                 Name = "유니클로 셔츠",
                 Description = "유니클로 셔츠다.",
-                Price = 100,
+                Price = 50,
                 Type = ITEMTYPE.ARMOR,
 
                 Attack = 0,
                 Defense = 20,
+                Own = false,
+                Equip = false
+            });
+            rewardArmor.Add(new MountableItem()
+            {
+                Name = "워셔블밀라노 스웨터",
+                Description = "깔끔한 짜임과 신축성이 있는 원단",
+                Price = 100,
+                Type = ITEMTYPE.ARMOR,
+
+                Attack = 0,
+                Defense = 25,
+                Own = false,
+                Equip = false
+            });
+            rewardArmor.Add(new MountableItem()
+            {
+                Name = "코튼엑스트라윔",
+                Description = "코튼 100%",
+                Price = 150,
+                Type = ITEMTYPE.ARMOR,
+
+                Attack = 0,
+                Defense = 30,
+                Own = false,
+                Equip = false
+            });
+            rewardArmor.Add(new MountableItem()
+            {
+                Name = "플러피얀후리스풀집 재킷",
+                Description = "이불을 덮은 듯한 따뜻함",
+                Price = 200,
+                Type = ITEMTYPE.ARMOR,
+
+                Attack = 0,
+                Defense = 35,
                 Own = false,
                 Equip = false
             });
