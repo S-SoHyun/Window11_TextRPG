@@ -132,7 +132,7 @@ namespace Window11_TextRPG
             if (items[idx - 1].Own)
             {
                 Console.WriteLine("이미 구매한 아이템입니다.");
-                Thread.Sleep(1000);
+                UtilManager.DelayForSecond(1);
             }
             // 구매 가능
             else
@@ -143,13 +143,13 @@ namespace Window11_TextRPG
                     items[idx - 1].Own = true;
                     player.gold -= items[idx - 1].Price;
                     Console.WriteLine("구매를 완료했습니다.");
-                    Thread.Sleep(1000);
+                    UtilManager.DelayForSecond(1);
                 }
                 // Gold 부족
                 else
                 {
                     Console.WriteLine("Gold가 부족합니다.");
-                    Thread.Sleep(1000);
+                    UtilManager.DelayForSecond(1);
                 }
             }
         }
@@ -164,20 +164,20 @@ namespace Window11_TextRPG
             if (!item.Own)
             {
                 Console.WriteLine("소유하지 않은 아이템입니다.");
-                Thread.Sleep(1000);
+                UtilManager.DelayForSecond(1);
             }
             // 판매 가능
             else
             {
-                // 장착 중이라면 장착 해제
+                // 장착 중이라면
                 if (item.Equip)
                 {
-                    // 아이템 성능 만큼 캐릭터 성능 하향
+                    // 아이템 장착 해제 및 성능 만큼 캐릭터 성능 하향
                     InventoryManager.Instance.Unequip(item);
                 }
                 player.gold += (int)((float)item.Price * 0.85f);
                 Console.WriteLine("판매를 완료했습니다.");
-                Thread.Sleep(1000);
+                UtilManager.DelayForSecond(1);
             }
         }
 
