@@ -34,13 +34,13 @@ namespace Window11_TextRPG
 
         public void Enter()
         {
-            Player enterPlayer = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
-            //Player enterPlayer = PlayerManager.Instance._Player;     
+            //Player enterPlayer = new Player("전사", "test", 130, 10);      //테스트용 임시코드 player
+            Player enterPlayer = PlayerManager.Instance._Player;     
             int playerHpBeforeEnter = enterPlayer.hp;
             SetMonsters(enterPlayer);
             while (!enterPlayer.Hpcheck() && GetMonsterDieCount() != monsters.Count)
             {
-                EnterDungeon(enterPlayer);
+                TargetMonster(enterPlayer);
             }
             if (enterPlayer.Hpcheck())                                      //플레이어의 체력이 0일때
             {
@@ -79,42 +79,33 @@ namespace Window11_TextRPG
             }
         }
 
-        public void EnterDungeon(Player player)
+        public void TargetMonster(Player player)
         {
             int actionInput;
             DisplayManager.DungeonScene(player, monsters);
-            actionInput = UtilManager.PlayerInput(1, 2);
-            switch (actionInput)
+            actionInput = UtilManager.PlayerInput(1, 1);
+            if (actionInput == 1)
             {
-                case 1: 
-                    PlayerAttackMonster(player);
-                    break;
-                case 2:
-                    UseSkill(player);
-                    break;
-                default:
-                    EnterDungeon(player);
-                    break;
+                PlayerAttackMonster(player);
+            }else
+            {
+                TargetMonster(player);
             }
-        }
-
-        public int TargetMonster(Player player)
-        {
-            DisplayManager.DungeonMonsterTargetScene(player, monsters);
-            return UtilManager.PlayerInput(0, monsters.Count);
         }
 
         public void PlayerAttackMonster(Player player)
         {
-            int selectMonster = TargetMonster(player);
+            int userInput;
+            DisplayManager.DungeonMonsterTargetScene(player, monsters);
+            userInput = UtilManager.PlayerInput(0, monsters.Count);
             Monster userSelectedMonster = new Monster();                        //0을 입력시 몬스터 배열의 userInput조회시 -1을 조회시켜 에러발생하여 수정
-            if (selectMonster == 0)
+            if (userInput == 0)
             {
-                EnterDungeon(player);
+                TargetMonster(player);
             }
             else
             {
-                userSelectedMonster = monsters[selectMonster - 1];
+                userSelectedMonster = monsters[userInput - 1];
                 if (!userSelectedMonster.IsDie())
                 {
                     int beforeMonsterHp = userSelectedMonster.hp;
@@ -179,48 +170,11 @@ namespace Window11_TextRPG
             return monsterDieCnt;
         }
 
-        public void UseSkill(Player player)
-        {
-            int userInput;
-            DisplayManager.DungeonUseSkill(player, monsters);
-            userInput = UtilManager.PlayerInput(0, player.skills.Count());
-            if (userInput == 0)
-            {
-                EnterDungeon(player);
-            }
-            else
-            {
-                
-            }
-        }
-
-        public void TargetToSKill(Player player, int skillType)
-        {
-            int userInput;
-            switch (skillType)
-            {
-                case 0:
-
-                    break;
-                case 1:
-                    break;
-            }
-            DisplayManager.DungeonMonsterTargetScene(player, monsters);
-            
-        }
-
         public enum MonsterType
         {
             Minion = 0,
             Canon,
             VoidMonster
-        }
-
-        public enum SkillType
-        {
-            one = 0,
-            random2,
-            all
         }
     }
 }

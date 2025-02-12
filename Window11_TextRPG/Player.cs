@@ -17,57 +17,28 @@ namespace Window11_TextRPG
         public float def { get; set; } 
 
         public int maxhp { get; set; } 
+
         public int hp { get; set; } 
-
-        public int maxmp { get; set; }
-        public int mp { get; set; }
-
         public int gold { get; set; }
 
         public int exp { get; set; }
         public Item weapon { get; set; } = null;
         public Item armor { get; set; } = null;
-        public List<Skill> skills { get; set; }
-        public int stage { get; set; }
 
-        public Player(string job, string name, int maxhp, float atk)
+
+        public Player(string job, string name, int maxhp,float atk)
         {  //이름 ,직업, 체력, 최대 체력 , 공격력 ,방어력 ,돈, 경험치?
             this.name = name;
             this.job = job;
             this.maxhp = maxhp;
             this.atk = atk;
-            maxmp = 50;
 
-            level = 1;
-            def = 5;
-            hp = maxhp;
-            mp = maxmp;
-            gold = 1500;
-            exp = 0;
-            stage = 1;
+            this.level = 1;
+            this.def = 5;
+            this.hp = maxhp;
+            this.gold = 1500;
+            this.exp = 0;
 
-            skills = new List<Skill>();
-            int skillAtk = UtilManager.GetCeiling(atk);
-
-            switch (job)
-            {
-                case "전사":
-                    skills.Add(new Skill("알파 스트라이크", "공격력 * 3 로 하나의 적을 공격합니다.", 10, (int)DungeonManager.SkillType.one));
-                    skills.Add(new Skill("더블 스트라이크", "공격력 * 1.5 로 2명의 적을 랜덤으로 공격합니다.", 15, (int)DungeonManager.SkillType.random2));
-                    break;
-                case "마법사":
-                    skills.Add(new Skill("파이어볼", "공격력 * 2 로 하나의 적을 공격합니다.", 15, (int)DungeonManager.SkillType.one));
-                    skills.Add(new Skill("메테오", "공격력 * 3 로 모든 적을 공격합니다.", 30, (int)DungeonManager.SkillType.all));
-                    break;
-                case "도적":
-                    skills.Add(new Skill("라이프 스틸", "공격력만큼 하나의 적의 체력을 훔칩니다.", 15, (int)DungeonManager.SkillType.one));
-                    skills.Add(new Skill("골드 어택", "공격력 + (현재골드 / 100)만큼 하나의 적을 공격합니다.", 15, (int)DungeonManager.SkillType.one));
-                    break;
-                case "궁수":
-                    skills.Add(new Skill("파워샷", "공격력 * 2 로 하나의 적을 공격합니다.", 15, (int)DungeonManager.SkillType.one));
-                    skills.Add(new Skill("멀티샷", "(공격력 * 1.5) - 대상 수만큼 모든 적을 공격합니다.", 20, (int)DungeonManager.SkillType.all));
-                    break;
-            }
         }
         public Player() { }
 
