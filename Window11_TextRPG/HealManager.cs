@@ -27,9 +27,7 @@ namespace Window11_TextRPG
 
         // 변수
         PotionItem potion = InventoryManager.Instance.potion;
-        // player
-        Player player = PlayerManager.Instance._Player;
-
+       
 
         // 중앙 통제
         public void Enter()
@@ -41,6 +39,9 @@ namespace Window11_TextRPG
         // Scene
         public void MoveHealScene()
         {
+            //player
+            Player player = PlayerManager.Instance._Player;
+
             DisplayManager.HealScene(player, potion);
             int input = UtilManager.PlayerInput(0, 1);
 
@@ -58,17 +59,20 @@ namespace Window11_TextRPG
         }
 
 
+        // 포션 사용
         public void UsePotion(Player player, PotionItem potion)
         {
+            int health = UtilManager.CalcPlayerHp(player, potion.Heel);
+
             if (potion.Count > 0)
             {
-                int health = UtilManager.CalcPlayerHp(player, potion.Heel);
                 if (player.hp == player.maxhp)
                 {
                     Console.WriteLine("이미 최대 체력입니다.");
                 }
                 else
                 {
+                    player.hp = health;
                     potion.Count -= 1;
                     Console.WriteLine("회복을 완료했습니다.");
                 }
