@@ -23,11 +23,8 @@ namespace Window11_TextRPG
         private string[] rewardOptionByState;     // 스탯 별 출력해야할 옵션 : 수락 or 퀘받아가세요 or 보상받기
 
         // 퀘스트 컨테이너
-        private Dictionary<string, Quest> nameByQuest;    // 전체 퀘스트 컨테이너 
+        private Dictionary<string, Quest> stringByQuest;    // 전체 퀘스트 컨테이너 
         private Quest currQuest;                            // 현재 퀘스트 저장 
-
-        // 저장용 컨테이너
-        private List<Quest> saveQuest;          // 딕셔너리의 value값을 json으로 직렬화가 안됨
 
         private List<Quest> performableQuests;  // 수행가능 퀘스트
         private List<Quest> doneQuest;          // 아얘 끝난 퀘스트 
@@ -39,20 +36,16 @@ namespace Window11_TextRPG
         private Action? actionOne;
         private Action? actionTwo;
 
-
         public List<SaveQuestWrapper> SaveWrapper => saveWrapper;
-
 
         // 생성자
         private QuestManager()
         {
             // 컨테이너 초기화
-            nameByQuest       = new Dictionary<string, Quest>();
-            performableQuests   = new List<Quest>();
-            doneQuest           = new List<Quest>();
-
-            saveWrapper         = new List<SaveQuestWrapper>();
-
+            stringByQuest = new Dictionary<string, Quest>();
+            performableQuests = new List<Quest>();
+            doneQuest = new List<Quest>();
+            saveWrapper = new List<SaveQuestWrapper>();
 
             rewardOptionByState = new string[2];
 
@@ -86,7 +79,7 @@ namespace Window11_TextRPG
 
             // player input 
             int input = UtilManager.PlayerInput(0, questOption.Length);
-            
+
             // 0 : 입력하면 되돌아가기 => 퀘스트화면으로
             if (input == 0)
                 GameManager.Instance.ChangeScene(SceneState.LobbyManager);
@@ -115,16 +108,16 @@ namespace Window11_TextRPG
             Console.WriteLine(currQuest.QuestName + '\n');
             Console.WriteLine(currQuest.QuestStory + '\n');
 
-            Console.WriteLine( "-" + currQuest.QuestProgress() + '\n');
-            Console.WriteLine( "-" + currQuest.RewardItemAndGold() + '\n');
+            Console.WriteLine("-" + currQuest.QuestProgress() + '\n');
+            Console.WriteLine("-" + currQuest.RewardItemAndGold() + '\n');
         }
 
-        private void PrintRewardBystate() 
+        private void PrintRewardBystate()
         {
             actionOne = null;
             actionTwo = null;
 
-            switch (currQuest.QuestState) 
+            switch (currQuest.QuestState)
             {
                 case QuestState.beforeReceive:
                     rewardOptionByState[0] = "수락";
@@ -150,29 +143,29 @@ namespace Window11_TextRPG
             DisplayManager.PrintMenu(rewardOptionByState);
 
             // 플레이어 입력
-            int input = UtilManager.PlayerInput(1,2);
+            int input = UtilManager.PlayerInput(1, 2);
 
             // 1이면 action첫번째꺼, 2이면 action 두번째꺼
             if (input == 1)
                 actionOne.Invoke();
-            else 
+            else
                 actionTwo.Invoke();
         }
 
-        private void Acception() 
+        private void Acception()
         {
             // 퀘스트 수락 -> 현재 퀘스트를 accept 로 바꾸기
             currQuest.ChangeState(QuestState.afterReceive);
 
             WaitAndReturnToQuest();
         }
-        private void DeclineQuest() 
+        private void DeclineQuest()
         {
             Console.WriteLine("퀘스트를 거절하셨습니다 ");
 
             WaitAndReturnToQuest();
         }
-        private void CompleteAndComeBack() 
+        private void CompleteAndComeBack()
         {
             // 퀘스트 완료필요 -> 완료하고 오세요 ! 
             Console.WriteLine("퀘스트를 완료하고 오세요!");
@@ -180,12 +173,12 @@ namespace Window11_TextRPG
             WaitAndReturnToQuest();
         }
 
-        private void ReturnToMenu() 
+        private void ReturnToMenu()
         {
             WaitAndReturnToQuest();
         }
 
-        private void AcquirReward() 
+        private void AcquirReward()
         {
             Console.WriteLine("보상을 받았습니다. 인벤토리를 확인해주세요!");
 
@@ -210,17 +203,17 @@ namespace Window11_TextRPG
             WaitAndReturnToQuest();
         }
 
-        private void RemovePerfomListAndAddToChild() 
+        private void RemovePerfomListAndAddToChild()
         {
             // 현재 퀘스트의 state를 done으로
             // 퀘스트 수락 -> 현재 퀘스트를 accept 로 바꾸기
             currQuest.ChangeState(QuestState.done);
 
             // currQuest와 같은 quest 반환
-            var temp = performableQuests.Find( quest => quest.Equals(currQuest));
+            var temp = performableQuests.Find(quest => quest.Equals(currQuest));
 
             // 수행가능 리스트에서 삭제
-            if (temp != null) 
+            if (temp != null)
             {
                 performableQuests.Remove(temp);
             }
@@ -229,14 +222,14 @@ namespace Window11_TextRPG
             doneQuest.Add(currQuest);
 
             // 현재 퀘스트의 child리스트에 접근해서 가능한 퀘스트리스트에 넣어야 함 
-            for (int i = 0; i < currQuest.ChildQuest.Count; i++) 
+            for (int i = 0; i < currQuest.ChildQuest.Count; i++)
             {
                 performableQuests.Add(currQuest.ChildQuest[i]);
             }
         }
 
         // 3초후 퀘스트화면으로 돌아가기
-        private void WaitAndReturnToQuest() 
+        private void WaitAndReturnToQuest()
         {
             Console.WriteLine("1초후 퀘스트 화면으로 돌아갑니다");
 
@@ -249,7 +242,7 @@ namespace Window11_TextRPG
 
         private void InitQuestList()
         {
-            
+
 
             // 1번 : 미니언처치
             // -> Dungeon에서 Monster 생성 후 몇마리 처치 했는지 저장 필요함 
@@ -259,13 +252,13 @@ namespace Window11_TextRPG
             // enum 기준으로 LINQ 한 다음에 배열이 0이상이면 있음 없음 정도로 해보면될듯
 
             #region Monster Kill 퀘스트 생성 
-            Quest kill1 =new MonsterKillQuest
+            Quest kill1 = new MonsterKillQuest
                 (name: "마을을 위협하는 미니언 처치"
                 , tooltip: "이봐! 마을 근처에 미니언들이 너무 많아졌다고 생각하지 않나?\r\n" +
                     "마을주민들의 안전을 위해서라도 저것들 수를 좀 줄여야 한다고!\r\n" +
                     "모험가인 자네가 좀 처치해주게!\r\n",
-                perForm : "",
-                rewardGold : 1000 );
+                perForm: "",
+                rewardGold: 1000);
             Quest kill2 = new MonsterKillQuest
                (name: "대포 미니언 처치"
                , tooltip: "미니언들을 처지하니 대포미니언이 나타났군!\r\n" +
@@ -327,42 +320,29 @@ namespace Window11_TextRPG
             #endregion
 
             // 전체 딕셔너리에 넣기
-            try 
-            {
-                nameByQuest.Add(kill1.QuestName, kill1);
-                nameByQuest.Add(kill2.QuestName, kill2);
-                nameByQuest.Add(kill3.QuestName, kill3);
-                nameByQuest.Add(kill4.QuestName, kill4);
-
-                nameByQuest.Add(equip1.QuestName, equip1);
-                nameByQuest.Add(equip2.QuestName, equip2);
-                nameByQuest.Add(equip3.QuestName, equip3);
-            }
-            catch (Exception ex) { Console.WriteLine(ex); }
-            
-            // 저장용 리스트에 넣기
             try
             {
-                saveQuest.Add(kill1);
-                saveQuest.Add(kill2);
-                saveQuest.Add(kill3);
-                saveQuest.Add(kill4);
-                saveQuest.Add(equip1);
-                saveQuest.Add(equip2);
-                saveQuest.Add(equip3);
+                stringByQuest.Add(kill1.QuestName, kill1);
+                stringByQuest.Add(kill2.QuestName, kill2);
+                stringByQuest.Add(kill3.QuestName, kill3);
+                stringByQuest.Add(kill4.QuestName, kill4);
+
+                stringByQuest.Add(equip1.QuestName, equip1);
+                stringByQuest.Add(equip2.QuestName, equip2);
+                stringByQuest.Add(equip3.QuestName, equip3);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
-            try 
+            try
             {
-                saveWrapper.Add(new SaveQuestWrapper(kill1.QuestName , kill1.QuestState));
-                saveWrapper.Add(new SaveQuestWrapper(kill2.QuestName , kill2.QuestState));
-                saveWrapper.Add(new SaveQuestWrapper(kill3.QuestName , kill3.QuestState));
-                saveWrapper.Add(new SaveQuestWrapper(kill4.QuestName , kill4.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(kill1.QuestName, kill1.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(kill2.QuestName, kill2.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(kill3.QuestName, kill3.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(kill4.QuestName, kill4.QuestState));
 
-                saveWrapper.Add(new SaveQuestWrapper(equip1.QuestName , equip1.QuestState));
-                saveWrapper.Add(new SaveQuestWrapper(equip2.QuestName , equip2.QuestState));
-                saveWrapper.Add(new SaveQuestWrapper(equip3.QuestName , equip3.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(equip1.QuestName, equip1.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(equip2.QuestName, equip2.QuestState));
+                saveWrapper.Add(new SaveQuestWrapper(equip3.QuestName, equip3.QuestState));
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
@@ -371,28 +351,28 @@ namespace Window11_TextRPG
             // 연계퀘스트 내역은 는 피그마 확인해주세요!
             try
             {
-                nameByQuest[kill1.QuestName].AddChild(kill2);
-                nameByQuest[kill1.QuestName].AddChild(kill3);
-                nameByQuest[kill2.QuestName].AddChild(kill4);
+                stringByQuest[kill1.QuestName].AddChild(kill2);
+                stringByQuest[kill1.QuestName].AddChild(kill3);
+                stringByQuest[kill2.QuestName].AddChild(kill4);
 
-                nameByQuest[equip1.QuestName].AddChild(equip2);
-                nameByQuest[equip2.QuestName].AddChild(equip3);
+                stringByQuest[equip1.QuestName].AddChild(equip2);
+                stringByQuest[equip2.QuestName].AddChild(equip3);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
             // 보상 세팅
-            try 
+            try
             {
-                nameByQuest[kill1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("흙 검"), 1);
-                nameByQuest[kill2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("구리 검"), 1);
-                nameByQuest[kill3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("은 검"), 1);
-                nameByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("철 활"), 1);
-                nameByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("칠흑나무 활"), 1);
+                stringByQuest[kill1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("흙 검"), 1);
+                stringByQuest[kill2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("구리 검"), 1);
+                stringByQuest[kill3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("은 검"), 1);
+                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("철 활"), 1);
+                stringByQuest[kill4.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("칠흑나무 활"), 1);
 
-                nameByQuest[equip1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
-                nameByQuest[equip2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("워셔블밀라노 스웨터"), 1);
-                nameByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("코튼엑스트라윔"), 1);
-                nameByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("플러피얀후리스풀집 재킷"), 1);
+                stringByQuest[equip1.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("유니클로 셔츠"), 1);
+                stringByQuest[equip2.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("워셔블밀라노 스웨터"), 1);
+                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("코튼엑스트라윔"), 1);
+                stringByQuest[equip3.QuestName].AddToItem(InventoryManager.instance.RewardInstnace.GetItem("플러피얀후리스풀집 재킷"), 1);
             }
             catch (Exception ex) { Console.WriteLine(ex); }
 
